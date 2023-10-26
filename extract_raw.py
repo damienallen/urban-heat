@@ -35,7 +35,7 @@ images = sorted(images, key=lambda img: img["capture_date"])
 mask_path = Path("geometry/extent.gpkg")
 mask_gdf = gpd.read_file(mask_path)
 
-pbar = tqdm(images[0:3])
+pbar = tqdm(images)
 for raw_image in pbar:
     image_path = raw_image["path"]
     pbar.set_description(raw_image["capture_date"].strftime("%y-%m-%d"))
@@ -64,5 +64,3 @@ for raw_image in pbar:
         clipped_image_path = clipped_data_dir / f"{image_path.stem}.tif"
         with rasterio.open(clipped_image_path, "w", **dst_meta) as dst:
             dst.write(temp_c)
-
-        print(clipped_data_dir / f"{image_path.stem}.tif")
