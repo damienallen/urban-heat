@@ -1,14 +1,13 @@
 import './App.css'
 
-// import { Map } from './Map'
 import { Chart } from './Chart'
+import { Map } from './Map'
 
-function App() {
+export const App = () => {
     return (
         <div className="app">
-            <Chart />
+            {/* <Chart /> */}
+            <Map />
         </div>
     )
 }
-
-export default App
