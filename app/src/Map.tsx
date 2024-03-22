@@ -174,7 +174,7 @@ export const Map = () => {
             zoom: 10,
         })
 
-        runContouring()
+        // runContouring()
     })
 
     return (

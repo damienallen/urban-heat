@@ -16,10 +16,11 @@ export const Chart = () => {
             const image = await tiff.getImage()
 
             const origin = image.getOrigin()
-            console.log('Origin', origin)
-            const data = (await image.readRasters())[0]
+            console.log('Origin:', origin)
 
-            const color = d3.scaleSequential(d3.extent(data), d3.interpolateMagma)
+            const data: number[] = (await image.readRasters())[0] as any
+            const extent: number[] = d3.extent(data) as any
+            const color = d3.scaleSequential(extent, d3.interpolateMagma)
 
             const m = image.getHeight()
             const n = image.getWidth()
@@ -36,9 +37,7 @@ export const Chart = () => {
                 .style('display', 'absolute')
                 .style('top', '0')
 
-            const contourData = contours(data)
-            for (let d of contourData) {
-                console.log(d)
+            for (let d of contours(data)) {
                 svg.append('path').attr('d', path(d)).attr('fill', color(d.value))
             }
         })()

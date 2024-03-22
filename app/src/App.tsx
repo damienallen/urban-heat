@@ -6,7 +6,7 @@ import { Map } from './Map'
 export const App = () => {
     return (
         <div className="app">
-            {/* <Chart /> */}
+            <Chart />
             <Map />
         </div>
     )
