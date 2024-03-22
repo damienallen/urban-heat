@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 
 import { fromUrl } from 'geotiff'
 
-export const Chart = () => {
+export const Contours = () => {
     const url = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
 
     const ref = useRef<HTMLInputElement>(null)
@@ -34,8 +34,9 @@ export const Chart = () => {
                 .attr('viewBox', `0 0 ${n} ${m}`)
                 .style('width', '100%')
                 .style('height', ' auto')
-                .style('display', 'absolute')
                 .style('top', '0')
+                .style('display', 'absolute')
+                .style('pointer-events', 'none')
 
             for (let d of contours(data)) {
                 svg.append('path').attr('d', path(d)).attr('fill', color(d.value))
