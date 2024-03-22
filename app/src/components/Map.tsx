@@ -1,5 +1,4 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
-import './Map.css'
 
 import { useEffect, useRef } from 'react'
 
@@ -24,7 +23,7 @@ export const Map = () => {
 
     return (
         <>
-            <div ref={mapContainer} className="map" />
+            <div ref={mapContainer} className="base-map" />
         </>
     )
 }

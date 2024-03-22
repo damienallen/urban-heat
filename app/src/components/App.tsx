@@ -1,5 +1,3 @@
-import './App.css'
-
 import { Contours } from './Contours'
 import { Map } from './Map'
 
