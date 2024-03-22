@@ -19,6 +19,10 @@ export const Map = () => {
             center: [4.478, 51.924],
             zoom: 10,
         })
+
+        // map.once('load', () => {
+        //     // This code runs once the base style has finished loading.
+        // })
     })
 
     return (

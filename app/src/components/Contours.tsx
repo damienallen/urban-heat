@@ -39,6 +39,7 @@ export const Contours = () => {
                 .style('pointer-events', 'none')
 
             for (let d of contours(data)) {
+                console.log(d)
                 svg.append('path').attr('d', path(d)).attr('fill', color(d.value))
             }
         })()
