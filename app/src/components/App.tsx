@@ -1,11 +1,9 @@
-import { Contours } from './Contours'
-import { Map } from './Map'
+import { MapCanvas } from './MapCanvas'
 
 export const App = () => {
     return (
         <div className="app">
-            <Contours />
-            <Map />
+            <MapCanvas />
         </div>
     )
 }
