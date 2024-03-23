@@ -7,7 +7,7 @@ import maplibregl from 'maplibre-gl'
 
 const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
 
-const mapStyleId = 'basic-v2' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
+const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 const API_KEY = 'bk2NyBkmsa6NdxDbxXvH'
 const baseMapStyleUrl = `https://api.maptiler.com/maps/${mapStyleId}/style.json?key=${API_KEY}`
 
@@ -31,7 +31,7 @@ export const MapCanvas = () => {
 
         const loadContours = async () => {
             console.log('Contouring max surface temperature raster')
-            const contourThresholds = linspace(36, 42, 2)
+            const contourThresholds = linspace(40, 50, 2)
             const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
 
             console.log(`Adding ${contours.length} contour layers to map`)
