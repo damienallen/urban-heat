@@ -4,7 +4,7 @@ const d3 = await Promise.all([import('d3-geo'), import('d3-geo-projection'), imp
     (d3) => Object.assign({}, ...d3)
 )
 
-export const getContours = async (url: string) => {
+export const getContours = async (url: string, thresholds: number[]) => {
     console.log(`Fetching url: ${url}`)
     const tiff = await fromUrl(url)
     const image = await tiff.getImage()
@@ -16,7 +16,7 @@ export const getContours = async (url: string) => {
     const h = image.getHeight()
     const w = image.getWidth()
 
-    const contourGenerator = d3.contours().size([w, h]).smooth(true).thresholds([20, 25, 30, 35])
+    const contourGenerator = d3.contours().size([w, h]).smooth(true).thresholds(thresholds)
 
     const projection = d3.geoTransform({
         point: function (x: number, y: number) {

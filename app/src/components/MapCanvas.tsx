@@ -24,7 +24,8 @@ export const MapCanvas = () => {
 
         const loadContours = async () => {
             console.log('Contouring max surface temperature raster')
-            const contours = await getContours(dataUrl)
+            const contourThresholds = [30, 35, 40, 45]
+            const contours = await getContours(dataUrl, contourThresholds)
 
             console.log(`Adding ${contours.length} contour layers to map`)
             for (let contourGeojson of contours) {
