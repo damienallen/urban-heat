@@ -1,9 +1,7 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-// import { contourWorker, getContours } from '../geometry/Contours'
 import { useEffect, useRef } from 'react'
 
-import { getContours } from '../geometry/Contours'
 import maplibregl from 'maplibre-gl'
 
 const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
@@ -20,6 +18,11 @@ const linspace = (start: number, stop: number, step: number) => {
     const num = Math.round((stop - start) / step) + 1
     return Array.from({ length: num }, (_, i) => start + step * i)
 }
+
+// worker instance
+export const contourWorker = new ComlinkWorker<typeof import('../geometry/worker')>(
+    new URL('../geometry/worker', import.meta.url)
+)
 
 export const MapCanvas = () => {
     const mapContainer = useRef(null)
@@ -38,8 +41,8 @@ export const MapCanvas = () => {
         const loadContours = async () => {
             console.log('Contouring max surface temperature raster')
             const contourThresholds = linspace(36, 42, 2)
-            const contours = await getContours(dataUrl, contourThresholds)
-            // const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
+            // const contours = await getContours(dataUrl, contourThresholds)
+            const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
 
             console.log(`Adding ${contours.length} contour layers to map`)
             for (let contourGeojson of contours) {
