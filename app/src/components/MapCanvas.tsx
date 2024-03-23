@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 import { getContours } from './Contours'
 import maplibregl from 'maplibre-gl'
 
-const dataUrl = 'https://sites.dallen.dev/urban-heat/wgs84/max_surface_temp_2023.tif'
+const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
 const API_KEY = 'bk2NyBkmsa6NdxDbxXvH'
 
 export const MapCanvas = () => {
@@ -37,8 +37,8 @@ export const MapCanvas = () => {
                     source: layerId,
                     layout: {},
                     paint: {
-                        'fill-color': '#088',
-                        'fill-opacity': 0.8,
+                        'fill-color': '#f00',
+                        'fill-opacity': 0.2,
                     },
                 })
             }

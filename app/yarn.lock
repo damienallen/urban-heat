@@ -407,34 +407,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@mapbox/extent@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@mapbox/extent/-/extent-0.4.0.tgz#3e591f32e1f0c3981c864239f7b0ac06e610f8a9"
-  integrity sha512-MSoKw3qPceGuupn04sdaJrFeLKvcSETVLZCGS8JA9x6zXQL3FWiKaIXYIZEDXd5jpXpWlRxinCZIN49yRy0C9A==
-
-"@mapbox/geojson-coords@0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@mapbox/geojson-coords/-/geojson-coords-0.0.2.tgz#f73d5744c832de0f05c48899f16a4288cefb2606"
-  integrity sha512-YuVzpseee/P1T5BWyeVVPppyfmuXYHFwZHmybkqaMfu4BWlOf2cmMGKj2Rr92MwfSTOCSUA0PAsVGRG8akY0rg==
-  dependencies:
-    "@mapbox/geojson-normalize" "0.0.1"
-    geojson-flatten "^1.0.4"
-
-"@mapbox/geojson-extent@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@mapbox/geojson-extent/-/geojson-extent-1.0.1.tgz#bd99a6b66ba98e63a29511c9cd1bbd1df4c1e203"
-  integrity sha512-hh8LEO3djT4fqfr8sSC6wKt+p0TMiu+KOLMBUiFOyj+zGq7+IXwQGl0ppCVDkyzCewyd9LoGe9zAvDxXrLfhLw==
-  dependencies:
-    "@mapbox/extent" "0.4.0"
-    "@mapbox/geojson-coords" "0.0.2"
-    rw "~0.1.4"
-    traverse "~0.6.6"
-
-"@mapbox/geojson-normalize@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@mapbox/geojson-normalize/-/geojson-normalize-0.0.1.tgz#1da1e6b3a7add3ad29909b30f438f60581b7cd80"
-  integrity sha512-82V7YHcle8lhgIGqEWwtXYN5cy0QM/OHq3ypGhQTbvHR57DF0vMHMjjVSQKFfVXBe/yWCBZTyOuzvK7DFFnx5Q==
-
 "@mapbox/geojson-rewind@^0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@mapbox/geojson-rewind/-/geojson-rewind-0.5.2.tgz#591a5d71a9cd1da1a0bf3420b3bea31b0fc7946a"
@@ -1668,11 +1640,6 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-geojson-flatten@^1.0.4:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/geojson-flatten/-/geojson-flatten-1.1.1.tgz#601aae07ba6406281ebca683573dcda69eba04c7"
-  integrity sha512-k/6BCd0qAt7vdqdM1LkLfAy72EsLDy0laNwX0x2h49vfYCiQkRc4PSra8DNEdJ10EKRpwEvDXMb0dBknTJuWpQ==
-
 geojson-vt@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/geojson-vt/-/geojson-vt-3.2.1.tgz#f8adb614d2c1d3f6ee7c4265cad4bbf3ad60c8b7"
@@ -2279,11 +2246,6 @@ rw@1, rw@^1.3.3:
   resolved "https://registry.yarnpkg.com/rw/-/rw-1.3.3.tgz#3f862dfa91ab766b14885ef4d01124bfda074fb4"
   integrity sha512-PdhdWy89SiZogBLaw42zdeqtRJ//zFd2PgQavcICDUgJT5oW10QCRKbJ6bg4r0/UY2M6BWd5tkxuGFRvCkgfHQ==
 
-rw@~0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/rw/-/rw-0.1.4.tgz#4903cbd80248ae0ede685bf58fd236a7a9b29a3e"
-  integrity sha512-vSj3D96kMcjNyqPcp65wBRIDImGSrUuMxngNNxvw8MQaO+aQ6llzRPH7XcJy5zrpb3wU++045+Uz/IDIM684iw==
-
 "safer-buffer@>= 2.1.2 < 3.0.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
@@ -2423,11 +2385,6 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
-
-traverse@~0.6.6:
-  version "0.6.8"
-  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.8.tgz#5e5e0c41878b57e4b73ad2f3d1e36a715ea4ab15"
-  integrity sha512-aXJDbk6SnumuaZSANd21XAo15ucCDE38H4fkqiGsc3MhCK+wOlZvLP9cB/TvpHT0mOyWgC4Z8EwRlzqYSUzdsA==
 
 ts-api-utils@^1.0.1:
   version "1.3.0"
