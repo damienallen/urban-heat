@@ -7,13 +7,9 @@ import maplibregl from 'maplibre-gl'
 
 const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
 
+const mapStyleId = 'basic-v2' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 const API_KEY = 'bk2NyBkmsa6NdxDbxXvH'
-// const baseMapStyleUrl = `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`
-// const baseMapStyleUrl = `https://api.maptiler.com/maps/satellite/style.json?key=${API_KEY}`
-const baseMapStyleUrl = `https://api.maptiler.com/maps/basic-v2/style.json?key=${API_KEY}`
-// const baseMapStyleUrl = `https://api.maptiler.com/maps/dataviz/style.json?key=${API_KEY}`
-// const baseMapStyleUrl = `https://api.maptiler.com/maps/bright-v2/style.json?key=${API_KEY}`
-// const baseMapStyleUrl = `https://api.maptiler.com/maps/topo-v2/style.json?key=${API_KEY}`
+const baseMapStyleUrl = `https://api.maptiler.com/maps/${mapStyleId}/style.json?key=${API_KEY}`
 
 const linspace = (start: number, stop: number, step: number) => {
     const num = Math.round((stop - start) / step) + 1
@@ -22,7 +18,6 @@ const linspace = (start: number, stop: number, step: number) => {
 
 export const MapCanvas = () => {
     const mapContainer = useRef(null)
-    const contourContainer = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         console.log('Initializing map...')
@@ -37,12 +32,10 @@ export const MapCanvas = () => {
         const loadContours = async () => {
             console.log('Contouring max surface temperature raster')
             const contourThresholds = linspace(36, 42, 2)
-            // const contours = await getContours(dataUrl, contourThresholds)
             const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
 
             console.log(`Adding ${contours.length} contour layers to map`)
             for (let contourGeojson of contours) {
-                console.log(contourGeojson)
                 const layerId = `contour-${contourGeojson.threshold}`
                 map.addSource(layerId, { type: 'geojson', data: contourGeojson })
                 map.addLayer({
@@ -66,7 +59,6 @@ export const MapCanvas = () => {
 
     return (
         <>
-            <div ref={contourContainer}></div>
             <div ref={mapContainer} className="base-map" />
         </>
     )
