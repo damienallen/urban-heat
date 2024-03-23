@@ -16,7 +16,7 @@ dst_crs = "EPSG:4326"
 # Find largest extent
 max_size = 0
 
-largest_src = {}
+source = {}
 largest_metadata = None
 
 for image_path in tqdm(clipped_images, desc="Finding largest extent"):
@@ -25,11 +25,11 @@ for image_path in tqdm(clipped_images, desc="Finding largest extent"):
         if (image_size := (src.height * src.width)) > max_size:
             max_size = image_size
 
-            largest_src["crs"] = src.crs
-            largest_src["bounds"] = src.bounds
-            largest_src["transform"] = src.transform
-            largest_src["width"] = src.width
-            largest_src["height"] = src.height
+            source["crs"] = src.crs
+            source["bounds"] = src.bounds
+            source["transform"] = src.transform
+            source["width"] = src.width
+            source["height"] = src.height
 
             largest_metadata = src.meta.copy()
             largest_metadata.update(
@@ -46,7 +46,7 @@ for image_path in tqdm(clipped_images, desc="Calculating max surface temp"):
     year = image_path.stem[17:21]
 
     with rasterio.open(image_path) as src:
-        window = rasterio.windows.from_bounds(*largest_src["bounds"], transform=src.transform)
+        window = rasterio.windows.from_bounds(*source["bounds"], transform=src.transform)
         surface_temp = src.read(window=window, boundless=True)
 
     if year not in max_surface_temp:
@@ -58,16 +58,18 @@ for image_path in tqdm(clipped_images, desc="Calculating max surface temp"):
 
 
 # Prepare for projection
-dst_transform, width, height = calculate_default_transform(
-    largest_src["crs"],
+dst_transform, dst_width, dst_height = calculate_default_transform(
+    source["crs"],
     dst_crs,
-    largest_src["width"],
-    largest_src["height"],
-    *largest_src["bounds"],
+    source["width"],
+    source["height"],
+    *source["bounds"],
 )
 
 dst_metadata = largest_metadata
-dst_metadata.update({"crs": dst_crs, "transform": dst_transform, "width": width, "height": height})
+dst_metadata.update(
+    {"crs": dst_crs, "transform": dst_transform, "width": dst_width, "height": dst_height}
+)
 
 # Export reprojected data
 annual_data_dir.mkdir(exist_ok=True)
@@ -75,16 +77,12 @@ for year, max_temp in tqdm(max_surface_temp.items(), desc="Writing surface temp"
     with rasterio.open(
         annual_data_dir / f"max_surface_temp_{year}.tif", "w", **dst_metadata
     ) as dst:
-        projected_max_temp = np.zeros_like(max_temp)
-
         reproject(
             source=max_temp,
-            destination=projected_max_temp,
-            src_transform=largest_src["transform"],
-            src_crs=largest_src["crs"],
+            destination=rasterio.band(dst, 1),
+            src_transform=source["transform"],
+            src_crs=source["crs"],
             dst_transform=dst_transform,
             dst_crs=dst_crs,
             resampling=Resampling.nearest,
         )
-
-        dst.write(projected_max_temp)
