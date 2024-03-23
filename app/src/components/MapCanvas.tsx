@@ -2,6 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 import { useEffect, useRef } from 'react'
 
+import { contourWorker } from '../geometry/workers'
 import maplibregl from 'maplibre-gl'
 
 const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
@@ -18,11 +19,6 @@ const linspace = (start: number, stop: number, step: number) => {
     const num = Math.round((stop - start) / step) + 1
     return Array.from({ length: num }, (_, i) => start + step * i)
 }
-
-// worker instance
-export const contourWorker = new ComlinkWorker<typeof import('../geometry/worker')>(
-    new URL('../geometry/worker', import.meta.url)
-)
 
 export const MapCanvas = () => {
     const mapContainer = useRef(null)
