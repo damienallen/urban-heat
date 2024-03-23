@@ -33,3 +33,8 @@ export const getContours = async (url: string, thresholds: number[]) => {
     }
     return projectedContours
 }
+
+// worker instance
+// export const contourWorker = new ComlinkWorker<typeof import('./worker')>(
+//     new URL('./worker', import.meta.url)
+// )
