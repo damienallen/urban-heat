@@ -8,10 +8,14 @@ import rasterio
 from rasterio.mask import mask
 from tqdm import tqdm
 
-NO_DATA = 0
-raw_data_dir = Path("data/raw")
+from processing import data_dir
 
-clipped_data_dir = Path("data/clipped")
+NO_DATA = 0
+
+# File handling
+raw_data_dir = data_dir / "raw"
+
+clipped_data_dir = data_dir / "clipped"
 rmtree(clipped_data_dir)
 clipped_data_dir.mkdir(exist_ok=True)
 
