@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - ./app/**
 
 jobs:
   build:
@@ -21,10 +19,12 @@ jobs:
 
       - name: Run install
         uses: borales/actions-yarn@v4
+        working-directory: ./app
         with:
           cmd: install
 
       - name: Build production bundle
         uses: borales/actions-yarn@v4
+        working-directory: ./app
         with:
           cmd: build
