@@ -1,4 +1,9 @@
-import { PiInfoDuotone, PiMagnifyingGlassDuotone, PiSlidersDuotone } from 'react-icons/pi'
+import {
+    PiInfoDuotone,
+    PiMagnifyingGlassDuotone,
+    PiSlidersDuotone,
+    PiStackSimpleDuotone,
+} from 'react-icons/pi'
 
 import { Search } from './Search'
 import { createUseStyles } from 'react-jss'
@@ -19,7 +24,7 @@ const useStyles = createUseStyles({
         zIndex: 500,
     },
     icon: {
-        margin: '0 4px',
+        margin: '0 8px',
         fontSize: '1.8em',
         color: '#666',
         flex: 1,
@@ -32,6 +37,7 @@ export const ActionBar = () => {
         <div className={classes.container}>
             <PiMagnifyingGlassDuotone className={classes.icon} />
             <Search />
+            <PiStackSimpleDuotone className={classes.icon} />
             <PiSlidersDuotone className={classes.icon} />
             <PiInfoDuotone className={classes.icon} />
         </div>

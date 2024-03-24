@@ -6,7 +6,7 @@ import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
 
-const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
+const dataUrl = 'https://sites.dallen.dev/urban-heat/zh/max_surface_temp_2023.tif'
 
 const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 const API_KEY = 'bk2NyBkmsa6NdxDbxXvH'
@@ -36,7 +36,7 @@ export const MapCanvas = () => {
         const map = new maplibregl.Map({
             container: mapContainer.current || '',
             style: baseMapStyleUrl,
-            center: [4.3, 51.92],
+            center: [4.478, 51.924],
             zoom: 11,
         })
 

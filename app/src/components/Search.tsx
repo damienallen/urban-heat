@@ -7,7 +7,7 @@ const useStyles = createUseStyles({
         color: '#333',
         outline: 'none',
         border: 'none',
-        paddingLeft: 8,
+        paddingLeft: 4,
         flex: 1,
     },
 })
