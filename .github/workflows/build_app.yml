@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        working-directory: ./app
 
       - name: Set Node.js 18.x
         uses: actions/setup-node@v3
@@ -19,12 +20,10 @@ jobs:
 
       - name: Run install
         uses: borales/actions-yarn@v4
-        working-directory: ./app
         with:
           cmd: install
 
       - name: Build production bundle
         uses: borales/actions-yarn@v4
-        working-directory: ./app
         with:
           cmd: build
