@@ -14,5 +14,5 @@ const useStyles = createUseStyles({
 
 export const Search = () => {
     const classes = useStyles()
-    return <input placeholder="Cities (Europe)" className={classes.input} />
+    return <input placeholder="Find a City" className={classes.input} />
 }
