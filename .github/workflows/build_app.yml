@@ -21,10 +21,10 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install
-          entryPoint: ./app
+          dir: ./app
 
       - name: Build production bundle
         uses: borales/actions-yarn@v4
         with:
           cmd: build
-          entryPoint: ./app
+          dir: ./app
