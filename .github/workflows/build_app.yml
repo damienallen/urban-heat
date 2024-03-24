@@ -17,15 +17,14 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Change working directory
-        run: cd app/
-
       - name: Run install
         uses: borales/actions-yarn@v4
         with:
           cmd: install
+          entryPoint: ./app
 
       - name: Build production bundle
         uses: borales/actions-yarn@v4
         with:
           cmd: build
+          entryPoint: ./app
