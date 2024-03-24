@@ -29,12 +29,11 @@ jobs:
           cmd: build
           dir: ./app
 
-      - name: Commit to build branch
+      - uses: actions/checkout@v3
+        name: Commit to build branch
         run: |
-          git config --global user.name 'Damien Allen'
-          git config --global user.email 'damienallen@users.noreply.github.com'
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git fetch
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git checkout build
           mv ./app/dist/ ./app/build/
           git add ./app/build/
