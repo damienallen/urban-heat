@@ -36,7 +36,7 @@ for image_path in raw_data_dir.glob("*.TIF"):
 images = sorted(images, key=lambda img: img["capture_date"])
 
 # Mask for clipping
-mask_path = Path("geometry/extent.gpkg")
+mask_path = data_dir / "zh_extent.gpkg"
 mask_gdf = gpd.read_file(mask_path)
 
 pbar = tqdm(images)
