@@ -28,3 +28,14 @@ jobs:
         with:
           cmd: build
           dir: ./app
+
+      - name: Commit to build branch
+        run: |
+          git config --global user.name 'Damien Allen'
+          git config --global user.email 'damienallen@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+          git checkout build
+          mv dist/ build/
+          git add build/
+          git commit -am "Updated distributables"
+          git push
