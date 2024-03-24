@@ -1,8 +1,8 @@
 {
-  "name": "heat-viz",
+  "name": "urban-heat",
   "homepage": "https://urbanheat.app",
   "private": true,
-  "version": "0.0.0",
+  "version": "2024.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
