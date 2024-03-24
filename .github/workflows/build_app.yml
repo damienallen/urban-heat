@@ -9,9 +9,12 @@ jobs:
   build:
     name: Build App
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./app
+
     steps:
       - uses: actions/checkout@v3
-        working-directory: ./app
 
       - name: Set Node.js 18.x
         uses: actions/setup-node@v3
