@@ -36,8 +36,8 @@ export const MapCanvas = () => {
         const map = new maplibregl.Map({
             container: mapContainer.current || '',
             style: baseMapStyleUrl,
-            center: [4.478, 51.924],
-            zoom: 10,
+            center: [4.3, 51.92],
+            zoom: 11,
         })
 
         const loadContours = async () => {
