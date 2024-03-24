@@ -8,5 +8,6 @@ export default defineConfig({
     plugins: [react(), comlink()],
     worker: {
         plugins: () => [comlink()],
+        format: 'es',
     },
 })

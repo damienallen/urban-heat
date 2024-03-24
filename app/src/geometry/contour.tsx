@@ -1,8 +1,7 @@
-import { fromUrl } from 'geotiff'
+import * as d3 from 'd3'
 
-const d3 = await Promise.all([import('d3-geo'), import('d3-geo-projection'), import('d3')]).then(
-    (d3) => Object.assign({}, ...d3)
-)
+import { fromUrl } from 'geotiff'
+import { geoProject } from 'd3-geo-projection'
 
 export const getContours = async (url: string, thresholds: number[]) => {
     console.log(`Fetching: ${url}`)
@@ -30,7 +29,7 @@ export const getContours = async (url: string, thresholds: number[]) => {
     let projectedContours = []
     const rawContours = contourGenerator(data)
     for (let contourGeojson of rawContours) {
-        let projectedGeojson = d3.geoProject(contourGeojson, projection)
+        let projectedGeojson = geoProject(contourGeojson, projection)
         projectedGeojson.threshold = contourGeojson.value
         projectedContours.push(projectedGeojson)
     }
