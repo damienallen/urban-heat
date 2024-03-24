@@ -8,6 +8,7 @@ const useStyles = createUseStyles({
         outline: 'none',
         border: 'none',
         paddingLeft: 8,
+        flex: 1,
     },
 })
 

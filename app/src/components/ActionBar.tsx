@@ -9,6 +9,7 @@ const useStyles = createUseStyles({
     container: {
         background: backgroundColor,
         position: 'absolute',
+        display: 'flex',
         top: 16,
         right: 24,
         padding: 8,
@@ -18,9 +19,10 @@ const useStyles = createUseStyles({
         zIndex: 500,
     },
     icon: {
-        margin: '4px 8px 0 8px',
-        fontSize: '1.4em',
+        margin: '0 4px',
+        fontSize: '1.8em',
         color: '#666',
+        flex: 1,
     },
 })
 
