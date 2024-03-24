@@ -12,6 +12,10 @@ const useStyles = createUseStyles({
         borderRadius: 16,
         userSelect: 'none',
         zIndex: 500,
+        '@media (max-width: 720px)': {
+            top: 8,
+            left: 8,
+        },
     },
     title: {
         fontSize: 42,
@@ -23,6 +27,7 @@ const useStyles = createUseStyles({
         textTransform: 'uppercase',
         color: titleColor,
         '-webkit-text-stroke': `${strokeWidth} ${strokeColor}`,
+        '@media (max-width: 720px)': { fontSize: 32 },
     },
 })
 
