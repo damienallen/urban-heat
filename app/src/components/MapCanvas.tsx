@@ -3,6 +3,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { useEffect, useRef } from 'react'
 
 import { contourWorker } from '../geometry/workers'
+import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
 
 const dataUrl = 'https://sites.dallen.dev/urban-heat/max_surface_temp_2023.tif'
@@ -11,6 +12,15 @@ const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | str
 const API_KEY = 'bk2NyBkmsa6NdxDbxXvH'
 const baseMapStyleUrl = `https://api.maptiler.com/maps/${mapStyleId}/style.json?key=${API_KEY}`
 
+const useStyles = createUseStyles({
+    map: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        zIndex: 100,
+    },
+})
+
 const linspace = (start: number, stop: number, step: number) => {
     const num = Math.round((stop - start) / step) + 1
     return Array.from({ length: num }, (_, i) => start + step * i)
@@ -18,6 +28,7 @@ const linspace = (start: number, stop: number, step: number) => {
 
 export const MapCanvas = () => {
     const mapContainer = useRef(null)
+    const classes = useStyles()
 
     useEffect(() => {
         console.log('Initializing map...')
@@ -59,7 +70,7 @@ export const MapCanvas = () => {
 
     return (
         <>
-            <div ref={mapContainer} className="base-map" />
+            <div ref={mapContainer} className={classes.map} />
         </>
     )
 }
