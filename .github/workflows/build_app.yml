@@ -31,8 +31,8 @@ jobs:
 
       - name: Commit to build branch
         run: |
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-          git config --global user.email '${{ env.GITHUB_ACTOR_ID }}+${{ env.GITHUB_ACTOR }}@users.noreply.github.com'
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
           git fetch
           git checkout build
