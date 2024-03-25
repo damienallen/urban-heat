@@ -29,14 +29,19 @@ jobs:
           cmd: build
           dir: ./app
 
+      - name: Move distributables
+        run: |
+          mv ./app/dist /dist
+          ls /dist
+
       - name: Commit to build branch
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
-          git fetch
-          git checkout build
-          mv ./app/dist/ ./app/build/
-          git add ./app/build/
-          git commit -am "Updated distributables"
+          git switch --orphan build
+          mv /dist/* .
+          ls
+          git add .
+          git commit -am "Created distributables"
           git push
