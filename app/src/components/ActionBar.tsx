@@ -9,7 +9,7 @@ import { Search } from './Search'
 import { Tooltip } from './Tooltip'
 import { createUseStyles } from 'react-jss'
 
-const containerBgColor = 'rgba(255, 255, 255, 0.9)'
+const containerBgColor = 'rgba(255, 255, 255, 0.8)'
 
 const useStyles = createUseStyles({
     container: {

@@ -1,6 +1,6 @@
 import { PiGearDuotone } from 'react-icons/pi'
 import { createUseStyles } from 'react-jss'
-const containerBgColor = 'rgba(255, 255, 255, 0.9)'
+const containerBgColor = 'rgba(255, 255, 255, 0.8)'
 
 const useStyles = createUseStyles({
     viewport: {
@@ -17,9 +17,11 @@ const useStyles = createUseStyles({
         background: containerBgColor,
         display: 'flex',
         alignItems: 'center',
-        fontSize: '1.2em',
+        justifyContent: 'center',
+        width: 240,
+        fontSize: '1.1em',
         color: '#333',
-        padding: 16,
+        padding: '32px 16px',
         border: '1px solid rgba(0, 0, 0, 0.2)',
         borderRadius: 8,
         userSelect: 'none',
@@ -37,14 +39,15 @@ const useStyles = createUseStyles({
 interface ProcessingStatusProps {
     text: string
 }
+
 export const ProcessingStatus = (props: ProcessingStatusProps) => {
     const classes = useStyles()
-    return (
+    return props.text ? (
         <div className={classes.viewport}>
             <div className={classes.status}>
                 <PiGearDuotone className={classes.icon} />
                 <span className={classes.text}>{props.text}</span>
             </div>
         </div>
-    )
+    ) : null
 }

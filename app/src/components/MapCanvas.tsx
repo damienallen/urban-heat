@@ -1,10 +1,11 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { ProcessingStatus } from './ProcessingStatus'
 import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
+import { linspace } from '../geometry/utils'
 import maplibregl from 'maplibre-gl'
 
 const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
@@ -23,13 +24,9 @@ const useStyles = createUseStyles({
     },
 })
 
-const linspace = (start: number, stop: number, step: number) => {
-    const num = Math.round((stop - start) / step) + 1
-    return Array.from({ length: num }, (_, i) => start + step * i)
-}
-
 export const MapCanvas = () => {
     const mapContainer = useRef(null)
+    const [statusText, setStatusText] = useState<string>('')
     const classes = useStyles()
 
     useEffect(() => {
@@ -43,11 +40,10 @@ export const MapCanvas = () => {
         })
 
         const loadContours = async () => {
-            console.log('Contouring max surface temperature raster')
+            setStatusText('Contouring raster...')
             const contourThresholds = linspace(44, 48, 2)
             const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
 
-            console.log(`Adding ${contours.length} contour layers to map`)
             for (let contourGeojson of contours) {
                 const layerId = `contour-${contourGeojson.threshold}`
                 map.addSource(layerId, { type: 'geojson', data: contourGeojson })
@@ -62,17 +58,19 @@ export const MapCanvas = () => {
                     },
                 })
             }
+
+            setStatusText('')
         }
 
         map.on('load', () => {
             console.log('Map loaded.')
             loadContours()
         })
-    })
+    }, [])
 
     return (
         <>
-            <ProcessingStatus text="Fetching LST raster..." />
+            <ProcessingStatus text={statusText} />
             <div ref={mapContainer} className={classes.map} />
         </>
     )
