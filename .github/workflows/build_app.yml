@@ -37,7 +37,6 @@ jobs:
           git switch --orphan build
           mv ./app/dist/* .
           rm -rf ./app
-          ls
           git add .
           git commit -am "Created distributables"
-          git push --set-upstream origin build
+          git push --force --set-upstream origin build
