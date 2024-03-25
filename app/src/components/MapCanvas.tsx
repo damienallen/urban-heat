@@ -43,7 +43,7 @@ export const MapCanvas = () => {
 
         const loadContours = async () => {
             console.log('Contouring max surface temperature raster')
-            const contourThresholds = linspace(40, 50, 2)
+            const contourThresholds = linspace(44, 48, 2)
             const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
 
             console.log(`Adding ${contours.length} contour layers to map`)
