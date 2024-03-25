@@ -21,3 +21,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(359deg); }
+}

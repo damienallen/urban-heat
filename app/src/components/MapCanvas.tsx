@@ -2,6 +2,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 import { useEffect, useRef } from 'react'
 
+import { ProcessingStatus } from './ProcessingStatus'
 import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
@@ -71,6 +72,7 @@ export const MapCanvas = () => {
 
     return (
         <>
+            <ProcessingStatus text="Fetching LST raster..." />
             <div ref={mapContainer} className={classes.map} />
         </>
     )
