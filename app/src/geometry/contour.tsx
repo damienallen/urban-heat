@@ -1,7 +1,9 @@
-import * as d3 from 'd3'
+import { contours, geoTransform } from 'd3'
 
 import { fromUrl } from 'geotiff'
 import { geoProject } from 'd3-geo-projection'
+
+const d3 = Object.assign({}, { contours, geoProject, geoTransform })
 
 export const getContours = async (url: string, thresholds: number[]) => {
     console.log(`Fetching: ${url}`)
