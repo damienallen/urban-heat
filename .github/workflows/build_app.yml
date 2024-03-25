@@ -31,7 +31,7 @@ jobs:
 
       - name: Commit to build branch
         run: |
-          mv ./app/dist /dist
+          mv ./app/dist ./dist
           ls ./dist
           git config user.name github-actions
           git config user.email github-actions@github.com
