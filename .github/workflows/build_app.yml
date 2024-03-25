@@ -36,8 +36,8 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
           git switch --orphan build
           mv ./app/dist/* .
-          ls
           rm -rf ./app
+          ls
           git add .
           git commit -am "Created distributables"
-          git push
+          git push --set-upstream origin build
