@@ -8,6 +8,11 @@ export default defineConfig({
     plugins: [react(), comlink()],
     worker: {
         plugins: () => [comlink()],
-        format: 'es',
+        rollupOptions: {
+            output: {
+                format: 'iife',
+                inlineDynamicImports: true,
+            },
+        },
     },
 })
