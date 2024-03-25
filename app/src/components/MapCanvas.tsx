@@ -6,11 +6,12 @@ import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
 
-const dataUrl = 'https://sites.dallen.dev/urban-heat/zh/max_surface_temp_2023.tif'
-
 const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
-const API_KEY = 'bk2NyBkmsa6NdxDbxXvH'
+
+const API_KEY = 'bk2NyBkmsa6NdxDbxXvH' // TODO: reset and protect origins for key
 const baseMapStyleUrl = `https://api.maptiler.com/maps/${mapStyleId}/style.json?key=${API_KEY}`
+
+const dataUrl = 'https://sites.dallen.dev/urban-heat/zh/max_surface_temp_2023.tif'
 
 const useStyles = createUseStyles({
     map: {

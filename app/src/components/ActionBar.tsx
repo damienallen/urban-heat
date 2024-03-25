@@ -1,10 +1,11 @@
 import {
+    PiBuildingsDuotone,
     PiInfoDuotone,
-    PiMagnifyingGlassDuotone,
     PiSlidersDuotone,
     PiStackSimpleDuotone,
 } from 'react-icons/pi'
 
+import { PropsWithChildren } from 'react'
 import { Search } from './Search'
 import { createUseStyles } from 'react-jss'
 
@@ -29,13 +30,24 @@ const useStyles = createUseStyles({
         color: '#666',
         flex: 1,
     },
+    button: {
+        background: 'hotPink',
+    },
 })
+
+export const IconButton = (props: PropsWithChildren) => {
+    const classes = useStyles()
+    return <div className={classes.button}>{props.children}</div>
+}
 
 export const ActionBar = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
-            <PiMagnifyingGlassDuotone className={classes.icon} />
+            <PiBuildingsDuotone className={classes.icon} />
+            {/* <IconButton>
+                <PiBuildingsDuotone className={classes.icon} />
+            </IconButton> */}
             <Search />
             <PiStackSimpleDuotone className={classes.icon} />
             <PiSlidersDuotone className={classes.icon} />
