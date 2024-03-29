@@ -17,6 +17,8 @@
     "d3-geo-projection": "^4.0",
     "geotiff": "^2.1",
     "maplibre-gl": "^4.1",
+    "mobx": "^6.12.3",
+    "mobx-react": "^9.1.1",
     "react": "^18.2",
     "react-dom": "^18.2",
     "react-icons": "^5.0",
