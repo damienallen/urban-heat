@@ -37,7 +37,7 @@ export const MapCanvas = () => {
             container: mapContainer.current || '',
             style: baseMapStyleUrl,
             center: [4.478, 51.924],
-            zoom: 11,
+            zoom: 10,
         })
 
         const loadContours = async () => {

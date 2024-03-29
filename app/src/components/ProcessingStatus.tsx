@@ -14,7 +14,7 @@ const useStyles = createUseStyles({
         padding: '0 8px',
     },
     icon: {
-        fontSize: '1.4em',
+        fontSize: '1.8em',
         flex: 1,
     },
     spin: {

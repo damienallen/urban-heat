@@ -27,19 +27,21 @@ const useStyles = createUseStyles({
             opacity: 0,
             transition: 'opacity 0.5s',
         },
-        '& .tooltip-text::after': {
-            content: '" "',
-            position: 'absolute',
-            bottom: '100%',
-            left: '50%',
-            marginLeft: -5,
-            borderWidth: 5,
-            borderStyle: 'solid',
-            borderColor: `transparent transparent ${tooltipBgColor} transparent`,
-        },
-        '&:hover .tooltip-text': {
-            visibility: 'visible',
-            opacity: 1,
+        '@media (min-width: 720px)': {
+            '& .tooltip-text::after': {
+                content: '" "',
+                position: 'absolute',
+                bottom: '100%',
+                left: '50%',
+                marginLeft: -5,
+                borderWidth: 5,
+                borderStyle: 'solid',
+                borderColor: `transparent transparent ${tooltipBgColor} transparent`,
+            },
+            '&:hover .tooltip-text': {
+                visibility: 'visible',
+                opacity: 1,
+            },
         },
     },
 })
