@@ -22,6 +22,7 @@ const useStyles = createUseStyles({
         background: containerBgColor,
         position: 'absolute',
         display: 'flex',
+        width: 420,
         margin: 16,
         padding: 8,
         border: '1px solid rgba(0, 0, 0, 0.2)',

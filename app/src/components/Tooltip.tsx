@@ -8,6 +8,7 @@ const useStyles = createUseStyles({
     tooltip: {
         position: 'relative',
         display: 'flex',
+        flex: 0,
         '& .tooltip-text': {
             visibility: 'hidden',
             width: tooltipWidth,
