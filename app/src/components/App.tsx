@@ -9,9 +9,18 @@ const useStyles = createUseStyles({
         top: 0,
         margin: 0,
         padding: 0,
-        height: '100%',
-        width: '100%',
+        height: '100dvh',
+        width: '100vw',
         position: 'absolute',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        '@media (max-width: 720px)': {
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+        },
     },
 })
 
