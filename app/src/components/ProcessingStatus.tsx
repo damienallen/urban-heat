@@ -1,53 +1,38 @@
-import { PiGearDuotone } from 'react-icons/pi'
+import { PiBuildingsDuotone, PiGearDuotone } from 'react-icons/pi'
+
 import { createUseStyles } from 'react-jss'
-const containerBgColor = 'rgba(255, 255, 255, 0.8)'
+import { observer } from 'mobx-react'
+import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
-    viewport: {
-        position: 'absolute',
+    container: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-    },
-    status: {
-        background: containerBgColor,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 240,
-        fontSize: '1.1em',
-        color: '#333',
-        padding: '32px 16px',
-        border: '1px solid rgba(0, 0, 0, 0.2)',
-        borderRadius: 8,
         userSelect: 'none',
-        zIndex: 500,
+        color: '#666',
+        padding: '0 8px',
     },
     icon: {
         fontSize: '1.4em',
-        animation: 'spin 5s linear infinite',
+        flex: 1,
     },
-    text: {
-        marginLeft: 8,
+    spin: {
+        animation: 'spin 5s linear infinite',
     },
 })
 
-interface ProcessingStatusProps {
-    text: string
-}
-
-export const ProcessingStatus = (props: ProcessingStatusProps) => {
+export const ProcessingStatus = observer(() => {
+    const { app } = useStores()
     const classes = useStyles()
-    return props.text ? (
-        <div className={classes.viewport}>
-            <div className={classes.status}>
-                <PiGearDuotone className={classes.icon} />
-                <span className={classes.text}>{props.text}</span>
-            </div>
+
+    return (
+        <div className={classes.container}>
+            {app.isContouring ? (
+                <PiGearDuotone className={`${classes.icon} ${classes.spin}`} />
+            ) : (
+                <PiBuildingsDuotone className={classes.icon} />
+            )}
         </div>
-    ) : null
-}
+    )
+})

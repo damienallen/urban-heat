@@ -1,4 +1,5 @@
 import { createUseStyles } from 'react-jss'
+import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     input: {
@@ -13,6 +14,7 @@ const useStyles = createUseStyles({
 })
 
 export const Search = () => {
+    const { app } = useStores()
     const classes = useStyles()
-    return <input placeholder="Find a City" className={classes.input} />
+    return <input placeholder={`${app.city}, ${app.country}`} className={classes.input} />
 }

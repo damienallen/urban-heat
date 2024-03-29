@@ -1,12 +1,12 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
-import { ProcessingStatus } from './ProcessingStatus'
 import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
 import { linspace } from '../geometry/utils'
 import maplibregl from 'maplibre-gl'
+import { useStores } from '../stores'
 
 const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 
@@ -26,7 +26,8 @@ const useStyles = createUseStyles({
 
 export const MapCanvas = () => {
     const mapContainer = useRef(null)
-    const [statusText, setStatusText] = useState<string>('')
+
+    const { app } = useStores()
     const classes = useStyles()
 
     useEffect(() => {
@@ -40,7 +41,6 @@ export const MapCanvas = () => {
         })
 
         const loadContours = async () => {
-            setStatusText('Contouring raster...')
             const contourThresholds = linspace(44, 48, 2)
             const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
 
@@ -59,18 +59,18 @@ export const MapCanvas = () => {
                 })
             }
 
-            setStatusText('')
+            app.setIsContouring(false)
         }
 
         map.on('load', () => {
             console.log('Map loaded.')
+            app.setIsContouring(true)
             loadContours()
         })
     }, [])
 
     return (
         <>
-            <ProcessingStatus text={statusText} />
             <div ref={mapContainer} className={classes.map} />
         </>
     )

@@ -1,5 +1,6 @@
 import { ActionBar } from './ActionBar'
 import { MapCanvas } from './MapCanvas'
+import { StoreProvider } from '../stores'
 import { Title } from './Title'
 import { createUseStyles } from 'react-jss'
 
@@ -17,10 +18,12 @@ const useStyles = createUseStyles({
 export const App = () => {
     const classes = useStyles()
     return (
-        <div className={classes.app}>
-            <Title />
-            <ActionBar />
-            <MapCanvas />
-        </div>
+        <StoreProvider>
+            <div className={classes.app}>
+                <Title />
+                <ActionBar />
+                <MapCanvas />
+            </div>
+        </StoreProvider>
     )
 }
