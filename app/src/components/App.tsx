@@ -19,7 +19,7 @@ const useStyles = createUseStyles({
         '@media (max-width: 720px)': {
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
         },
     },
 })
