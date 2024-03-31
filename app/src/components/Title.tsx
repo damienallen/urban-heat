@@ -32,10 +32,7 @@ export const Title = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
-            <div className={classes.title}>
-                Urban <br />
-                Heat
-            </div>
+            <div className={classes.title}>Urban Heat</div>
         </div>
     )
 }

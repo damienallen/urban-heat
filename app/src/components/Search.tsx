@@ -12,6 +12,9 @@ const useStyles = createUseStyles({
         outline: 'none',
         border: 'none',
         width: '100%',
+        '@media (max-width: 720px)': {
+            fontSize: '1.4em',
+        },
     },
 })
 

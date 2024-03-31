@@ -9,6 +9,7 @@ const useStyles = createUseStyles({
     container: {
         background: '#fff',
         display: 'flex',
+        alignItems: 'center',
         flex: '0 1',
         width: '100vw',
         padding: '8px 0',
@@ -30,6 +31,9 @@ const useStyles = createUseStyles({
         color: '#666',
         flex: 1,
         cursor: 'pointer',
+        '@media (max-width: 720px)': {
+            fontSize: '1.6em',
+        },
     },
 })
 
@@ -39,14 +43,14 @@ export const ActionBar = () => {
         <div className={classes.container}>
             <ProcessingStatus />
             <Search />
+            <Tooltip text="About">
+                <PiInfoDuotone className={classes.icon} />
+            </Tooltip>
             <Tooltip text="Base Map">
                 <PiStackSimpleDuotone className={classes.icon} />
             </Tooltip>
             <Tooltip text="Settings">
                 <PiSlidersDuotone className={classes.icon} />
-            </Tooltip>
-            <Tooltip text="About UH">
-                <PiInfoDuotone className={classes.icon} />
             </Tooltip>
         </div>
     )

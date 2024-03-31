@@ -16,6 +16,9 @@ const useStyles = createUseStyles({
     icon: {
         fontSize: '1.8em',
         flex: 1,
+        '@media (max-width: 720px)': {
+            fontSize: '1.6em',
+        },
     },
     spin: {
         animation: 'spin 5s linear infinite',
