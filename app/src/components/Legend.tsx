@@ -1,7 +1,4 @@
-import { PiInfoDuotone, PiStackSimpleDuotone } from 'react-icons/pi'
-
-import { ProcessingStatus } from './ProcessingStatus'
-import { Search } from './Search'
+import { PiSlidersDuotone } from 'react-icons/pi'
 import { Tooltip } from './Tooltip'
 import { createUseStyles } from 'react-jss'
 
@@ -20,6 +17,7 @@ const useStyles = createUseStyles({
             flex: '0 1 420px',
             margin: 16,
             padding: 8,
+            background: 'rgba(255, 255, 255, 0.8)',
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
         },
@@ -36,17 +34,12 @@ const useStyles = createUseStyles({
     },
 })
 
-export const ActionBar = () => {
+export const Legend = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
-            <ProcessingStatus />
-            <Search />
-            <Tooltip text="Base Map">
-                <PiStackSimpleDuotone className={classes.icon} />
-            </Tooltip>
-            <Tooltip text="About">
-                <PiInfoDuotone className={classes.icon} />
+            <Tooltip text="Settings">
+                <PiSlidersDuotone className={classes.icon} />
             </Tooltip>
         </div>
     )

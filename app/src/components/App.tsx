@@ -1,4 +1,8 @@
+import '@mantine/core/styles.css'
+
 import { ActionBar } from './ActionBar'
+import { Legend } from './Legend'
+import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
 import { StoreProvider } from '../stores'
 import { Title } from './Title'
@@ -13,8 +17,7 @@ const useStyles = createUseStyles({
         width: '100vw',
         position: 'absolute',
         display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         '@media (max-width: 720px)': {
             flexDirection: 'column',
@@ -22,17 +25,41 @@ const useStyles = createUseStyles({
             justifyContent: 'flex-end',
         },
     },
+    row: {
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        '@media (max-width: 720px)': {
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+        },
+    },
+    top: {
+        alignItems: 'flex-start',
+    },
+    bottom: {
+        alignItems: 'flex-end',
+    },
 })
 
 export const App = () => {
     const classes = useStyles()
     return (
         <StoreProvider>
-            <div className={classes.app}>
-                <Title />
-                <ActionBar />
-                <MapCanvas />
-            </div>
+            <MantineProvider>
+                <div className={classes.app}>
+                    <div className={`${classes.row} ${classes.top}`}>
+                        <Title />
+                        <ActionBar />
+                    </div>
+                    <div className={`${classes.row} ${classes.bottom}`}>
+                        <Legend />
+                    </div>
+                    <MapCanvas />
+                </div>
+            </MantineProvider>
         </StoreProvider>
     )
 }
