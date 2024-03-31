@@ -1,4 +1,5 @@
 import { createUseStyles } from 'react-jss'
+import { observer } from 'mobx-react'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
@@ -18,7 +19,7 @@ const useStyles = createUseStyles({
     },
 })
 
-export const Search = () => {
+export const Search = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
     return (
@@ -26,4 +27,4 @@ export const Search = () => {
             <input placeholder={`${app.city}, ${app.country}`} className={classes.input} />
         </div>
     )
-}
+})

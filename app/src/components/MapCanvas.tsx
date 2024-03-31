@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react'
 
 import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
-import { linspace } from '../geometry/utils'
 import maplibregl from 'maplibre-gl'
 import { useStores } from '../stores'
 
@@ -41,8 +40,7 @@ export const MapCanvas = () => {
         })
 
         const loadContours = async () => {
-            const contourThresholds = linspace(44, 48, 2)
-            const contours = await contourWorker.startContouring(dataUrl, contourThresholds)
+            const contours = await contourWorker.startContouring(dataUrl, app.contourThresholds)
 
             for (let contourGeojson of contours) {
                 const layerId = `contour-${contourGeojson.threshold}`

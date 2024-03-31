@@ -1,4 +1,5 @@
 import React from 'react'
+import { linspace } from './geometry/utils'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
 
@@ -16,7 +17,12 @@ export class AppStore {
     public version: string = packageJson.version
     public city: string = 'Rotterdam'
     public country: string = 'NL'
+
     public isContouring: boolean = true
+
+    public contourStart: number = 44
+    public contourEnd: number = 48
+    public contourStep: number = 2
 
     setCity = (value: string) => {
         this.city = value
@@ -30,16 +36,20 @@ export class AppStore {
         this.isContouring = value
     }
 
+    get contourThresholds() {
+        return linspace(this.contourStart, this.contourEnd, this.contourStep)
+    }
+
     constructor(public root: Store) {
         makeAutoObservable(this, {}, { autoBind: true })
     }
 }
 
 export class UIStore {
-    public isContouring: boolean = true
+    public showControls: boolean = false
 
-    setIsContouring = (value: boolean) => {
-        this.isContouring = value
+    setShowControls = (value: boolean) => {
+        this.showControls = value
     }
 
     constructor(public root: Store) {
