@@ -11,6 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mantine/core": "^7.7.1",
+    "@mantine/hooks": "^7.7.1",
+    "@mantine/modals": "^7.7.1",
+    "@mantine/notifications": "^7.7.1",
+    "@mantine/spotlight": "^7.7.1",
     "comlink": "^4.4",
     "d3": "^7.9",
     "d3-contour": "^4.0",

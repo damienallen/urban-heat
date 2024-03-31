@@ -20,7 +20,6 @@ const useStyles = createUseStyles({
             flex: '0 1 420px',
             margin: 16,
             padding: 8,
-            background: 'rgba(255, 255, 255, 0.8)',
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
         },

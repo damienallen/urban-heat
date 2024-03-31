@@ -4,9 +4,11 @@ import packageJson from '../package.json'
 
 export class Store {
     public app: AppStore
+    public ui: UIStore
 
     constructor() {
         this.app = new AppStore(this)
+        this.ui = new UIStore(this)
     }
 }
 
@@ -23,6 +25,18 @@ export class AppStore {
     setCountry = (value: string) => {
         this.country = value
     }
+
+    setIsContouring = (value: boolean) => {
+        this.isContouring = value
+    }
+
+    constructor(public root: Store) {
+        makeAutoObservable(this, {}, { autoBind: true })
+    }
+}
+
+export class UIStore {
+    public isContouring: boolean = true
 
     setIsContouring = (value: boolean) => {
         this.isContouring = value
