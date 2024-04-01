@@ -8,6 +8,9 @@ const useStyles = createUseStyles({
         display: 'flex',
         flex: 1,
     },
+    label: {
+        marginRight: 8,
+    },
 })
 
 export const ControlsPanel = observer(() => {
@@ -18,11 +21,14 @@ export const ControlsPanel = observer(() => {
 
     return (
         <div className={classes.container}>
-            <div>Selected Year</div>
+            <div className={classes.label}>Selected Year</div>
             <NativeSelect
                 value={app.selectedYear}
-                onChange={(e: React.ChangeEvent) => app.setSelectedYear(e.currentTarget.value)}
+                onChange={(e: React.ChangeEvent) =>
+                    app.setSelectedYear((e.currentTarget as HTMLInputElement).value)
+                }
                 data={app.availableYears.map(String)}
+                disabled={app.disableControls}
             />
         </div>
     )

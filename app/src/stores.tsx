@@ -46,6 +46,10 @@ export class AppStore {
         return linspace(this.contourStart, this.contourEnd, this.contourStep)
     }
 
+    get disableControls() {
+        return this.isContouring
+    }
+
     constructor(public root: Store) {
         makeAutoObservable(this, {}, { autoBind: true })
     }
