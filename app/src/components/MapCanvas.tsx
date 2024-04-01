@@ -82,9 +82,8 @@ export const MapCanvas = observer(() => {
             style: baseMapStyleUrl,
             center: [4.478, 51.924],
             zoom: 10,
-        })
-
-        map.current.on('load', () => {
+        }) as any
+        ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
             loadContours(app.contourThresholds)
         })
