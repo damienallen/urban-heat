@@ -59,11 +59,11 @@ export const MapCanvas = observer(() => {
             }
 
             app.setIsContouring(false)
-            console.log('Contour lays added.')
+            console.log(`${contours.length} contour layers added`)
         }
 
         map.on('load', () => {
-            console.log('Map loaded.')
+            console.log('Map loaded successfully')
             app.setIsContouring(true)
             loadContours()
         })

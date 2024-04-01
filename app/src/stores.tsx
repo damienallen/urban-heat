@@ -50,8 +50,8 @@ export class AppStore {
 export class UIStore {
     public showControls: boolean = false
 
-    setShowControls = (value: boolean) => {
-        this.showControls = value
+    toggleShowControls = () => {
+        this.showControls = !this.showControls
     }
 
     constructor(public root: Store) {
