@@ -59,6 +59,7 @@ export const MapCanvas = observer(() => {
             }
 
             app.setIsContouring(false)
+            console.log('Contour lays added.')
         }
 
         map.on('load', () => {

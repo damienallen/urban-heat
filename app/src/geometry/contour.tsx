@@ -13,23 +13,23 @@ export const getContours = async (url: string, thresholds: number[]) => {
     const [oX, oY] = image.getOrigin()
     const [rX, rY] = image.getResolution()
 
-    console.log('Reading raster data...')
+    console.log('Parsing raster data')
     const data: number[] = (await image.readRasters())[0] as any
     const h = image.getHeight()
     const w = image.getWidth()
 
-    console.log(`Contouring (${thresholds})...`)
+    console.log(`Contouring thresholds: ${thresholds}`)
     const contourGenerator = d3.contours().size([w, h]).smooth(true).thresholds(thresholds)
+    const rawContours = contourGenerator(data)
 
+    console.log('Projecting contours to WGS84')
     const projection = d3.geoTransform({
         point: function (x: number, y: number) {
             this.stream.point(oX + x * rX, oY + y * rY)
         },
     })
 
-    console.log('Projecting contours to WGS84...')
     let projectedContours = []
-    const rawContours = contourGenerator(data)
     for (let contourGeojson of rawContours) {
         let projectedGeojson = geoProject(contourGeojson, projection)
         projectedGeojson.threshold = contourGeojson.value
