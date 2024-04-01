@@ -18,8 +18,10 @@ export class AppStore {
     public city: string = 'Rotterdam'
     public country: string = 'NL'
 
-    public isContouring: boolean = true
+    public selectedYear: number = 2023
+    public availableYears: number[] = linspace(2013, 2023, 1)
 
+    public isContouring: boolean = true
     public contourStart: number = 44
     public contourEnd: number = 48
     public contourStep: number = 2

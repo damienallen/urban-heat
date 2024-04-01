@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css'
 
 import { ActionBar } from './ActionBar'
-import { Legend } from './Legend'
+import { Controls } from './Controls'
 import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
 import { StoreProvider } from '../stores'
@@ -55,7 +55,7 @@ export const App = () => {
                         <ActionBar />
                     </div>
                     <div className={`${classes.row} ${classes.bottom}`}>
-                        <Legend />
+                        <Controls />
                     </div>
                     <MapCanvas />
                 </div>

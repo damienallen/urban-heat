@@ -5,14 +5,13 @@ import { useEffect, useRef } from 'react'
 import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
+import { observer } from 'mobx-react'
 import { useStores } from '../stores'
 
 const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 
 const API_KEY = 'bk2NyBkmsa6NdxDbxXvH' // TODO: reset and protect origins for key
 const baseMapStyleUrl = `https://api.maptiler.com/maps/${mapStyleId}/style.json?key=${API_KEY}`
-
-const dataUrl = 'https://sites.dallen.dev/urban-heat/zh/max_surface_temp_2023.tif'
 
 const useStyles = createUseStyles({
     map: {
@@ -23,11 +22,13 @@ const useStyles = createUseStyles({
     },
 })
 
-export const MapCanvas = () => {
+export const MapCanvas = observer(() => {
     const mapContainer = useRef(null)
 
     const { app } = useStores()
     const classes = useStyles()
+
+    const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${app.selectedYear}.tif`
 
     useEffect(() => {
         console.log('Initializing map...')
@@ -72,4 +73,4 @@ export const MapCanvas = () => {
             <div ref={mapContainer} className={classes.map} />
         </>
     )
-}
+})

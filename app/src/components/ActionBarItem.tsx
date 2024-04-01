@@ -13,6 +13,7 @@ const useStyles = createUseStyles({
         fontSize: '1.8em',
         color: '#666',
         flex: 0,
+        display: 'flex',
         cursor: 'pointer',
         '@media (max-width: 720px)': {
             fontSize: '1.6em',

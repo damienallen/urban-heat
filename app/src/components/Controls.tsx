@@ -23,7 +23,8 @@ const useStyles = createUseStyles({
     icon: {
         fontSize: '1.8em',
         color: '#666',
-        flex: '0 0 32px',
+        flex: 0,
+        display: 'flex',
         cursor: 'pointer',
         '@media (max-width: 720px)': {
             fontSize: '1.6em',
@@ -51,7 +52,7 @@ const useStyles = createUseStyles({
     },
 })
 
-export const LegendItems = observer(() => {
+export const Legend = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
 
@@ -68,14 +69,16 @@ export const LegendItems = observer(() => {
     return <div className={classes.items}>{items}</div>
 })
 
-export const Legend = () => {
+export const Controls = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
-            <Tooltip label="Parameter Controls">
-                <PiSlidersDuotone className={classes.icon} />
+            <Tooltip label="Controls">
+                <span className={classes.icon}>
+                    <PiSlidersDuotone />
+                </span>
             </Tooltip>
-            <LegendItems />
+            <Legend />
         </div>
     )
 }
