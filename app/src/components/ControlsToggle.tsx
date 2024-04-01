@@ -1,5 +1,5 @@
-import { PiSlidersDuotone } from 'react-icons/pi'
-import { Tooltip } from '@mantine/core'
+import { PiCaretDoubleDownDuotone, PiSlidersDuotone } from 'react-icons/pi'
+
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -10,6 +10,7 @@ const useStyles = createUseStyles({
         color: '#666',
         flex: 0,
         display: 'flex',
+        alignItems: 'flex-end',
         cursor: 'pointer',
         '@media (max-width: 720px)': {
             fontSize: '1.6em',
@@ -24,10 +25,8 @@ export const ControlsToggle = observer(() => {
     console.log('Show controls:', ui.showControls)
 
     return (
-        <Tooltip label={ui.showControls ? 'Hide Controls' : 'Show Controls'}>
-            <span className={classes.icon} onClick={ui.toggleShowControls}>
-                <PiSlidersDuotone />
-            </span>
-        </Tooltip>
+        <span className={classes.icon} onClick={ui.toggleShowControls}>
+            {ui.showControls ? <PiCaretDoubleDownDuotone /> : <PiSlidersDuotone />}
+        </span>
     )
 })
