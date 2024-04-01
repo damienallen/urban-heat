@@ -25,10 +25,9 @@ const useStyles = createUseStyles({
 })
 
 export const Controls = observer(() => {
-    const { app, ui } = useStores()
+    const { ui } = useStores()
     const classes = useStyles()
 
-    console.log('Year:', app.selectedYear)
     return (
         <div className={classes.container}>
             <ControlsToggle />

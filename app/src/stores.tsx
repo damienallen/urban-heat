@@ -34,6 +34,10 @@ export class AppStore {
         this.country = value
     }
 
+    setSelectedYear = (value: string) => {
+        this.selectedYear = Number(value)
+    }
+
     setIsContouring = (value: boolean) => {
         this.isContouring = value
     }

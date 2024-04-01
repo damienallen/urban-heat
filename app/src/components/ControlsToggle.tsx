@@ -22,8 +22,6 @@ export const ControlsToggle = observer(() => {
     const { ui } = useStores()
     const classes = useStyles()
 
-    console.log('Show controls:', ui.showControls)
-
     return (
         <span className={classes.icon} onClick={ui.toggleShowControls}>
             {ui.showControls ? <PiCaretDoubleDownDuotone /> : <PiSlidersDuotone />}
