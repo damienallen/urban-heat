@@ -1,4 +1,5 @@
 import { PiSlidersDuotone } from 'react-icons/pi'
+import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -10,7 +11,7 @@ const useStyles = createUseStyles({
         padding: '8px 0',
         borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         userSelect: 'none',
-        zIndex: 400,
+        zIndex: 300,
         '@media (min-width: 720px)': {
             flex: 0,
             margin: 16,
@@ -71,7 +72,9 @@ export const Legend = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
-            <PiSlidersDuotone className={classes.icon} />
+            <Tooltip label="Parameter Controls">
+                <PiSlidersDuotone className={classes.icon} />
+            </Tooltip>
             <LegendItems />
         </div>
     )
