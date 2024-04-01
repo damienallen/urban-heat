@@ -25,6 +25,8 @@ export class AppStore {
     public isContouring: boolean = true
     public contourRange: RangeSliderValue = [40, 48]
     public contourStep: number = 4
+    public minThreshold: number = 20
+    public maxThreshold: number = 50
 
     public baseMapId: string = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 
