@@ -4,7 +4,7 @@ import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     items: {
-        margin: '0 8px 0 16px',
+        margin: '0 8px 0 24px',
         display: 'flex',
         flex: 1,
         gap: 16,

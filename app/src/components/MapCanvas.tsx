@@ -8,11 +8,6 @@ import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
 
-const mapStyleId = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
-
-const API_KEY = 'bk2NyBkmsa6NdxDbxXvH' // TODO: reset and protect origins for key
-const baseMapStyleUrl = `https://api.maptiler.com/maps/${mapStyleId}/style.json?key=${API_KEY}`
-
 const useStyles = createUseStyles({
     map: {
         position: 'absolute',
@@ -26,45 +21,64 @@ export const MapCanvas = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
 
-    const map = useRef<maplibregl.Map>(null)
+    const mapContainer = useRef(null)
+    const map = useRef(null)
+
     const [renderedYear, setRenderedYear] = useState<number>(app.selectedYear)
+    const [layerIds, setLayerIds] = useState<string[]>([])
 
     const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${app.selectedYear}.tif`
 
-    const loadContours = async () => {
-        setRenderedYear(app.selectedYear)
-        app.setIsContouring(true)
-        const contours = await contourWorker.startContouring(dataUrl, app.contourThresholds)
+    // TODO: reset and protect origins for key
+    const baseMapStyleUrl = `https://api.maptiler.com/maps/${app.baseMapId}/style.json?key=bk2NyBkmsa6NdxDbxXvH`
 
-        for (let contourGeojson of contours) {
-            const layerId = `contour-${contourGeojson.threshold}`
+    const loadContours = async (thresholds: number[]) => {
+        if (map.current) {
+            const currentMap: maplibregl.Map = map.current
+            setRenderedYear(app.selectedYear)
+            app.setIsContouring(true)
 
-            ;(map.current as maplibregl.Map).addSource(layerId, {
-                type: 'geojson',
-                data: contourGeojson,
-            })
-            ;(map.current as maplibregl.Map).addLayer({
-                id: layerId,
-                type: 'fill',
-                source: layerId,
-                layout: {},
-                paint: {
-                    'fill-color': '#f00',
-                    'fill-opacity': 0.2,
-                },
-            })
+            // Remove existing layers and sources
+            for (let id of layerIds) {
+                currentMap.removeLayer(id)
+                currentMap.removeSource(id)
+            }
+
+            let idList = []
+            const contours = await contourWorker.startContouring(dataUrl, thresholds)
+
+            for (let contourGeojson of contours) {
+                const layerId = `contour-${contourGeojson.threshold}`
+                idList.push(layerId)
+
+                currentMap.addSource(layerId, {
+                    type: 'geojson',
+                    data: contourGeojson,
+                })
+                currentMap.addLayer({
+                    id: layerId,
+                    type: 'fill',
+                    source: layerId,
+                    layout: {},
+                    paint: {
+                        'fill-color': '#f00',
+                        'fill-opacity': 0.2,
+                    },
+                })
+            }
+
+            setLayerIds(idList)
+            app.setIsContouring(false)
+            console.log(`${contours.length} contour layers added`)
         }
-
-        app.setIsContouring(false)
-        console.log(`${contours.length} contour layers added`)
     }
 
     useEffect(() => {
-        console.log('Initializing map...')
         if (map.current) return
 
+        console.log('Initializing map...')
         map.current = new maplibregl.Map({
-            container: map.current || '',
+            container: mapContainer.current || '',
             style: baseMapStyleUrl,
             center: [4.478, 51.924],
             zoom: 10,
@@ -72,20 +86,25 @@ export const MapCanvas = observer(() => {
 
         map.current.on('load', () => {
             console.log('Map loaded successfully')
-            loadContours()
+            loadContours(app.contourThresholds)
         })
     }, [])
 
     useEffect(() => {
-        if (renderedYear !== app.selectedYear) {
-            console.log('RELOADING')
-            loadContours()
+        if (!app.isContouring) {
+            loadContours(app.contourThresholds)
+        }
+    }, [app.contourThresholds])
+
+    useEffect(() => {
+        if (renderedYear !== app.selectedYear && !app.isContouring) {
+            loadContours(app.contourThresholds)
         }
     }, [app.selectedYear])
 
     return (
         <>
-            <div ref={map} className={classes.map} />
+            <div ref={mapContainer} className={classes.map} />
         </>
     )
 })

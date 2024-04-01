@@ -1,3 +1,4 @@
+import { RangeSliderValue } from '@mantine/core'
 import React from 'react'
 import { linspace } from './geometry/utils'
 import { makeAutoObservable } from 'mobx'
@@ -22,9 +23,10 @@ export class AppStore {
     public availableYears: number[] = linspace(2013, 2023, 1)
 
     public isContouring: boolean = true
-    public contourStart: number = 44
-    public contourEnd: number = 48
-    public contourStep: number = 2
+    public contourRange: RangeSliderValue = [40, 48]
+    public contourStep: number = 4
+
+    public baseMapId: string = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 
     setCity = (value: string) => {
         this.city = value
@@ -42,8 +44,16 @@ export class AppStore {
         this.isContouring = value
     }
 
+    setContourRange = (value: RangeSliderValue) => {
+        this.contourRange = value
+    }
+
+    setContourStep = (value: string) => {
+        this.contourStep = Number(value)
+    }
+
     get contourThresholds() {
-        return linspace(this.contourStart, this.contourEnd, this.contourStep)
+        return linspace(this.contourRange[0], this.contourRange[1], this.contourStep)
     }
 
     get disableControls() {
