@@ -23,8 +23,8 @@ export class AppStore {
     public availableYears: number[] = linspace(2013, 2023, 1)
 
     public isContouring: boolean = true
-    public contourRange: RangeSliderValue = [40, 48]
-    public contourStep: number = 4
+    public contourRange: RangeSliderValue = [44, 48]
+    public contourStep: number = 2
     public minThreshold: number = 20
     public maxThreshold: number = 50
 
