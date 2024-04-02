@@ -1,5 +1,6 @@
 import { PiBuildingsDuotone, PiGearDuotone } from 'react-icons/pi'
 
+import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -29,13 +30,17 @@ export const ProcessingStatus = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
 
+    const tooltipLabel = app.isContouring ? 'Generating contours...' : 'Search cities in Europe'
+
     return (
-        <div className={classes.container}>
-            {app.isContouring ? (
-                <PiGearDuotone className={`${classes.icon} ${classes.spin}`} />
-            ) : (
-                <PiBuildingsDuotone className={classes.icon} />
-            )}
-        </div>
+        <Tooltip label={tooltipLabel}>
+            <div className={classes.container}>
+                {app.isContouring ? (
+                    <PiGearDuotone className={`${classes.icon} ${classes.spin}`} />
+                ) : (
+                    <PiBuildingsDuotone className={classes.icon} />
+                )}
+            </div>
+        </Tooltip>
     )
 })

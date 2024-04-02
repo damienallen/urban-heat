@@ -1,18 +1,13 @@
 import { NativeSelect, RangeSlider, RangeSliderValue } from '@mantine/core'
-import {
-    PiArrowsHorizontalDuotone,
-    PiCalendarBlankDuotone,
-    PiStackSimpleDuotone,
-} from 'react-icons/pi'
 
+import { ApplyButton } from './ApplyButton'
+import { CloseButton } from './CloseButton'
 import { createUseStyles } from 'react-jss'
-import { linspace } from '../geometry/utils'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {
-        marginLeft: 24,
         minWidth: 360,
         display: 'flex',
         flexDirection: 'column',
@@ -24,15 +19,13 @@ const useStyles = createUseStyles({
         marginRight: 8,
         flex: 2,
     },
-    icon: {
-        fontSize: '1.8em',
-    },
     input: {
         flex: 3,
     },
     inputRow: {
         display: 'flex',
         alignItems: 'center',
+        margin: '4px 0',
     },
     sliderInput: {
         flex: 3,
@@ -42,10 +35,15 @@ const useStyles = createUseStyles({
         margin: '16px 0',
         fontSize: '0.8em',
     },
+    actionButtons: {
+        marginTop: 24,
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
 })
 
 export const ControlsPanel = observer(() => {
-    const { app } = useStores()
+    const { app, ui } = useStores()
     const classes = useStyles()
 
     const marks = [
@@ -56,7 +54,7 @@ export const ControlsPanel = observer(() => {
         { value: app.maxThreshold, label: `${app.maxThreshold}°C` },
     ]
 
-    return (
+    return ui.showControls ? (
         <div className={classes.container}>
             <div className={classes.inputRow}>
                 <div className={classes.label}>Dataset:</div>
@@ -77,9 +75,6 @@ export const ControlsPanel = observer(() => {
             </div>
 
             <div className={classes.inputRow}>
-                <div className={classes.icon}>
-                    <PiCalendarBlankDuotone />
-                </div>
                 <div className={classes.label}>Thresholds</div>
                 <div className={classes.sliderInput}>
                     <RangeSlider
@@ -94,9 +89,6 @@ export const ControlsPanel = observer(() => {
                 </div>
             </div>
             <div className={classes.inputRow}>
-                <div className={classes.icon}>
-                    <PiCalendarBlankDuotone />
-                </div>
                 <div className={classes.label}>Year</div>
                 <div className={classes.input}>
                     <NativeSelect
@@ -110,9 +102,6 @@ export const ControlsPanel = observer(() => {
                 </div>
             </div>
             <div className={classes.inputRow}>
-                <div className={classes.icon}>
-                    <PiArrowsHorizontalDuotone />
-                </div>
                 <div className={classes.label}>Step Size</div>
                 <div className={classes.input}>
                     <NativeSelect
@@ -126,9 +115,6 @@ export const ControlsPanel = observer(() => {
                 </div>
             </div>
             <div className={classes.inputRow}>
-                <div className={classes.icon}>
-                    <PiStackSimpleDuotone />
-                </div>
                 <div className={classes.label}>Base Map</div>
                 <div className={classes.input}>
                     <NativeSelect
@@ -139,6 +125,10 @@ export const ControlsPanel = observer(() => {
                     />
                 </div>
             </div>
+            <div className={classes.actionButtons}>
+                <CloseButton />
+                <ApplyButton />
+            </div>
         </div>
-    )
+    ) : null
 })
