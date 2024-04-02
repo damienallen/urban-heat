@@ -18,7 +18,7 @@ const useStyles = createUseStyles({
 })
 
 export const MapCanvas = observer(() => {
-    const { app } = useStores()
+    const { app, contours } = useStores()
     const classes = useStyles()
 
     const mapContainer = useRef(null)
@@ -36,7 +36,7 @@ export const MapCanvas = observer(() => {
         if (map.current) {
             const currentMap: maplibregl.Map = map.current
             setRenderedYear(app.selectedYear)
-            app.setIsContouring(true)
+            contours.setIsProcessing(true)
 
             // Remove existing layers and sources
             for (let id of layerIds) {
@@ -45,9 +45,9 @@ export const MapCanvas = observer(() => {
             }
 
             let idList = []
-            const contours = await contourWorker.startContouring(dataUrl, thresholds)
+            const contoursList = await contourWorker.startContouring(dataUrl, thresholds)
 
-            for (let contourGeojson of contours) {
+            for (let contourGeojson of contoursList) {
                 const layerId = `contour-${contourGeojson.threshold}`
                 idList.push(layerId)
 
@@ -68,8 +68,8 @@ export const MapCanvas = observer(() => {
             }
 
             setLayerIds(idList)
-            app.setIsContouring(false)
-            console.log(`${contours.length} contour layers added`)
+            contours.setIsProcessing(false)
+            console.log(`${contoursList.length} contour layers added`)
         }
     }
 
@@ -85,19 +85,19 @@ export const MapCanvas = observer(() => {
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
-            loadContours(app.contourThresholds)
+            loadContours(contours.thresholds)
         })
     }, [])
 
     useEffect(() => {
-        if (!app.isContouring) {
-            loadContours(app.contourThresholds)
+        if (!contours.isProcessing) {
+            loadContours(contours.thresholds)
         }
-    }, [app.contourThresholds])
+    }, [contours.thresholds])
 
     useEffect(() => {
-        if (renderedYear !== app.selectedYear && !app.isContouring) {
-            loadContours(app.contourThresholds)
+        if (renderedYear !== app.selectedYear && !contours.isProcessing) {
+            loadContours(contours.thresholds)
         }
     }, [app.selectedYear])
 

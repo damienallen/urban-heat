@@ -43,15 +43,15 @@ const useStyles = createUseStyles({
 })
 
 export const ControlsPanel = observer(() => {
-    const { app, ui } = useStores()
+    const { app, contours, ui } = useStores()
     const classes = useStyles()
 
     const marks = [
-        { value: app.minThreshold, label: `${app.minThreshold}°C` },
+        { value: contours.minThreshold, label: `${contours.minThreshold}°C` },
         { value: 30 },
         { value: 35 },
         { value: 40 },
-        { value: app.maxThreshold, label: `${app.maxThreshold}°C` },
+        { value: contours.maxThreshold, label: `${contours.maxThreshold}°C` },
     ]
 
     return ui.showControls ? (
@@ -79,12 +79,12 @@ export const ControlsPanel = observer(() => {
                 <div className={classes.sliderInput}>
                     <RangeSlider
                         minRange={2}
-                        min={app.minThreshold}
-                        max={app.maxThreshold}
+                        min={contours.minThreshold}
+                        max={contours.maxThreshold}
                         marks={marks}
-                        defaultValue={app.contourRange}
-                        onChangeEnd={(range: RangeSliderValue) => app.setContourRange(range)}
-                        disabled={app.disableControls}
+                        defaultValue={contours.range}
+                        onChangeEnd={(range: RangeSliderValue) => contours.setRange(range)}
+                        disabled={contours.disableControls}
                     />
                 </div>
             </div>
@@ -97,7 +97,7 @@ export const ControlsPanel = observer(() => {
                         onChange={(e: React.ChangeEvent) =>
                             app.setSelectedYear((e.currentTarget as HTMLInputElement).value)
                         }
-                        disabled={app.disableControls}
+                        disabled={contours.disableControls}
                     />
                 </div>
             </div>
@@ -105,12 +105,12 @@ export const ControlsPanel = observer(() => {
                 <div className={classes.label}>Step Size</div>
                 <div className={classes.input}>
                     <NativeSelect
-                        value={app.contourStep}
+                        value={contours.step}
                         data={['2', '3', '4', '5']}
                         onChange={(e: React.ChangeEvent) =>
-                            app.setContourStep((e.currentTarget as HTMLInputElement).value)
+                            contours.setStep((e.currentTarget as HTMLInputElement).value)
                         }
-                        disabled={app.disableControls}
+                        disabled={contours.disableControls}
                     />
                 </div>
             </div>

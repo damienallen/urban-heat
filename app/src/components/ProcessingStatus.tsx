@@ -27,15 +27,17 @@ const useStyles = createUseStyles({
 })
 
 export const ProcessingStatus = observer(() => {
-    const { app } = useStores()
+    const { contours } = useStores()
     const classes = useStyles()
 
-    const tooltipLabel = app.isContouring ? 'Generating contours...' : 'Search cities in Europe'
+    const tooltipLabel = contours.isProcessing
+        ? 'Generating contours...'
+        : 'Search cities in Europe'
 
     return (
         <Tooltip label={tooltipLabel}>
             <div className={classes.container}>
-                {app.isContouring ? (
+                {contours.isProcessing ? (
                     <PiGearDuotone className={`${classes.icon} ${classes.spin}`} />
                 ) : (
                     <PiBuildingsDuotone className={classes.icon} />

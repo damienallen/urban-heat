@@ -26,15 +26,15 @@ const useStyles = createUseStyles({
 })
 
 export const Legend = observer(() => {
-    const { app } = useStores()
+    const { contours } = useStores()
     const classes = useStyles()
 
     let items = []
-    for (let ind = 0; ind < app.contourThresholds.length; ind++) {
+    for (let ind = 0; ind < contours.thresholds.length; ind++) {
         items.push(
             <div key={`threshold-${ind}`} className={classes.threholdItem}>
                 <div className={classes.thresholdColor} style={{ opacity: 0.2 * (ind + 1) }} />
-                <div className={classes.thresholdText}>{app.contourThresholds[ind]}°C</div>
+                <div className={classes.thresholdText}>{contours.thresholds[ind]}°C</div>
             </div>
         )
     }

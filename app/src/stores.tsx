@@ -6,10 +6,12 @@ import packageJson from '../package.json'
 
 export class Store {
     public app: AppStore
+    public contours: ContoursStore
     public ui: UIStore
 
     constructor() {
         this.app = new AppStore(this)
+        this.contours = new ContoursStore(this)
         this.ui = new UIStore(this)
     }
 }
@@ -21,12 +23,6 @@ export class AppStore {
 
     public selectedYear: number = 2023
     public availableYears: number[] = linspace(2013, 2023, 1)
-
-    public isContouring: boolean = true
-    public contourRange: RangeSliderValue = [44, 52]
-    public contourStep: number = 4
-    public minThreshold: number = 30
-    public maxThreshold: number = 60
 
     public baseMapId: string = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 
@@ -42,24 +38,38 @@ export class AppStore {
         this.selectedYear = Number(value)
     }
 
-    setIsContouring = (value: boolean) => {
-        this.isContouring = value
+    constructor(public root: Store) {
+        makeAutoObservable(this, {}, { autoBind: true })
+    }
+}
+
+export class ContoursStore {
+    public isProcessing: boolean = true
+
+    public range: RangeSliderValue = [44, 52]
+    public step: number = 4
+
+    public minThreshold: number = 30
+    public maxThreshold: number = 60
+
+    setIsProcessing = (value: boolean) => {
+        this.isProcessing = value
     }
 
-    setContourRange = (value: RangeSliderValue) => {
-        this.contourRange = value
+    setRange = (value: RangeSliderValue) => {
+        this.range = value
     }
 
-    setContourStep = (value: string) => {
-        this.contourStep = Number(value)
+    setStep = (value: string) => {
+        this.step = Number(value)
     }
 
-    get contourThresholds() {
-        return linspace(this.contourRange[0], this.contourRange[1], this.contourStep)
+    get thresholds() {
+        return linspace(this.range[0], this.range[1], this.step)
     }
 
     get disableControls() {
-        return this.isContouring
+        return this.isProcessing
     }
 
     constructor(public root: Store) {
