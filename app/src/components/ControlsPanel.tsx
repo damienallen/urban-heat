@@ -29,7 +29,7 @@ const useStyles = createUseStyles({
     },
     sliderInput: {
         flex: 3,
-        padding: '8px 8px 32px 8px',
+        padding: '8px 8px 32px 16px',
     },
     description: {
         margin: '16px 0',
@@ -48,9 +48,8 @@ export const ControlsPanel = observer(() => {
 
     const marks = [
         { value: contours.minThreshold, label: `${contours.minThreshold}°C` },
-        { value: 30 },
-        { value: 35 },
         { value: 40 },
+        { value: 50 },
         { value: contours.maxThreshold, label: `${contours.maxThreshold}°C` },
     ]
 
@@ -119,10 +118,37 @@ export const ControlsPanel = observer(() => {
                 <div className={classes.label}>Base Map</div>
                 <div className={classes.input}>
                     <NativeSelect
-                        value="Maptiler Dataviz"
-                        data={['Maptiler Dataviz']}
-                        onChange={(e: React.ChangeEvent) => console.log(e)}
-                        disabled={true}
+                        value={app.baseMapStyle}
+                        data={[
+                            {
+                                label: 'Maptiler Basic',
+                                value: 'basic-v2',
+                            },
+                            {
+                                label: 'Maptiler Dataviz',
+                                value: 'dataviz',
+                            },
+                            {
+                                label: 'Maptiler Bright',
+                                value: 'bright-v2',
+                            },
+                            {
+                                label: 'Maptiler Satellite',
+                                value: 'satellite',
+                            },
+                            {
+                                label: 'Maptiler Streets',
+                                value: 'streets-v2',
+                            },
+                            {
+                                label: 'Maptiler Topo',
+                                value: 'topo-v2',
+                            },
+                        ]}
+                        onChange={(e: React.ChangeEvent) =>
+                            app.setBaseMapStyle((e.currentTarget as HTMLInputElement).value)
+                        }
+                        disabled={contours.isProcessing}
                     />
                 </div>
             </div>

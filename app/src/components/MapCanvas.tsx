@@ -2,7 +2,6 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 import { useEffect, useRef, useState } from 'react'
 
-import { contourWorker } from '../geometry/workers'
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
@@ -24,21 +23,22 @@ export const MapCanvas = observer(() => {
     const mapContainer = useRef(null)
     const map = useRef(null)
 
-    const [layerIds, setLayerIds] = useState<string[]>([])
+    const [contourLayerIds, setContourLayerIds] = useState<string[]>([])
 
-    // TODO: reset and protect origins for key
-    const baseMapStyleUrl = `https://api.maptiler.com/maps/${app.baseMapId}/style.json?key=bk2NyBkmsa6NdxDbxXvH`
-
-    const loadContours = async (layers: any[]) => {
+    const loadContours = (layers: any[]) => {
         if (map.current) {
             const currentMap: maplibregl.Map = map.current
 
             // Remove existing layers and sources
-            for (let id of layerIds) {
-                currentMap.removeLayer(id)
-                currentMap.removeSource(id)
+            const orderedLayerIds = [...currentMap.getLayersOrder().values()]
+            for (let id of contourLayerIds) {
+                if (orderedLayerIds.includes(id)) {
+                    currentMap.removeLayer(id)
+                    currentMap.removeSource(id)
+                }
             }
 
+            // Add contour layers
             let idList = []
             for (let contourGeojson of layers) {
                 const layerId = `contour-${contourGeojson.threshold}`
@@ -60,8 +60,8 @@ export const MapCanvas = observer(() => {
                 })
             }
 
-            setLayerIds(idList)
-            console.log(`${layers.length} contour layers added`)
+            setContourLayerIds(idList)
+            console.debug(`${layers.length} contour layers added`)
         }
     }
 
@@ -71,7 +71,7 @@ export const MapCanvas = observer(() => {
         console.log('Initializing map...')
         map.current = new maplibregl.Map({
             container: mapContainer.current || '',
-            style: baseMapStyleUrl,
+            style: app.styleUrl,
             center: [4.478, 51.924],
             zoom: 10,
         }) as any
@@ -86,6 +86,16 @@ export const MapCanvas = observer(() => {
             loadContours(contours.layers)
         }
     }, [contours.layers])
+
+    useEffect(() => {
+        if (map.current && !contours.isProcessing) {
+            const currentMap: maplibregl.Map = map.current
+            currentMap.setStyle(app.styleUrl, { diff: false })
+            currentMap.on('style.load', () => {
+                loadContours(contours.layers)
+            })
+        }
+    }, [app.styleUrl])
 
     return (
         <>

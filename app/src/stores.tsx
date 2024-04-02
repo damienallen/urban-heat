@@ -25,7 +25,7 @@ export class AppStore {
     public selectedYear: number = 2023
     public availableYears: number[] = linspace(2013, 2023, 1)
 
-    public baseMapId: string = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
+    public baseMapStyle: string = 'dataviz'
 
     setCity = (value: string) => {
         this.city = value
@@ -37,6 +37,16 @@ export class AppStore {
 
     setSelectedYear = (value: string) => {
         this.selectedYear = Number(value)
+    }
+
+    setBaseMapStyle = (value: string) => {
+        this.baseMapStyle = value
+    }
+
+    get styleUrl() {
+        // TODO: reset and protect origins for key
+        const key = 'bk2NyBkmsa6NdxDbxXvH'
+        return `https://api.maptiler.com/maps/${this.baseMapStyle}/style.json?key=${key}`
     }
 
     constructor(public root: Store) {
@@ -69,10 +79,6 @@ export class ContoursStore {
 
     get thresholds() {
         return linspace(this.range[0], this.range[1], this.step)
-    }
-
-    get isProcessing() {
-        return this.isProcessing
     }
 
     processContours = async () => {
