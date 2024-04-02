@@ -1,6 +1,5 @@
-import { PiInfoDuotone, PiStackSimpleDuotone } from 'react-icons/pi'
-
 import { ActionBarItem } from './ActionBarItem'
+import { PiInfoDuotone } from 'react-icons/pi'
 import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
 import { createUseStyles } from 'react-jss'
