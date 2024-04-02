@@ -82,6 +82,8 @@ export class ContoursStore {
     }
 
     processContours = async () => {
+        // TODO: only apply if changed
+
         this.setIsProcessing(true)
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.root.app.selectedYear}.tif`
         this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)

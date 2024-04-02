@@ -46,6 +46,7 @@ export const ControlsPanel = observer(() => {
     const { app, contours, ui } = useStores()
     const classes = useStyles()
 
+    // TODO: dynamic based on range/steps
     const marks = [
         { value: contours.minThreshold, label: `${contours.minThreshold}°C` },
         { value: 40 },
@@ -59,8 +60,8 @@ export const ControlsPanel = observer(() => {
                 <div className={classes.label}>Dataset:</div>
                 <div className={classes.input}>
                     <NativeSelect
-                        value="Max. Surface Temp."
-                        data={['Max. Surface Temp.']}
+                        value="Max. Surface Temperature"
+                        data={['Max. Surface Temperature']}
                         onChange={(e: React.ChangeEvent) => console.log(e)}
                         disabled={contours.isProcessing}
                     />
