@@ -115,7 +115,7 @@ export const ControlsPanel = observer(() => {
                 </div>
             </div>
             <div className={classes.inputRow}>
-                <div className={classes.label}>Base Map</div>
+                <div className={classes.label}>Map Style</div>
                 <div className={classes.input}>
                     <NativeSelect
                         value={app.baseMapStyle}
