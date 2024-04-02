@@ -118,7 +118,7 @@ export const ControlsPanel = observer(() => {
                 <div className={classes.label}>Map Style</div>
                 <div className={classes.input}>
                     <NativeSelect
-                        value={app.baseMapStyle}
+                        value={app.mapStyle}
                         data={[
                             {
                                 label: 'Maptiler Basic',
@@ -146,7 +146,7 @@ export const ControlsPanel = observer(() => {
                             },
                         ]}
                         onChange={(e: React.ChangeEvent) =>
-                            app.setBaseMapStyle((e.currentTarget as HTMLInputElement).value)
+                            app.setMapStyle((e.currentTarget as HTMLInputElement).value)
                         }
                         disabled={contours.isProcessing}
                     />
