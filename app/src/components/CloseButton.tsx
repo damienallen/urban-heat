@@ -26,8 +26,9 @@ export const CloseButton = observer(() => {
     const classes = useStyles()
 
     return (
-        <span className={classes.container} onClick={ui.toggleShowControls}>
+        <span className={classes.container}>
             <Button
+                onClick={ui.toggleShowControls}
                 leftSection={<PiCaretDoubleDownDuotone className={classes.icon} />}
                 variant="outline"
             >

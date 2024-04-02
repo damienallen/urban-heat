@@ -63,6 +63,7 @@ export const ControlsPanel = observer(() => {
                         value="Max. Surface Temp."
                         data={['Max. Surface Temp.']}
                         onChange={(e: React.ChangeEvent) => console.log(e)}
+                        disabled={contours.isProcessing}
                     />
                 </div>
             </div>
@@ -84,7 +85,7 @@ export const ControlsPanel = observer(() => {
                         marks={marks}
                         defaultValue={contours.range}
                         onChangeEnd={(range: RangeSliderValue) => contours.setRange(range)}
-                        disabled={contours.disableControls}
+                        disabled={contours.isProcessing}
                     />
                 </div>
             </div>
@@ -97,7 +98,7 @@ export const ControlsPanel = observer(() => {
                         onChange={(e: React.ChangeEvent) =>
                             app.setSelectedYear((e.currentTarget as HTMLInputElement).value)
                         }
-                        disabled={contours.disableControls}
+                        disabled={contours.isProcessing}
                     />
                 </div>
             </div>
@@ -110,7 +111,7 @@ export const ControlsPanel = observer(() => {
                         onChange={(e: React.ChangeEvent) =>
                             contours.setStep((e.currentTarget as HTMLInputElement).value)
                         }
-                        disabled={contours.disableControls}
+                        disabled={contours.isProcessing}
                     />
                 </div>
             </div>

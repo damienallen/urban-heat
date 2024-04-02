@@ -1,5 +1,6 @@
 import { RangeSliderValue } from '@mantine/core'
 import React from 'react'
+import { contourWorker } from './geometry/workers'
 import { linspace } from './geometry/utils'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
@@ -52,6 +53,8 @@ export class ContoursStore {
     public minThreshold: number = 30
     public maxThreshold: number = 60
 
+    public layers: any[] = []
+
     setIsProcessing = (value: boolean) => {
         this.isProcessing = value
     }
@@ -68,8 +71,15 @@ export class ContoursStore {
         return linspace(this.range[0], this.range[1], this.step)
     }
 
-    get disableControls() {
+    get isProcessing() {
         return this.isProcessing
+    }
+
+    processContours = async () => {
+        this.setIsProcessing(true)
+        const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.root.app.selectedYear}.tif`
+        this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)
+        this.setIsProcessing(false)
     }
 
     constructor(public root: Store) {

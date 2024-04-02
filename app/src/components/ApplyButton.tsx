@@ -22,12 +22,18 @@ const useStyles = createUseStyles({
 })
 
 export const ApplyButton = observer(() => {
-    const { ui } = useStores()
+    const { contours } = useStores()
     const classes = useStyles()
 
     return (
-        <span className={classes.container} onClick={() => console.log('Applied!')}>
-            <Button rightSection={<PiFloppyDiskDuotone className={classes.icon} />}>Apply</Button>
+        <span className={classes.container}>
+            <Button
+                onClick={() => contours.processContours()}
+                rightSection={<PiFloppyDiskDuotone className={classes.icon} />}
+                disabled={contours.isProcessing}
+            >
+                Apply
+            </Button>
         </span>
     )
 })
