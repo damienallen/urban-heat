@@ -23,10 +23,10 @@ export class AppStore {
     public availableYears: number[] = linspace(2013, 2023, 1)
 
     public isContouring: boolean = true
-    public contourRange: RangeSliderValue = [44, 48]
-    public contourStep: number = 2
-    public minThreshold: number = 20
-    public maxThreshold: number = 50
+    public contourRange: RangeSliderValue = [44, 52]
+    public contourStep: number = 4
+    public minThreshold: number = 30
+    public maxThreshold: number = 60
 
     public baseMapId: string = 'dataviz' // basic-v2 | bright-v2 | dataviz | satellite | streets-v2 | topo-v2
 

@@ -32,7 +32,6 @@ export const ActionBar = () => {
         <div className={classes.container}>
             <ProcessingStatus />
             <Search />
-            <ActionBarItem label="Base Map" icon={<PiStackSimpleDuotone />} />
             <ActionBarItem label="About" icon={<PiInfoDuotone />} />
         </div>
     )
