@@ -3,6 +3,7 @@ import { PiInfoDuotone } from 'react-icons/pi'
 import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
 import { createUseStyles } from 'react-jss'
+import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {
@@ -26,12 +27,17 @@ const useStyles = createUseStyles({
 })
 
 export const ActionBar = () => {
+    const { ui } = useStores()
     const classes = useStyles()
     return (
         <div className={classes.container}>
             <ProcessingStatus />
             <Search />
-            <ActionBarItem label="About" icon={<PiInfoDuotone />} />
+            <ActionBarItem
+                label="About"
+                icon={<PiInfoDuotone />}
+                onClick={() => ui.toggleShowAbout()}
+            />
         </div>
     )
 }

@@ -96,7 +96,12 @@ export class ContoursStore {
 }
 
 export class UIStore {
+    public showAbout: boolean = false
     public showControls: boolean = false
+
+    toggleShowAbout = () => {
+        this.showAbout = !this.showAbout
+    }
 
     toggleShowControls = () => {
         this.showControls = !this.showControls

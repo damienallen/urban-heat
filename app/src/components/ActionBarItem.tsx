@@ -24,13 +24,16 @@ const useStyles = createUseStyles({
 interface ActionBarItemProps {
     icon: ReactNode
     label: string
+    onClick: React.MouseEventHandler
 }
 
 export const ActionBarItem = (props: ActionBarItemProps) => {
     const classes = useStyles()
     return (
         <Tooltip label={props.label}>
-            <span className={classes.icon}>{props.icon}</span>
+            <span className={classes.icon} onClick={props.onClick}>
+                {props.icon}
+            </span>
         </Tooltip>
     )
 }

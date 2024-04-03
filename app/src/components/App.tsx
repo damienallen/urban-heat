@@ -1,5 +1,6 @@
 import '@mantine/core/styles.css'
 
+import { AboutModal } from './AboutModal'
 import { ActionBar } from './ActionBar'
 import { Controls } from './Controls'
 import { MantineProvider } from '@mantine/core'
@@ -57,6 +58,8 @@ export const App = () => {
                     <div className={`${classes.row} ${classes.bottom}`}>
                         <Controls />
                     </div>
+
+                    <AboutModal />
                     <MapCanvas />
                 </div>
             </MantineProvider>
