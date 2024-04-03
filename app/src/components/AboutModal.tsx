@@ -5,7 +5,16 @@ import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {
-        background: 'hotPink',
+        fontSize: '0.9em',
+        '& p': {
+            margin: '16px 0 0 0',
+        },
+        '& .mantine-Modal-body': {
+            marginTop: -8,
+        },
+    },
+    title: {
+        fontWeight: 'bold',
     },
 })
 
@@ -14,22 +23,32 @@ export const AboutModal = observer(() => {
     const classes = useStyles()
 
     return ui.showAbout ? (
-        <div className={classes.container}>
-            <Modal
-                opened={ui.showAbout}
-                onClose={() => ui.toggleShowAbout()}
-                title={<h4>About Urban Heat Map</h4>}
-                centered
-            >
-                <p></p>
-                <p>
-                    This project is developed by{' '}
-                    <a href="https://dallen.co" target="_blank">
-                        Damien Allen
-                    </a>
-                    .
-                </p>
-            </Modal>
-        </div>
+        <Modal
+            className={classes.container}
+            opened={ui.showAbout}
+            onClose={() => ui.toggleShowAbout()}
+            title={<span className={classes.title}>About Urban Heat Map</span>}
+            centered
+        >
+            <p>
+                The Urban Heat Map provides an easily interpreted illustration of the{' '}
+                <a href="https://en.wikipedia.org/wiki/Urban_heat_island" rel="external">
+                    Urban Heat Island Effect
+                </a>{' '}
+                using public satellite imagery.
+            </p>
+            <p>
+                This web application borrows your computer's hardware for generating and displaying
+                isotherm contours. Therefore, more interactivity is possible, while hosting costs
+                are kept low.
+            </p>
+            <p>
+                A project by{' '}
+                <a href="https://dallen.co" rel="author" target="_blank">
+                    Damien Allen
+                </a>
+                .
+            </p>
+        </Modal>
     ) : null
 })
