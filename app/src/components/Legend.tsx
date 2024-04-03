@@ -10,18 +10,10 @@ const useStyles = createUseStyles({
         gap: 16,
     },
     threholdItem: {
-        flex: 1,
-        display: 'flex',
-        gap: 8,
-    },
-    thresholdColor: {
-        flex: 0,
-        minWidth: 32,
+        flex: '0',
         background: '#f00',
+        padding: '4px 8px',
         borderRadius: 8,
-    },
-    thresholdText: {
-        flex: 1,
     },
 })
 
@@ -32,9 +24,12 @@ export const Legend = observer(() => {
     let items = []
     for (let ind = 0; ind < contours.thresholds.length; ind++) {
         items.push(
-            <div key={`threshold-${ind}`} className={classes.threholdItem}>
-                <div className={classes.thresholdColor} style={{ opacity: 0.2 * (ind + 1) }} />
-                <div className={classes.thresholdText}>{contours.thresholds[ind]}°C</div>
+            <div
+                key={`threshold-${ind}`}
+                className={classes.threholdItem}
+                style={{ background: `rgba(255, 0, 0, ${0.2 * (ind + 1)})` }}
+            >
+                {contours.thresholds[ind]}°C
             </div>
         )
     }
