@@ -1,8 +1,6 @@
 import { ControlsButton } from './ContolsButton'
 import { ControlsPanel } from './ControlsPanel'
 import { Legend } from './Legend'
-import { PiSlidersDuotone } from 'react-icons/pi'
-import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
