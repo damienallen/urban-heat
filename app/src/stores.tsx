@@ -89,6 +89,7 @@ export class ContoursStore {
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.root.app.selectedYear}.tif`
         this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)
         this.setIsProcessing(false)
+        this.root.ui.setShowControls(false)
     }
 
     constructor(public root: Store) {
@@ -107,6 +108,10 @@ export class UIStore {
 
     toggleShowControls = () => {
         this.showControls = !this.showControls
+    }
+
+    setShowControls = (value: boolean) => {
+        this.showControls = value
     }
 
     toggleColorScheme = () => {

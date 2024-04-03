@@ -40,6 +40,7 @@ const useStyles = createUseStyles({
         alignItems: 'flex-start',
         '@media (max-width: 720px)': {
             flexDirection: 'column-reverse',
+            alignItems: 'center',
         },
     },
     bottom: {

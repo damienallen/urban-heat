@@ -1,4 +1,10 @@
-import { Blockquote, NativeSelect, RangeSlider, RangeSliderValue } from '@mantine/core'
+import {
+    Blockquote,
+    LoadingOverlay,
+    NativeSelect,
+    RangeSlider,
+    RangeSliderValue,
+} from '@mantine/core'
 
 import { ApplyButton } from './ApplyButton'
 import { CloseButton } from './CloseButton'
@@ -16,6 +22,7 @@ const useStyles = createUseStyles({
         flex: 1,
         gap: 8,
         padding: 8,
+        position: 'relative',
     },
     sliderInput: {
         flex: 3,
@@ -55,6 +62,11 @@ export const ControlsPanel = observer(() => {
 
     return ui.showControls ? (
         <div className={classes.container}>
+            <LoadingOverlay
+                visible={contours.isProcessing}
+                zIndex={500}
+                overlayProps={{ radius: 'sm', blur: 2 }}
+            />
             <StyleSelector />
 
             <ControlsItem label="Dataset">

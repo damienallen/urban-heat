@@ -21,7 +21,7 @@ const useStyles = createUseStyles({
         textTransform: 'uppercase',
         color: titleColor,
         '-webkit-text-stroke': `${strokeWidth} ${strokeColor}`,
-        '@media (max-width: 720px)': { fontSize: 24 },
+        '@media (max-width: 720px)': { fontSize: 32 },
     },
 })
 
