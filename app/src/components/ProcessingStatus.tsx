@@ -32,7 +32,7 @@ export const ProcessingStatus = observer(() => {
 
     const tooltipLabel = contours.isProcessing
         ? 'Generating contours...'
-        : 'Search cities in Europe'
+        : 'Search major urban areas in Europe'
 
     return (
         <Tooltip label={tooltipLabel}>

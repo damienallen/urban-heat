@@ -5,7 +5,7 @@ const useStyles = createUseStyles({
     container: {
         display: 'flex',
         alignItems: 'center',
-        margin: '4px 0',
+        marginBottom: 8,
     },
     label: {
         marginRight: 8,

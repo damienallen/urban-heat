@@ -1,5 +1,6 @@
-import { Button } from '@mantine/core'
-import { PiCaretDoubleDownDuotone } from 'react-icons/pi'
+import { Button, Tooltip } from '@mantine/core'
+
+import { PiSlidersDuotone } from 'react-icons/pi'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -21,19 +22,21 @@ const useStyles = createUseStyles({
     },
 })
 
-export const CloseButton = observer(() => {
-    const { ui } = useStores()
+export const ControlsButton = observer(() => {
+    const { contours, ui } = useStores()
     const classes = useStyles()
 
-    return (
+    return ui.showControls ? null : (
         <span className={classes.container}>
-            <Button
-                onClick={ui.toggleShowControls}
-                leftSection={<PiCaretDoubleDownDuotone className={classes.icon} />}
-                variant="light"
-            >
-                Close
-            </Button>
+            <Tooltip label="Controls">
+                <Button
+                    onClick={ui.toggleShowControls}
+                    variant="light"
+                    disabled={contours.isProcessing}
+                >
+                    <PiSlidersDuotone className={classes.icon} />
+                </Button>
+            </Tooltip>
         </span>
     )
 })

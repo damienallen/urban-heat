@@ -21,7 +21,6 @@ const useStyles = createUseStyles({
         flexDirection: 'column',
         flex: 1,
         gap: 8,
-        padding: 8,
         position: 'relative',
     },
     sliderInput: {

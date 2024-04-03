@@ -135,6 +135,7 @@ export class UIStore {
                     '#b12f00',
                 ],
             },
+            focusRing: 'never',
         })
     }
 

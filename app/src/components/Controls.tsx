@@ -1,3 +1,4 @@
+import { ControlsButton } from './ContolsButton'
 import { ControlsPanel } from './ControlsPanel'
 import { Legend } from './Legend'
 import { PiSlidersDuotone } from 'react-icons/pi'
@@ -10,7 +11,7 @@ const useStyles = createUseStyles({
     container: {
         background: '#fff',
         display: 'flex',
-        padding: 8,
+        padding: 12,
         flex: 1,
         borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         userSelect: 'none',
@@ -45,11 +46,7 @@ export const Controls = observer(() => {
         </div>
     ) : (
         <div className={classes.container}>
-            <Tooltip label="Controls">
-                <span className={classes.toggle} onClick={ui.toggleShowControls}>
-                    {ui.showControls ? null : <PiSlidersDuotone />}
-                </span>
-            </Tooltip>
+            <ControlsButton />
             <Legend />
         </div>
     )
