@@ -1,4 +1,5 @@
-import { RangeSliderValue } from '@mantine/core'
+import { MantineColorScheme, RangeSliderValue, createTheme } from '@mantine/core'
+
 import React from 'react'
 import { contourWorker } from './geometry/workers'
 import { linspace } from './geometry/utils'
@@ -98,6 +99,7 @@ export class ContoursStore {
 export class UIStore {
     public showAbout: boolean = false
     public showControls: boolean = false
+    public colorScheme: MantineColorScheme = 'light'
 
     toggleShowAbout = () => {
         this.showAbout = !this.showAbout
@@ -105,6 +107,30 @@ export class UIStore {
 
     toggleShowControls = () => {
         this.showControls = !this.showControls
+    }
+
+    toggleColorScheme = () => {
+        this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
+    }
+
+    get theme() {
+        return createTheme({
+            primaryColor: 'default',
+            colors: {
+                default: [
+                    '#ffefe5',
+                    '#ffddce',
+                    '#ffb99c',
+                    '#fe9365',
+                    '#fe7338',
+                    '#fe5e1b',
+                    '#fe540c',
+                    '#e34400',
+                    '#ca3b00',
+                    '#b12f00',
+                ],
+            },
+        })
     }
 
     constructor(public root: Store) {

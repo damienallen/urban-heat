@@ -1,11 +1,12 @@
 import '@mantine/core/styles.css'
 
+import { StoreProvider, useStores } from '../stores'
+
 import { AboutModal } from './AboutModal'
 import { ActionBar } from './ActionBar'
 import { Controls } from './Controls'
 import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
-import { StoreProvider } from '../stores'
 import { Title } from './Title'
 import { createUseStyles } from 'react-jss'
 
@@ -46,10 +47,12 @@ const useStyles = createUseStyles({
 })
 
 export const App = () => {
+    const { ui } = useStores()
     const classes = useStyles()
+
     return (
         <StoreProvider>
-            <MantineProvider>
+            <MantineProvider defaultColorScheme={ui.colorScheme} theme={ui.theme}>
                 <div className={classes.app}>
                     <div className={`${classes.row} ${classes.top}`}>
                         <Title />
