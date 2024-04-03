@@ -10,15 +10,14 @@ const useStyles = createUseStyles({
     container: {
         background: '#fff',
         display: 'flex',
-        padding: '8px 0',
-        flex: '1 0 280px',
+        padding: 8,
+        flex: 1,
         borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         userSelect: 'none',
         zIndex: 300,
         '@media (min-width: 720px)': {
             flex: '0 0 280px',
             margin: 16,
-            padding: 8,
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
         },

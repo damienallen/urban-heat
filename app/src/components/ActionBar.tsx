@@ -13,7 +13,7 @@ const useStyles = createUseStyles({
         flex: '0 1',
         width: '100vw',
         padding: '8px 0',
-        borderTop: '1px solid rgba(0, 0, 0, 0.2)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
         userSelect: 'none',
         zIndex: 200,
         '@media (min-width: 720px)': {

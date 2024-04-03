@@ -22,27 +22,31 @@ const useStyles = createUseStyles({
         flexDirection: 'column',
         justifyContent: 'space-between',
         '@media (max-width: 720px)': {
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'flex-end',
+            alignItems: 'stretch',
         },
     },
     row: {
-        flex: 1,
+        flex: 0,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         '@media (max-width: 720px)': {
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: 'stretch',
             justifyContent: 'flex-end',
         },
     },
     top: {
         alignItems: 'flex-start',
+        '@media (max-width: 720px)': {
+            flexDirection: 'column-reverse',
+        },
     },
     bottom: {
         alignItems: 'flex-end',
+        '@media (max-width: 720px)': {
+            alignItems: 'stretch',
+        },
     },
 })
 
