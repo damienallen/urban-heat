@@ -31,7 +31,7 @@ export const MapCanvas = observer(() => {
     const [contourLayerIds, setContourLayerIds] = useState<string[]>([])
 
     const updateStyle = () => {
-        if (map.current && !contours.isProcessing) {
+        if (map.current && !contours.areProcessing) {
             const currentMap: maplibregl.Map = map.current
             currentMap.setStyle(app.styleUrl, { diff: false })
             currentMap.on('style.load', () => {
@@ -101,7 +101,7 @@ export const MapCanvas = observer(() => {
     }, [])
 
     useEffect(() => {
-        if (!contours.isProcessing) {
+        if (!contours.areProcessing) {
             loadContours(contours.layers)
         }
     }, [contours.layers])

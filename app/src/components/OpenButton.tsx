@@ -30,7 +30,7 @@ export const OpenButton = observer(() => {
                 <Button
                     onClick={ui.toggleShowControls}
                     variant="light"
-                    disabled={contours.isProcessing}
+                    disabled={contours.areProcessing}
                 >
                     <Sliders size={24} weight="duotone" />
                 </Button>

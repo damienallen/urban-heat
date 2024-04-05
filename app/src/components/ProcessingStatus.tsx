@@ -22,14 +22,14 @@ export const ProcessingStatus = observer(() => {
     const { contours } = useStores()
     const classes = useStyles()
 
-    const tooltipLabel = contours.isProcessing
+    const tooltipLabel = contours.areProcessing
         ? 'Generating contours...'
         : 'Search major urban areas in Europe'
 
     return (
         <Tooltip label={tooltipLabel}>
             <div className={classes.container}>
-                {contours.isProcessing ? (
+                {contours.areProcessing ? (
                     <Gear size={32} weight="duotone" className={classes.spin} />
                 ) : (
                     <Buildings size={32} weight="duotone" />

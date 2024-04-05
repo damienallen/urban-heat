@@ -69,11 +69,11 @@ export const StyleMenu = observer(() => {
             offset={0}
             withArrow
             arrowPosition="center"
-            disabled={contours.isProcessing}
+            disabled={contours.areProcessing}
         >
             <Menu.Target>
                 <span
-                    className={`${classes.icon} ${contours.isProcessing ? classes.disabled : ''}`}
+                    className={`${classes.icon} ${contours.areProcessing ? classes.disabled : ''}`}
                 >
                     <StackSimple size={32} weight="duotone" />
                 </span>

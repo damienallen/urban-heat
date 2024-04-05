@@ -64,7 +64,7 @@ export const ControlsForm = observer(() => {
     return ui.showControls ? (
         <div className={classes.container}>
             <LoadingOverlay
-                visible={contours.isProcessing}
+                visible={contours.areProcessing}
                 zIndex={150}
                 overlayProps={{ radius: 'sm', blur: 2 }}
             />
@@ -78,18 +78,18 @@ export const ControlsForm = observer(() => {
                     value="Max. Surface Temp."
                     data={['Max. Surface Temp.']}
                     onChange={(e: React.ChangeEvent) => console.log(e)}
-                    disabled={contours.isProcessing}
+                    disabled={contours.areProcessing}
                 />
             </ControlsItem>
 
             <ControlsItem label="Year">
                 <NativeSelect
-                    value={app.selectedYear}
-                    data={app.availableYears.map(String)}
+                    value={contours.year}
+                    data={contours.availableYears.map(String)}
                     onChange={(e: React.ChangeEvent) =>
-                        app.setSelectedYear((e.currentTarget as HTMLInputElement).value)
+                        contours.setYear((e.currentTarget as HTMLInputElement).value)
                     }
-                    disabled={contours.isProcessing}
+                    disabled={contours.areProcessing}
                 />
             </ControlsItem>
 
@@ -100,7 +100,7 @@ export const ControlsForm = observer(() => {
                     onChange={(e: React.ChangeEvent) =>
                         contours.setStep((e.currentTarget as HTMLInputElement).value)
                     }
-                    disabled={contours.isProcessing}
+                    disabled={contours.areProcessing}
                 />
             </ControlsItem>
 
@@ -113,7 +113,7 @@ export const ControlsForm = observer(() => {
                         marks={marks}
                         defaultValue={contours.range}
                         onChangeEnd={(range: RangeSliderValue) => contours.setRange(range)}
-                        disabled={contours.isProcessing}
+                        disabled={contours.areProcessing}
                     />
                 </div>
             </ControlsItem>

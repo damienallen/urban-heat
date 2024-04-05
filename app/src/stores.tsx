@@ -23,9 +23,6 @@ export class AppStore {
     public city: string = 'Rotterdam'
     public country: string = 'NL'
 
-    public selectedYear: number = 2023
-    public availableYears: number[] = linspace(2013, 2023, 1)
-
     public mapStyle: string = 'dataviz'
 
     setCity = (value: string) => {
@@ -34,10 +31,6 @@ export class AppStore {
 
     setCountry = (value: string) => {
         this.country = value
-    }
-
-    setSelectedYear = (value: string) => {
-        this.selectedYear = Number(value)
     }
 
     setMapStyle = (value: string) => {
@@ -56,7 +49,8 @@ export class AppStore {
 }
 
 export class ContoursStore {
-    public isProcessing: boolean = true
+    public areProcessing: boolean = true
+    public layers: any[] = []
 
     public range: RangeSliderValue = [42, 48]
     public step: number = 2
@@ -64,10 +58,11 @@ export class ContoursStore {
     public minThreshold: number = 30
     public maxThreshold: number = 60
 
-    public layers: any[] = []
+    public availableYears: number[] = linspace(2013, 2023, 1)
+    public year: number = 2023
 
     setIsProcessing = (value: boolean) => {
-        this.isProcessing = value
+        this.areProcessing = value
     }
 
     setRange = (value: RangeSliderValue) => {
@@ -78,15 +73,27 @@ export class ContoursStore {
         this.step = Number(value)
     }
 
+    setYear = (value: string) => {
+        this.year = Number(value)
+    }
+
     get thresholds() {
         return linspace(this.range[0], this.range[1], this.step)
+    }
+
+    get json() {
+        return JSON.stringify({
+            range: this.range,
+            step: this.step,
+            year: this.year,
+        })
     }
 
     processContours = async () => {
         // TODO: only apply if changed
 
         this.setIsProcessing(true)
-        const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.root.app.selectedYear}.tif`
+        const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
         this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)
         this.setIsProcessing(false)
         this.root.ui.setShowControls(false)

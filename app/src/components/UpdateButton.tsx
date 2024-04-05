@@ -27,7 +27,7 @@ export const UpdateButton = observer(() => {
             <Button
                 onClick={() => contours.processContours()}
                 rightSection={<Gear size={24} weight="duotone" />}
-                disabled={contours.isProcessing}
+                disabled={contours.areProcessing}
             >
                 Update
             </Button>
