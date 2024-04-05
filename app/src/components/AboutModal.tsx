@@ -20,7 +20,7 @@ const useStyles = createUseStyles({
 })
 
 export const AboutModal = observer(() => {
-    const { ui } = useStores()
+    const { app, ui } = useStores()
     const classes = useStyles()
 
     return ui.showAbout ? (
@@ -48,6 +48,9 @@ export const AboutModal = observer(() => {
                     Damien Allen
                 </a>
                 .
+            </p>
+            <p>
+                <i>v{app.version}</i>
             </p>
         </Modal>
     ) : null

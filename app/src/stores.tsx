@@ -51,6 +51,7 @@ export class AppStore {
 export class ContoursStore {
     public areProcessing: boolean = true
     public layers: any[] = []
+    public lastJson: string = ''
 
     public range: RangeSliderValue = [42, 48]
     public step: number = 2
@@ -63,6 +64,10 @@ export class ContoursStore {
 
     setIsProcessing = (value: boolean) => {
         this.areProcessing = value
+    }
+
+    setLastJson = () => {
+        this.lastJson = this.json
     }
 
     setRange = (value: RangeSliderValue) => {
@@ -90,8 +95,7 @@ export class ContoursStore {
     }
 
     processContours = async () => {
-        // TODO: only apply if changed
-
+        this.setLastJson()
         this.setIsProcessing(true)
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
         this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)
@@ -129,6 +133,13 @@ export class UIStore {
 
     toggleColorScheme = () => {
         this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
+    }
+
+    get disableUpdate() {
+        return (
+            this.root.contours.areProcessing ||
+            this.root.contours.lastJson === this.root.contours.json
+        )
     }
 
     get theme() {

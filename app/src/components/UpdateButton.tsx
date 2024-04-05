@@ -19,7 +19,7 @@ const useStyles = createUseStyles({
 })
 
 export const UpdateButton = observer(() => {
-    const { contours } = useStores()
+    const { contours, ui } = useStores()
     const classes = useStyles()
 
     return (
@@ -27,7 +27,7 @@ export const UpdateButton = observer(() => {
             <Button
                 onClick={() => contours.processContours()}
                 rightSection={<Gear size={24} weight="duotone" />}
-                disabled={contours.areProcessing}
+                disabled={ui.disableUpdate}
             >
                 Update
             </Button>
