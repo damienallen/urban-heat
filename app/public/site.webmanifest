@@ -1,6 +1,6 @@
 {
-    "name": "Urban Heat",
-    "short_name": "Urban Heat",
+    "name": "Urban Heat Map",
+    "short_name": "Urban Heat Map",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
