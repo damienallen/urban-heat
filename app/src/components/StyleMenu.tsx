@@ -66,7 +66,7 @@ export const StyleMenu = observer(() => {
         <Menu
             shadow="sm"
             position="bottom"
-            offset={20}
+            offset={0}
             withArrow
             arrowPosition="center"
             disabled={contours.isProcessing}
