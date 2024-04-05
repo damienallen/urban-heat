@@ -27,20 +27,20 @@ export const AboutModal = observer(() => {
             className={classes.container}
             opened={ui.showAbout}
             onClose={() => ui.toggleShowAbout()}
-            title={<span className={classes.title}>About Urban Heat Map</span>}
+            title={<span className={classes.title}>About this App</span>}
             centered
         >
             <p>
-                The Urban Heat Map provides an easily interpreted illustration of the{' '}
+                The Urban Heat Map aims to provide an easily interpreted visualization of the{' '}
                 <a href="https://en.wikipedia.org/wiki/Urban_heat_island" rel="external">
                     Urban Heat Island Effect
                 </a>{' '}
-                using public satellite imagery.
+                using processed public satellite imagery.
             </p>
             <p>
-                This web application borrows your computer's hardware for generating and displaying
-                isotherm contours. Therefore, more interactivity is possible, while hosting costs
-                are kept low.
+                This web application borrows your hardware for efficiently generating and displaying
+                isotherm contours. Thus, allowing for more interactivity, without high hosting
+                costs.
             </p>
             <p>
                 A project by{' '}
