@@ -11,14 +11,55 @@ const useStyles = createUseStyles({
         display: 'flex',
         cursor: 'pointer',
     },
+    menuItem: {
+        textAlign: 'center',
+    },
 })
 
 export const StyleMenu = observer(() => {
-    const { ui } = useStores()
+    const { app } = useStores()
     const classes = useStyles()
 
+    const stylesList: { label: string; value: string }[] = [
+        {
+            label: 'Basic',
+            value: 'basic-v2',
+        },
+        {
+            label: 'Dataviz',
+            value: 'dataviz',
+        },
+        {
+            label: 'Bright',
+            value: 'bright-v2',
+        },
+        {
+            label: 'Satellite',
+            value: 'satellite',
+        },
+        {
+            label: 'Streets',
+            value: 'streets-v2',
+        },
+        {
+            label: 'Topo',
+            value: 'topo-v2',
+        },
+    ]
+
+    const styleElementsList = stylesList.map((item) => (
+        <Menu.Item
+            component="span"
+            key={`style-${item.value}`}
+            onClick={() => app.setMapStyle(item.value)}
+            className={classes.menuItem}
+        >
+            {item.label}
+        </Menu.Item>
+    ))
+
     return (
-        <Menu shadow="sm" position="bottom-end" offset={20} withArrow arrowPosition="center">
+        <Menu shadow="sm" position="bottom" offset={20} withArrow arrowPosition="center">
             <Menu.Target>
                 <span className={classes.icon}>
                     <StackSimple size={32} weight="duotone" />
@@ -26,10 +67,7 @@ export const StyleMenu = observer(() => {
             </Menu.Target>
             <Menu.Dropdown>
                 <Menu.Label>Maptiler Styles</Menu.Label>
-                <Menu.Item>Settings</Menu.Item>
-                <Menu.Item>Messages</Menu.Item>
-                <Menu.Item>Gallery</Menu.Item>
-                <Menu.Item>Search</Menu.Item>
+                {...styleElementsList}
             </Menu.Dropdown>
         </Menu>
     )

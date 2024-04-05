@@ -82,12 +82,6 @@ export const MapCanvas = observer(() => {
     }, [])
 
     useEffect(() => {
-        if (!contours.isProcessing) {
-            loadContours(contours.layers)
-        }
-    }, [contours.layers])
-
-    useEffect(() => {
         if (map.current && !contours.isProcessing) {
             const currentMap: maplibregl.Map = map.current
             currentMap.setStyle(app.styleUrl, { diff: false })
@@ -95,7 +89,7 @@ export const MapCanvas = observer(() => {
                 loadContours(contours.layers)
             })
         }
-    }, [app.styleUrl])
+    }, [app.styleUrl, contours.layers])
 
     return (
         <>
