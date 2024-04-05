@@ -58,8 +58,8 @@ export class AppStore {
 export class ContoursStore {
     public isProcessing: boolean = true
 
-    public range: RangeSliderValue = [44, 52]
-    public step: number = 4
+    public range: RangeSliderValue = [42, 48]
+    public step: number = 2
 
     public minThreshold: number = 30
     public maxThreshold: number = 60

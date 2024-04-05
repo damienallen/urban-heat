@@ -6,9 +6,9 @@ import {
     RangeSliderValue,
 } from '@mantine/core'
 
-import { ApplyButton } from './ApplyButton'
 import { CloseButton } from './CloseButton'
 import { ControlsItem } from './ControlsItem'
+import { UpdateButton } from './UpdateButton'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -56,7 +56,7 @@ export const ControlsForm = observer(() => {
         <div>
             Source:{' '}
             <a href="https://landsat.gsfc.nasa.gov/article/thermal-infrared-sensor-tirs/">
-                Thermal Infrared Sensor
+                NASA Landsat: Thermal Infrared Sensor
             </a>
         </div>
     )
@@ -120,7 +120,7 @@ export const ControlsForm = observer(() => {
 
             <div className={classes.actionButtons}>
                 <CloseButton />
-                <ApplyButton />
+                <UpdateButton />
             </div>
         </div>
     ) : null

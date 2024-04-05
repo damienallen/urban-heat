@@ -32,19 +32,18 @@ export const AboutModal = observer(() => {
             centered
         >
             <p>
-                The Urban Heat Map aims to provide an easily interpreted visualization of the{' '}
+                This project aims to provide a convenient visualization of the{' '}
                 <a href="https://en.wikipedia.org/wiki/Urban_heat_island" rel="external">
                     Urban Heat Island Effect
                 </a>
-                . All data is sourced from publically available satellite imagery.
+                across a number of urban centers.
             </p>
             <p>
-                This web application borrows your hardware for efficiently generating and displaying
-                isotherm contours. Thus, allowing for more interactivity, without high hosting
-                costs.
+                Your device's CPU and GPU are used to efficiently generate and display isotherm
+                contours using a moderate resolution satellite image source.
             </p>
             <p>
-                A project by{' '}
+                Created by{' '}
                 <a href="https://dallen.co" rel="author" target="_blank">
                     Damien Allen
                 </a>
