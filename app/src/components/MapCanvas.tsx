@@ -25,6 +25,16 @@ export const MapCanvas = observer(() => {
 
     const [contourLayerIds, setContourLayerIds] = useState<string[]>([])
 
+    const updateStyle = () => {
+        if (map.current && !contours.isProcessing) {
+            const currentMap: maplibregl.Map = map.current
+            currentMap.setStyle(app.styleUrl, { diff: false })
+            currentMap.on('style.load', () => {
+                loadContours(contours.layers)
+            })
+        }
+    }
+
     const loadContours = (layers: any[]) => {
         if (map.current) {
             const currentMap: maplibregl.Map = map.current
@@ -61,6 +71,7 @@ export const MapCanvas = observer(() => {
             }
 
             setContourLayerIds(idList)
+            app.setIsLoaded(true)
             console.debug(`${layers.length} contour layers added`)
         }
     }
@@ -82,14 +93,12 @@ export const MapCanvas = observer(() => {
     }, [])
 
     useEffect(() => {
-        if (map.current && !contours.isProcessing) {
-            const currentMap: maplibregl.Map = map.current
-            currentMap.setStyle(app.styleUrl, { diff: false })
-            currentMap.on('style.load', () => {
-                loadContours(contours.layers)
-            })
+        if (!contours.isProcessing) {
+            loadContours(contours.layers)
         }
-    }, [app.styleUrl, contours.layers])
+    }, [contours.layers])
+
+    useEffect(() => updateStyle(), [app.styleUrl])
 
     return (
         <>

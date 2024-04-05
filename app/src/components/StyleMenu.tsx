@@ -62,7 +62,7 @@ export const StyleMenu = observer(() => {
         <Menu shadow="sm" position="bottom" offset={20} withArrow arrowPosition="center">
             <Menu.Target>
                 <span className={classes.icon}>
-                    <StackSimple size={32} weight="duotone" />
+                    {app.isLoaded ? <StackSimple size={32} weight="duotone" /> : null}
                 </span>
             </Menu.Target>
             <Menu.Dropdown>
