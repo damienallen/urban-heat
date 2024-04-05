@@ -6,8 +6,8 @@ import {
     RangeSliderValue,
 } from '@mantine/core'
 
-import { CloseButton } from './CloseButton'
 import { ControlsItem } from './ControlsItem'
+import { HideButton } from './HideButton'
 import { UpdateButton } from './UpdateButton'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
@@ -119,7 +119,7 @@ export const ControlsForm = observer(() => {
             </ControlsItem>
 
             <div className={classes.actionButtons}>
-                <CloseButton />
+                <HideButton />
                 <UpdateButton />
             </div>
         </div>

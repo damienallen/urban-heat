@@ -29,7 +29,7 @@ export const OpenButton = observer(() => {
             <Tooltip label="Controls">
                 <Button
                     onClick={ui.toggleShowControls}
-                    variant="outline"
+                    variant="light"
                     disabled={contours.isProcessing}
                 >
                     <Sliders size={24} weight="duotone" />
