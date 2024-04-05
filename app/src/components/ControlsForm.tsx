@@ -39,7 +39,7 @@ const useStyles = createUseStyles({
     },
 })
 
-export const ControlsPanel = observer(() => {
+export const ControlsForm = observer(() => {
     const { app, contours, ui } = useStores()
     const classes = useStyles()
 

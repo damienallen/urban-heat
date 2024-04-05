@@ -1,6 +1,6 @@
-import { ControlsButton } from './ContolsButton'
-import { ControlsPanel } from './ControlsPanel'
+import { ControlsForm } from './ControlsForm'
 import { Legend } from './Legend'
+import { OpenButton } from './OpenButton'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -34,17 +34,17 @@ const useStyles = createUseStyles({
     },
 })
 
-export const Controls = observer(() => {
+export const ControlPanel = observer(() => {
     const { ui } = useStores()
     const classes = useStyles()
 
     return ui.showControls ? (
         <div className={classes.container}>
-            <ControlsPanel />
+            <ControlsForm />
         </div>
     ) : (
         <div className={classes.container}>
-            <ControlsButton />
+            <OpenButton />
             <Legend />
         </div>
     )

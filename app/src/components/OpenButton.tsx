@@ -22,7 +22,7 @@ const useStyles = createUseStyles({
     },
 })
 
-export const ControlsButton = observer(() => {
+export const OpenButton = observer(() => {
     const { contours, ui } = useStores()
     const classes = useStyles()
 

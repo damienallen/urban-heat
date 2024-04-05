@@ -4,7 +4,7 @@ import { StoreProvider, useStores } from '../stores'
 
 import { AboutModal } from './AboutModal'
 import { ActionBar } from './ActionBar'
-import { Controls } from './Controls'
+import { ControlPanel } from './ControlPanel'
 import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
 import { Title } from './Title'
@@ -64,7 +64,7 @@ export const App = () => {
                         <ActionBar />
                     </div>
                     <div className={`${classes.row} ${classes.bottom}`}>
-                        <Controls />
+                        <ControlPanel />
                     </div>
 
                     <AboutModal />
