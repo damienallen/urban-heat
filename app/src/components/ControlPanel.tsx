@@ -10,7 +10,7 @@ const useStyles = createUseStyles({
         background: '#fff',
         display: 'flex',
         userSelect: 'none',
-        zIndex: 300,
+        zIndex: 100,
         '@media (min-width: 720px)': {
             flex: '0 0 280px',
             margin: 16,

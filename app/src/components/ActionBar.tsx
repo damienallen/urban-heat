@@ -10,7 +10,7 @@ const useStyles = createUseStyles({
         alignItems: 'center',
         width: '100vw',
         userSelect: 'none',
-        zIndex: 200,
+        zIndex: 100,
         '@media (min-width: 720px)': {
             flex: '0 1 420px',
             background: '#fff',

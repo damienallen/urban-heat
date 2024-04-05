@@ -65,7 +65,7 @@ export const ControlsForm = observer(() => {
         <div className={classes.container}>
             <LoadingOverlay
                 visible={contours.isProcessing}
-                zIndex={500}
+                zIndex={150}
                 overlayProps={{ radius: 'sm', blur: 2 }}
             />
 
