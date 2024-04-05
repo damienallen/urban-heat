@@ -1,8 +1,8 @@
-import { Info, StackSimple } from '@phosphor-icons/react'
-
-import { ActionBarItem } from './ActionBarItem'
+import { AboutButton } from './AboutButton'
+import { Info } from '@phosphor-icons/react'
 import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
+import { StyleMenu } from './StyleMenu'
 import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
 
@@ -34,16 +34,8 @@ export const ActionBar = () => {
         <div className={classes.container}>
             <ProcessingStatus />
             <Search />
-            <ActionBarItem
-                label="Map Style"
-                icon={<StackSimple size={32} weight="duotone" />}
-                onClick={() => ui.toggleShowAbout()}
-            />
-            <ActionBarItem
-                label="About"
-                icon={<Info size={32} weight="duotone" />}
-                onClick={() => ui.toggleShowAbout()}
-            />
+            <StyleMenu />
+            <AboutButton />
         </div>
     )
 }

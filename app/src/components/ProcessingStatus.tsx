@@ -11,7 +11,6 @@ const useStyles = createUseStyles({
         alignItems: 'center',
         justifyContent: 'center',
         userSelect: 'none',
-        color: '#666',
         padding: '0 8px',
     },
     spin: {

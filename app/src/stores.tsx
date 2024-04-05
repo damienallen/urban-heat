@@ -100,6 +100,8 @@ export class ContoursStore {
 export class UIStore {
     public showAbout: boolean = false
     public showControls: boolean = false
+    public showStyleMenu: boolean = false
+
     public colorScheme: MantineColorScheme = 'light'
 
     toggleShowAbout = () => {
@@ -108,6 +110,10 @@ export class UIStore {
 
     toggleShowControls = () => {
         this.showControls = !this.showControls
+    }
+
+    toggleShowStyleMenu = () => {
+        this.showStyleMenu = !this.showStyleMenu
     }
 
     setShowControls = (value: boolean) => {
