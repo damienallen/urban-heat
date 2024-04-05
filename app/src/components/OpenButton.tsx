@@ -21,13 +21,17 @@ const useStyles = createUseStyles({
 })
 
 export const OpenButton = observer(() => {
-    const { ui } = useStores()
+    const { contours, ui } = useStores()
     const classes = useStyles()
 
     return ui.showControls ? null : (
         <span className={classes.container}>
             <Tooltip label="Controls">
-                <Button onClick={ui.toggleShowControls} variant="light">
+                <Button
+                    onClick={ui.toggleShowControls}
+                    variant="light"
+                    disabled={contours.areProcessing}
+                >
                     <Sliders size={24} weight="duotone" />
                 </Button>
             </Tooltip>
