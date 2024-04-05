@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@mantine/core'
 
-import { PiSlidersDuotone } from 'react-icons/pi'
+import { Sliders } from '@phosphor-icons/react'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -17,9 +17,6 @@ const useStyles = createUseStyles({
             fontSize: '1.6em',
         },
     },
-    icon: {
-        fontSize: '1.8em',
-    },
 })
 
 export const OpenButton = observer(() => {
@@ -31,10 +28,10 @@ export const OpenButton = observer(() => {
             <Tooltip label="Controls">
                 <Button
                     onClick={ui.toggleShowControls}
-                    variant="light"
+                    variant="outline"
                     disabled={contours.isProcessing}
                 >
-                    <PiSlidersDuotone className={classes.icon} />
+                    <Sliders size={24} weight="duotone" />
                 </Button>
             </Tooltip>
         </span>

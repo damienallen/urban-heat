@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core'
-import { PiFloppyDiskDuotone } from 'react-icons/pi'
+import { FloppyDisk } from '@phosphor-icons/react'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -16,9 +16,6 @@ const useStyles = createUseStyles({
             fontSize: '1.6em',
         },
     },
-    icon: {
-        fontSize: '1.8em',
-    },
 })
 
 export const ApplyButton = observer(() => {
@@ -29,7 +26,7 @@ export const ApplyButton = observer(() => {
         <span className={classes.container}>
             <Button
                 onClick={() => contours.processContours()}
-                rightSection={<PiFloppyDiskDuotone className={classes.icon} />}
+                rightSection={<FloppyDisk size={24} weight="duotone" />}
                 disabled={contours.isProcessing}
             >
                 Apply

@@ -1,5 +1,6 @@
+import { Info, StackSimple } from '@phosphor-icons/react'
+
 import { ActionBarItem } from './ActionBarItem'
-import { PiInfoDuotone } from 'react-icons/pi'
 import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
 import { createUseStyles } from 'react-jss'
@@ -34,8 +35,13 @@ export const ActionBar = () => {
             <ProcessingStatus />
             <Search />
             <ActionBarItem
+                label="Map Style"
+                icon={<StackSimple size={32} weight="duotone" />}
+                onClick={() => ui.toggleShowAbout()}
+            />
+            <ActionBarItem
                 label="About"
-                icon={<PiInfoDuotone />}
+                icon={<Info size={32} weight="duotone" />}
                 onClick={() => ui.toggleShowAbout()}
             />
         </div>

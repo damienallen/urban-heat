@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core'
-import { PiCaretDoubleDownDuotone } from 'react-icons/pi'
+import { CaretLineDown } from '@phosphor-icons/react'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -16,9 +16,6 @@ const useStyles = createUseStyles({
             fontSize: '1.6em',
         },
     },
-    icon: {
-        fontSize: '1.8em',
-    },
 })
 
 export const CloseButton = observer(() => {
@@ -29,10 +26,10 @@ export const CloseButton = observer(() => {
         <span className={classes.container}>
             <Button
                 onClick={ui.toggleShowControls}
-                leftSection={<PiCaretDoubleDownDuotone className={classes.icon} />}
-                variant="light"
+                leftSection={<CaretLineDown size={24} weight="duotone" />}
+                variant="outline"
             >
-                Close
+                Hide
             </Button>
         </span>
     )

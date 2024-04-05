@@ -1,4 +1,4 @@
-import { PiBuildingsDuotone, PiGearDuotone } from 'react-icons/pi'
+import { Buildings, Gear } from '@phosphor-icons/react'
 
 import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
@@ -13,13 +13,6 @@ const useStyles = createUseStyles({
         userSelect: 'none',
         color: '#666',
         padding: '0 8px',
-    },
-    icon: {
-        fontSize: '1.8em',
-        flex: 1,
-        '@media (max-width: 720px)': {
-            fontSize: '1.6em',
-        },
     },
     spin: {
         animation: 'spin 5s linear infinite',
@@ -38,9 +31,9 @@ export const ProcessingStatus = observer(() => {
         <Tooltip label={tooltipLabel}>
             <div className={classes.container}>
                 {contours.isProcessing ? (
-                    <PiGearDuotone className={`${classes.icon} ${classes.spin}`} />
+                    <Gear size={32} weight="duotone" className={classes.spin} />
                 ) : (
-                    <PiBuildingsDuotone className={classes.icon} />
+                    <Buildings size={32} weight="duotone" />
                 )}
             </div>
         </Tooltip>
