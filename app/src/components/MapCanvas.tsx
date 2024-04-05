@@ -50,13 +50,17 @@ export const MapCanvas = observer(() => {
 
             // Add contour layers
             let idList = []
-            for (let contourGeojson of layers) {
-                const layerId = `contour-${contourGeojson.threshold}`
+            let accumulatedOpacity = 0
+            for (let ind = 0; ind < layers.length; ind++) {
+                const layerId = `contour-${layers[ind].threshold}`
                 idList.push(layerId)
+
+                const opacity = (ind + 1) / (layers.length + 1) - accumulatedOpacity
+                accumulatedOpacity += opacity
 
                 currentMap.addSource(layerId, {
                     type: 'geojson',
-                    data: contourGeojson,
+                    data: layers[ind],
                 })
                 currentMap.addLayer({
                     id: layerId,
@@ -65,7 +69,7 @@ export const MapCanvas = observer(() => {
                     layout: {},
                     paint: {
                         'fill-color': '#f00',
-                        'fill-opacity': 0.2,
+                        'fill-opacity': opacity,
                     },
                 })
             }

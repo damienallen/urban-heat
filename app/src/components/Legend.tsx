@@ -30,7 +30,7 @@ export const Legend = observer(() => {
 
     let items = []
     for (let ind = 0; ind < contours.thresholds.length; ind++) {
-        const opacity = (ind + 1) / (contours.thresholds.length + 1)
+        const opacity = (0.8 * (ind + 1)) / (contours.thresholds.length + 1)
         items.push(
             <div
                 key={`threshold-${ind}`}
