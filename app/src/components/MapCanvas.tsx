@@ -71,7 +71,6 @@ export const MapCanvas = observer(() => {
             }
 
             setContourLayerIds(idList)
-            app.setIsLoaded(true)
             console.debug(`${layers.length} contour layers added`)
         }
     }

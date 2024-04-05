@@ -11,13 +11,17 @@ const useStyles = createUseStyles({
         display: 'flex',
         cursor: 'pointer',
     },
+    disabled: {
+        cursor: 'not-allowed',
+        opacity: 0.5,
+    },
     menuItem: {
         textAlign: 'center',
     },
 })
 
 export const StyleMenu = observer(() => {
-    const { app } = useStores()
+    const { app, contours } = useStores()
     const classes = useStyles()
 
     const stylesList: { label: string; value: string }[] = [
@@ -59,10 +63,19 @@ export const StyleMenu = observer(() => {
     ))
 
     return (
-        <Menu shadow="sm" position="bottom" offset={20} withArrow arrowPosition="center">
+        <Menu
+            shadow="sm"
+            position="bottom"
+            offset={20}
+            withArrow
+            arrowPosition="center"
+            disabled={contours.isProcessing}
+        >
             <Menu.Target>
-                <span className={classes.icon}>
-                    {app.isLoaded ? <StackSimple size={32} weight="duotone" /> : null}
+                <span
+                    className={`${classes.icon} ${contours.isProcessing ? classes.disabled : ''}`}
+                >
+                    <StackSimple size={32} weight="duotone" />
                 </span>
             </Menu.Target>
             <Menu.Dropdown>

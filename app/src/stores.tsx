@@ -27,7 +27,6 @@ export class AppStore {
     public availableYears: number[] = linspace(2013, 2023, 1)
 
     public mapStyle: string = 'dataviz'
-    public isLoaded: boolean = false
 
     setCity = (value: string) => {
         this.city = value
@@ -43,10 +42,6 @@ export class AppStore {
 
     setMapStyle = (value: string) => {
         this.mapStyle = value
-    }
-
-    setIsLoaded = (value: boolean) => {
-        this.isLoaded = value
     }
 
     get styleUrl() {
