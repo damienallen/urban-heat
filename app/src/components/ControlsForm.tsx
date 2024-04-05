@@ -42,7 +42,7 @@ const useStyles = createUseStyles({
 })
 
 export const ControlsForm = observer(() => {
-    const { app, contours, ui } = useStores()
+    const { contours, ui } = useStores()
     const classes = useStyles()
 
     // TODO: dynamic based on range/steps
