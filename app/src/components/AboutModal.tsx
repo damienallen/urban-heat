@@ -39,8 +39,8 @@ export const AboutModal = observer(() => {
                 across a number of urban centers.
             </p>
             <p>
-                Your device's CPU and GPU are used to efficiently generate and display isotherm
-                contours using a moderate resolution satellite image source.
+                Your device's CPU/GPU are used to generate and display isotherm contours from a
+                moderate resolution satellite source.
             </p>
             <p>
                 Created by{' '}
