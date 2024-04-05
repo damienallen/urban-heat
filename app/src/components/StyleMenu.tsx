@@ -54,7 +54,7 @@ export const StyleMenu = observer(() => {
             onClick={() => app.setMapStyle(item.value)}
             className={classes.menuItem}
         >
-            {item.label}
+            {item.value == app.mapStyle ? <b>{item.label}</b> : item.label}
         </Menu.Item>
     ))
 

@@ -9,7 +9,6 @@ import {
 import { ApplyButton } from './ApplyButton'
 import { CloseButton } from './CloseButton'
 import { ControlsItem } from './ControlsItem'
-import { StyleSelector } from './StyleSelector'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -66,7 +65,10 @@ export const ControlsForm = observer(() => {
                 zIndex={500}
                 overlayProps={{ radius: 'sm', blur: 2 }}
             />
-            <StyleSelector />
+
+            <Blockquote className={classes.description} color="gray" cite={source} mt="xl">
+                Annual maximum land surface temperature (LST).
+            </Blockquote>
 
             <ControlsItem label="Dataset">
                 <NativeSelect
@@ -112,10 +114,6 @@ export const ControlsForm = observer(() => {
                     />
                 </div>
             </ControlsItem>
-
-            <Blockquote className={classes.description} color="gray" cite={source} mt="xl">
-                Annual maximum land surface temperature (LST).
-            </Blockquote>
 
             <div className={classes.actionButtons}>
                 <CloseButton />
