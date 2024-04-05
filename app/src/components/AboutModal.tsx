@@ -35,7 +35,7 @@ export const AboutModal = observer(() => {
                 This project aims to provide a convenient visualization of the{' '}
                 <a href="https://en.wikipedia.org/wiki/Urban_heat_island" rel="external">
                     Urban Heat Island Effect
-                </a>
+                </a>{' '}
                 across a number of urban centers.
             </p>
             <p>

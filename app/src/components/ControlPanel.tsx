@@ -21,6 +21,8 @@ const useStyles = createUseStyles({
         '@media (max-width: 720px)': {
             flex: 1,
             borderTop: '1px solid rgba(0, 0, 0, 0.2)',
+            background: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(4px)',
         },
     },
     toggle: {

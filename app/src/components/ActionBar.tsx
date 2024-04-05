@@ -22,6 +22,7 @@ const useStyles = createUseStyles({
         '@media (max-width: 720px)': {
             flex: '0 1',
             background: 'rgba(255, 255, 255, 0.8)',
+            backdropFilter: 'blur(4px)',
             padding: 8,
             borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
         },
