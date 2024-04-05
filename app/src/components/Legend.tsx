@@ -30,11 +30,12 @@ export const Legend = observer(() => {
 
     let items = []
     for (let ind = 0; ind < contours.thresholds.length; ind++) {
+        const opacity = (ind + 1) / (contours.thresholds.length + 1)
         items.push(
             <div
                 key={`threshold-${ind}`}
                 className={classes.threholdItem}
-                style={{ background: `rgba(255, 0, 0, ${0.2 * (ind + 1)})` }}
+                style={{ background: `rgba(255, 0, 0, ${opacity})` }}
             >
                 {contours.thresholds[ind]}°C
             </div>
