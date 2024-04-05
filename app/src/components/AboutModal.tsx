@@ -11,6 +11,7 @@ const useStyles = createUseStyles({
         },
         '& .mantine-Modal-body': {
             marginTop: -8,
+            marginBottom: 8,
         },
     },
     title: {
@@ -27,7 +28,7 @@ export const AboutModal = observer(() => {
             className={classes.container}
             opened={ui.showAbout}
             onClose={() => ui.toggleShowAbout()}
-            title={<span className={classes.title}>About this App</span>}
+            title={<span className={classes.title}>About the UHM App</span>}
             centered
         >
             <p>
