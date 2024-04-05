@@ -66,7 +66,7 @@ export const ControlsForm = observer(() => {
             <LoadingOverlay
                 visible={contours.areProcessing}
                 zIndex={150}
-                overlayProps={{ radius: 'sm', blur: 2 }}
+                overlayProps={{ blur: 2 }}
             />
 
             <Blockquote className={classes.description} color="gray" cite={source} mt="xl">
