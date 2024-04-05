@@ -7,11 +7,12 @@ import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {
-        background: '#fff',
         display: 'flex',
         userSelect: 'none',
         zIndex: 100,
+        backdropFilter: 'blur(4px)',
         '@media (min-width: 720px)': {
+            background: 'rgba(255, 255, 255, 0.85)',
             flex: '0 0 280px',
             margin: 16,
             padding: 12,
@@ -22,7 +23,6 @@ const useStyles = createUseStyles({
             flex: 1,
             borderTop: '1px solid rgba(0, 0, 0, 0.2)',
             background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(4px)',
         },
     },
     toggle: {
