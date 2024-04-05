@@ -28,15 +28,15 @@ export const AboutModal = observer(() => {
             className={classes.container}
             opened={ui.showAbout}
             onClose={() => ui.toggleShowAbout()}
-            title={<span className={classes.title}>About the UHM App</span>}
+            title={<span className={classes.title}>About the App</span>}
             centered
         >
             <p>
                 The Urban Heat Map aims to provide an easily interpreted visualization of the{' '}
                 <a href="https://en.wikipedia.org/wiki/Urban_heat_island" rel="external">
                     Urban Heat Island Effect
-                </a>{' '}
-                using processed public satellite imagery.
+                </a>
+                . All data is sourced from publically available satellite imagery.
             </p>
             <p>
                 This web application borrows your hardware for efficiently generating and displaying
