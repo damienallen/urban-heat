@@ -9,16 +9,18 @@ const useStyles = createUseStyles({
     container: {
         background: '#fff',
         display: 'flex',
-        padding: 12,
-        flex: 1,
-        borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         userSelect: 'none',
         zIndex: 300,
         '@media (min-width: 720px)': {
             flex: '0 0 280px',
             margin: 16,
+            padding: 12,
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
+        },
+        '@media (max-width: 720px)': {
+            flex: 1,
+            borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         },
     },
     toggle: {

@@ -1,34 +1,34 @@
 import { AboutButton } from './AboutButton'
-import { Info } from '@phosphor-icons/react'
 import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
 import { StyleMenu } from './StyleMenu'
 import { createUseStyles } from 'react-jss'
-import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {
-        background: '#fff',
         display: 'flex',
         alignItems: 'center',
-        flex: '0 1',
         width: '100vw',
-        padding: '8px 0',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
         userSelect: 'none',
         zIndex: 200,
         '@media (min-width: 720px)': {
             flex: '0 1 420px',
+            background: '#fff',
             margin: 16,
             padding: 8,
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
         },
+        '@media (max-width: 720px)': {
+            flex: '0 1',
+            background: 'rgba(255, 255, 255, 0.8)',
+            padding: 8,
+            borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
+        },
     },
 })
 
 export const ActionBar = () => {
-    const { ui } = useStores()
     const classes = useStyles()
     return (
         <div className={classes.container}>

@@ -21,13 +21,16 @@ const useStyles = createUseStyles({
         flex: 1,
         gap: 8,
         position: 'relative',
+        '@media (max-width: 720px)': {
+            padding: 16,
+        },
     },
     sliderInput: {
         flex: 3,
         padding: '8px 8px 32px 16px',
     },
     description: {
-        margin: '8px 0 !important',
+        margin: '0 0 8px 0 !important',
         padding: 8,
         fontSize: '0.8em',
     },

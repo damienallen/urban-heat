@@ -4,10 +4,16 @@ import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     items: {
-        marginLeft: 16,
         display: 'flex',
         flex: 1,
         gap: 16,
+        overflowX: 'scroll',
+        '@media (max-width: 720px)': {
+            padding: '16px 0',
+        },
+        '@media (min-width: 720px)': {
+            marginLeft: 16,
+        },
     },
     threholdItem: {
         flex: '0',
