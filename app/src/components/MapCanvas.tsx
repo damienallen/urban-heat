@@ -1,9 +1,9 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-import maplibregl, { Point } from 'maplibre-gl'
 import { useEffect, useRef, useState } from 'react'
 
 import { createUseStyles } from 'react-jss'
+import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
 
