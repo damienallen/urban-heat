@@ -30,9 +30,9 @@ export const ProcessingStatus = observer(() => {
         <Tooltip label={tooltipLabel}>
             <div className={classes.container}>
                 {contours.areProcessing ? (
-                    <Gear size={32} weight="duotone" className={classes.spin} />
+                    <Gear size={28} weight="duotone" className={classes.spin} />
                 ) : (
-                    <Buildings size={32} weight="duotone" />
+                    <Buildings size={28} weight="duotone" />
                 )}
             </div>
         </Tooltip>

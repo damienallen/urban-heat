@@ -66,7 +66,7 @@ export class AppStore {
 
             this.searchResults = respJson.results.filter((o: any) => o.type === 'city')
             this.resultsLoading = false
-        }, 200)
+        })
     }
 
     get styleUrl() {
@@ -210,7 +210,7 @@ export const StoreProvider = ({ children }: { children: any }) => (
 export const useStores = () => React.useContext(StoreContext)
 
 let timer: number
-const debounce = (func: any, timeout = 300) => {
+const debounce = (func: any, timeout = 350) => {
     clearTimeout(timer)
     timer = setTimeout(func, timeout)
 }
