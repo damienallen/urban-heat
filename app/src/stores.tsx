@@ -28,6 +28,7 @@ export class AppStore {
 
     public mapStyle: string = 'dataviz'
     public mapCenter: [number, number] = [4.478, 51.924]
+    public bounds: [[number, number], [number, number]] | null = null
 
     setCity = (value: string) => {
         this.city = value
@@ -49,21 +50,21 @@ export class AppStore {
         this.mapCenter = value
     }
 
+    setBounds = (bbox: [number, number, number, number]) => {
+        this.bounds = [
+            [bbox[0], bbox[1]],
+            [bbox[2], bbox[3]],
+        ]
+    }
+
     queryLocation = (query: string) => {
-        console.log(`Q:`, query)
         const geocodeUrl = `https://geocode.urbanheat.app/q/${query}.js`
         this.resultsLoading = true
         debounce(async () => {
-            console.log(geocodeUrl)
             const response = await fetch(geocodeUrl)
             const respJson = await response.json()
-            const resultsList = respJson.results.map(
-                (r: any) => `${r.city}, ${r.country_code.toUpperCase()}`
-            )
-            console.log(respJson)
-            console.log(resultsList)
 
-            this.searchResults = [...new Set<string>(resultsList)]
+            this.searchResults = respJson.results.filter((o: any) => o.type === 'city')
             this.resultsLoading = false
         }, 200)
     }
@@ -84,7 +85,7 @@ export class ContoursStore {
     public layers: any[] = []
     public lastJson: string = ''
 
-    public range: RangeSliderValue = [42, 48]
+    public range: RangeSliderValue = [44, 48]
     public step: number = 2
 
     public minThreshold: number = 30

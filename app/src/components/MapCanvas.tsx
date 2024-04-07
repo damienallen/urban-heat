@@ -113,6 +113,13 @@ export const MapCanvas = observer(() => {
         }
     }, [app.mapCenter])
 
+    useEffect(() => {
+        if (map.current && app.bounds) {
+            const currentMap: maplibregl.Map = map.current
+            currentMap.fitBounds(app.bounds)
+        }
+    }, [app.bounds])
+
     useEffect(() => updateStyle(), [app.styleUrl])
 
     return (

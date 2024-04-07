@@ -31,18 +31,24 @@ export const Search = observer(() => {
         app.queryLocation(q)
     }
 
+    const options = Object.fromEntries(
+        app.searchResults.map((r: any) => [`${r.city}, ${r.country_code?.toUpperCase()}`, r])
+    )
+
     return (
         <div className={classes.container}>
             <Autocomplete
                 className={classes.input}
                 placeholder={`${app.city}, ${app.country}`}
-                data={app.searchResults}
+                data={Object.keys(options)}
                 value={query}
                 onChange={(q: string) => updateQuery(q)}
-                onOptionSubmit={(o) => {
-                    console.log('Option', o)
-                    app.setCity(app.city)
-                    app.setCountry(app.country)
+                onOptionSubmit={(k: string) => {
+                    const o = options[k]
+                    app.setCity(o.city)
+                    app.setCountry(o.country)
+                    app.setMapCenter([o.lon, o.lat])
+                    app.setBounds(o.boundingbox)
                 }}
                 comboboxProps={{ transitionProps: { transition: 'fade', duration: 200 } }}
             />
