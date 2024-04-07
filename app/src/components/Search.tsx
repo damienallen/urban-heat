@@ -27,7 +27,7 @@ const useStyles = createUseStyles({
 export const Search = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
-    const [query, setQuery] = useState<string>('')
+    const [query, setQuery] = useState<string>(`${app.city}, ${app.country}`)
 
     const updateQuery = (q: string) => {
         setQuery(q)
@@ -42,7 +42,7 @@ export const Search = observer(() => {
         <div className={classes.container}>
             <Autocomplete
                 className={classes.input}
-                placeholder={`${app.city}, ${app.country}`}
+                placeholder="Search"
                 data={Object.keys(options)}
                 value={query}
                 onChange={(q: string) => updateQuery(q)}
