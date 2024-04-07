@@ -7,6 +7,7 @@ import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {
+        color: '#333',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -22,19 +23,15 @@ export const ProcessingStatus = observer(() => {
     const { contours } = useStores()
     const classes = useStyles()
 
-    const tooltipLabel = contours.areProcessing
-        ? 'Generating contours...'
-        : 'Search European cities'
-
     return (
-        <Tooltip label={tooltipLabel}>
-            <div className={classes.container}>
-                {contours.areProcessing ? (
+        <div className={classes.container}>
+            {contours.areProcessing ? (
+                <Tooltip label="Generating contours...">
                     <Gear size={28} weight="duotone" className={classes.spin} />
-                ) : (
-                    <Buildings size={28} weight="duotone" />
-                )}
-            </div>
-        </Tooltip>
+                </Tooltip>
+            ) : (
+                <Buildings size={28} weight="duotone" />
+            )}
+        </div>
     )
 })

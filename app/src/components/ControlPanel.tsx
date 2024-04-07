@@ -24,17 +24,6 @@ const useStyles = createUseStyles({
             borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         },
     },
-    toggle: {
-        fontSize: '1.8em',
-        color: '#666',
-        flex: 0,
-        display: 'flex',
-        alignItems: 'flex-end',
-        cursor: 'pointer',
-        '@media (max-width: 720px)': {
-            fontSize: '1.6em',
-        },
-    },
 })
 
 export const ControlPanel = observer(() => {

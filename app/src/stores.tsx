@@ -20,8 +20,8 @@ export class Store {
 
 export class AppStore {
     public version: string = packageJson.version
-    public city: string = 'Rotterdam'
-    public country: string = 'NL'
+    public city: string = ''
+    public country: string = ''
 
     public resultsLoading: boolean = false
     public searchResults: string[] = []

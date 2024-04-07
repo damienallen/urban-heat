@@ -15,6 +15,7 @@ const useStyles = createUseStyles({
         background: 'none',
         width: '100%',
         '& .mantine-Autocomplete-input': {
+            color: '#333',
             border: 'none',
             fontSize: '1.4em',
             '@media (max-width: 720px)': {
@@ -27,7 +28,7 @@ const useStyles = createUseStyles({
 export const Search = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
-    const [query, setQuery] = useState<string>(`${app.city}, ${app.country}`)
+    const [query, setQuery] = useState<string>('')
 
     const updateQuery = (q: string) => {
         setQuery(q)
@@ -42,7 +43,7 @@ export const Search = observer(() => {
         <div className={classes.container}>
             <Autocomplete
                 className={classes.input}
-                placeholder="Search"
+                placeholder="Search Cities"
                 data={Object.keys(options)}
                 value={query}
                 onChange={(q: string) => updateQuery(q)}
