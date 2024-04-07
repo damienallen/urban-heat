@@ -1,5 +1,7 @@
+import { Autocomplete } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { useState } from 'react'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
@@ -22,9 +24,28 @@ const useStyles = createUseStyles({
 export const Search = observer(() => {
     const { app } = useStores()
     const classes = useStyles()
+    const [query, setQuery] = useState<string>('')
+
+    const updateQuery = (q: string) => {
+        setQuery(q)
+        app.queryLocation(q)
+    }
+
     return (
         <div className={classes.container}>
-            <input placeholder={`${app.city}, ${app.country}`} className={classes.input} />
+            <Autocomplete
+                className={classes.input}
+                placeholder={`${app.city}, ${app.country}`}
+                data={app.searchResults}
+                value={query}
+                onChange={(q: string) => updateQuery(q)}
+                onOptionSubmit={(o) => {
+                    console.log('Option', o)
+                    app.setCity(app.city)
+                    app.setCountry(app.country)
+                }}
+                comboboxProps={{ transitionProps: { transition: 'fade', duration: 200 } }}
+            />
         </div>
     )
 })

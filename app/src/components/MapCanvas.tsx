@@ -91,7 +91,7 @@ export const MapCanvas = observer(() => {
         map.current = new maplibregl.Map({
             container: mapContainer.current || '',
             style: app.styleUrl,
-            center: [4.478, 51.924],
+            center: app.mapCenter,
             zoom: 10,
         }) as any
         ;(map.current as any).on('load', () => {
@@ -105,6 +105,13 @@ export const MapCanvas = observer(() => {
             loadContours(contours.layers)
         }
     }, [contours.layers])
+
+    useEffect(() => {
+        if (map.current) {
+            const currentMap: maplibregl.Map = map.current
+            currentMap.setCenter(app.mapCenter)
+        }
+    }, [app.mapCenter])
 
     useEffect(() => updateStyle(), [app.styleUrl])
 

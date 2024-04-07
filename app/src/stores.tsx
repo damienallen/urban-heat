@@ -23,7 +23,11 @@ export class AppStore {
     public city: string = 'Rotterdam'
     public country: string = 'NL'
 
+    public resultsLoading: boolean = false
+    public searchResults: string[] = []
+
     public mapStyle: string = 'dataviz'
+    public mapCenter: [number, number] = [4.478, 51.924]
 
     setCity = (value: string) => {
         this.city = value
@@ -35,6 +39,33 @@ export class AppStore {
 
     setMapStyle = (value: string) => {
         this.mapStyle = value
+    }
+
+    setResultsLoading = (value: boolean) => {
+        this.resultsLoading = value
+    }
+
+    setMapCenter = (value: [number, number]) => {
+        this.mapCenter = value
+    }
+
+    queryLocation = (query: string) => {
+        console.log(`Q:`, query)
+        const geocodeUrl = `https://geocode.urbanheat.app/q/${query}.js`
+        this.resultsLoading = true
+        debounce(async () => {
+            console.log(geocodeUrl)
+            const response = await fetch(geocodeUrl)
+            const respJson = await response.json()
+            const resultsList = respJson.results.map(
+                (r: any) => `${r.city}, ${r.country_code.toUpperCase()}`
+            )
+            console.log(respJson)
+            console.log(resultsList)
+
+            this.searchResults = [...new Set<string>(resultsList)]
+            this.resultsLoading = false
+        }, 200)
     }
 
     get styleUrl() {
@@ -176,3 +207,9 @@ export const StoreProvider = ({ children }: { children: any }) => (
 )
 
 export const useStores = () => React.useContext(StoreContext)
+
+let timer: number
+const debounce = (func: any, timeout = 300) => {
+    clearTimeout(timer)
+    timer = setTimeout(func, timeout)
+}
