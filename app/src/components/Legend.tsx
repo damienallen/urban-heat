@@ -9,7 +9,7 @@ const useStyles = createUseStyles({
         gap: 16,
         overflowX: 'scroll',
         '@media (max-width: 720px)': {
-            padding: '16px 0',
+            padding: '8px 0',
             marginRight: 16,
         },
         '@media (min-width: 720px)': {

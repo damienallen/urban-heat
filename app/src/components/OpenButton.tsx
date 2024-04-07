@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
         cursor: 'pointer',
         '@media (max-width: 720px)': {
             fontSize: '1.6em',
-            padding: 16,
+            padding: 8,
         },
     },
 })
