@@ -28,7 +28,7 @@ export class AppStore {
 
     public mapStyle: string = 'dataviz'
     public mapCenter: [number, number] = [4.478, 51.924]
-    public bounds: [[number, number], [number, number]] | null = null
+    public bounds: [[number, number], [number, number]] | undefined = undefined
 
     setCity = (value: string) => {
         this.city = value

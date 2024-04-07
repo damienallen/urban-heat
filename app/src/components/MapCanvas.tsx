@@ -1,9 +1,9 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+import maplibregl, { Point } from 'maplibre-gl'
 import { useEffect, useRef, useState } from 'react'
 
 import { createUseStyles } from 'react-jss'
-import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
 
@@ -107,16 +107,9 @@ export const MapCanvas = observer(() => {
     }, [contours.layers])
 
     useEffect(() => {
-        if (map.current) {
-            const currentMap: maplibregl.Map = map.current
-            currentMap.setCenter(app.mapCenter)
-        }
-    }, [app.mapCenter])
-
-    useEffect(() => {
         if (map.current && app.bounds) {
             const currentMap: maplibregl.Map = map.current
-            currentMap.fitBounds(app.bounds)
+            currentMap.fitBounds(app.bounds, { padding: 20, maxZoom: 14 })
         }
     }, [app.bounds])
 
