@@ -1,0 +1,16 @@
+name: Service
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - service/**
+
+jobs:
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: chartboost/ruff-action@v1
