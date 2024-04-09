@@ -15,7 +15,7 @@ const useStyles = createUseStyles({
         zIndex: 50,
         '@media (max-width: 720px)': {
             '& .maplibregl-ctrl-attrib': {
-                marginBottom: '80px !important',
+                marginBottom: '64px !important',
             },
         },
     },

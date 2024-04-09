@@ -36,11 +36,11 @@ export const AboutModal = observer(() => {
                 <a href="https://en.wikipedia.org/wiki/Urban_heat_island" rel="external">
                     Urban Heat Island Effect
                 </a>{' '}
-                across a number of urban centers.
+                across European urban centers.
             </p>
             <p>
-                Your device's CPU/GPU are used to generate and display isotherm contours from a
-                moderate resolution satellite source.
+                Isotherm contours are generated from a moderate resolution satellite source using
+                your device's CPU/GPU hardware.
             </p>
             <p>
                 Created by{' '}
