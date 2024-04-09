@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -55,5 +55,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           tags: ghcr.io/damienallen/urban-heat/service:latest
+          file: ./service/Dockerfile
           context: ./service
           push: false
