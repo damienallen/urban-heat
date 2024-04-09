@@ -38,8 +38,6 @@ jobs:
     needs:
       - static-analysis
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
 
     steps:
       - uses: actions/checkout@v4
