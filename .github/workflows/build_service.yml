@@ -19,3 +19,4 @@ jobs:
       - run: pip install --upgrade pip
       - run: pip install pipx
       - run: pipx install poetry
+      - run: poetry install --only dev
