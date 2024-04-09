@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "urban-heat-pipelines"
+name = "urban_heat_pipelines"
 version = "2024"
 description = "Processing pipelines for remote sensing data"
 authors = ["Damien Allen <dev@dallen.co>"]

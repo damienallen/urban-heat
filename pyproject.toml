@@ -5,6 +5,7 @@ description = "Shared development environment for service and processing scripts
 authors = ["Damien Allen <dev@dallen.co>"]
 readme = "README.md"
 
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.12"
@@ -18,14 +19,14 @@ black = "^24.3.0"
 isort = "^5.13.2"
 
 
+[tool.black]
+line-length = 99
+
 [tool.ruff]
 line-length = 99
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402"]
-
-[tool.black]
-line-length = 99
 
 
 [build-system]
