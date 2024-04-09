@@ -65,6 +65,9 @@ dst_transform, dst_width, dst_height = calculate_default_transform(
 )
 
 dst_metadata = largest_metadata
+if dst_metadata is None:
+    raise Exception("Unable to export with missing metadata")
+
 dst_metadata.update(
     {"crs": dst_crs, "transform": dst_transform, "width": dst_width, "height": dst_height}
 )

@@ -31,7 +31,7 @@ for image_path in raw_data_dir.glob("*.TIF"):
         }
     )
 
-images = sorted(images, key=lambda img: img["capture_date"])
+images = sorted(images, key=lambda img: img["capture_date"])  # type: ignore
 
 # Mask for clipping
 mask_path = data_dir / "zh_extent.gpkg"
