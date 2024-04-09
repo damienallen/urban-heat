@@ -54,7 +54,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./service
-          file: ./Dockerfile
-          push: false
           tags: ghcr.io/damienallen/urban-heat/service:latest
+          context: ./service
+          push: false
