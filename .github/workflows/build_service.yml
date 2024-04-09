@@ -57,4 +57,4 @@ jobs:
           tags: ghcr.io/damienallen/urban-heat/service:latest
           file: ./service/Dockerfile
           context: ./service
-          push: false
+          push: true
