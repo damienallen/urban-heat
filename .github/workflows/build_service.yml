@@ -16,7 +16,13 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: "3.12"
+
       - run: pip install --upgrade pip
       - run: pip install pipx
       - run: pipx install poetry
+
+      - run: poetry config virtualenvs.create false
       - run: poetry install --only dev
+
+      - run: ruff .
+      - run: mypy .
