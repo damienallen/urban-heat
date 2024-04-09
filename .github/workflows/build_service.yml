@@ -57,6 +57,6 @@ jobs:
           tags: ghcr.io/damienallen/urban-heat/service:latest
           file: ./service/Dockerfile
           context: ./service
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=ghcr.io/damienallen/urban-heat/service:latest
           cache-to: type=inline
           push: true
