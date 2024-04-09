@@ -84,4 +84,3 @@ for year, max_temp in tqdm(max_surface_temp.items(), desc="Writing surface temp"
             dst_crs=dst_crs,
             resampling=Resampling.nearest,
         )
-        )
