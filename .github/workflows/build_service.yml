@@ -22,7 +22,7 @@ jobs:
       - run: pipx install poetry
 
       - run: poetry config virtualenvs.create false
-      - run: poetry install --only dev
+      - run: poetry install
 
-      - run: ruff .
+      - run: ruff check .
       - run: mypy .
