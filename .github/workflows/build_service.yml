@@ -4,8 +4,13 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - service/**
+    paths:
+      - service/**
+  pull_request:
+    branches:
+      - "*"
+    paths:
+      - service/**
 
 jobs:
   static-analysis:
