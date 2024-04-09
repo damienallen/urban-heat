@@ -4,9 +4,9 @@ from shutil import rmtree
 import geopandas as gpd
 import numpy as np
 import rasterio
+from pipelines import data_dir
 from rasterio.mask import mask
 from tqdm import tqdm
-from urban_heat_pipelines import data_dir
 
 NO_DATA = 0
 
@@ -65,4 +65,5 @@ for raw_image in pbar:
 
         clipped_image_path = clipped_data_dir / f"{image_path.stem}.tif"
         with rasterio.open(clipped_image_path, "w", **dst_meta) as dst:
+            dst.write(temp_c)
             dst.write(temp_c)

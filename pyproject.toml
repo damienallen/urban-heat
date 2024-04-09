@@ -9,8 +9,8 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.12"
-urban-heat-pipelines = { path = "./pipelines", develop = true }
-urban-heat-service = { path = "./service", develop = true }
+pipelines = { path = "./scripts", develop = true }
+urban-heat = { path = "./service", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.4"

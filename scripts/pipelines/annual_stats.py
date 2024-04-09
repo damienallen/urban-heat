@@ -1,8 +1,8 @@
 import numpy as np
 import rasterio
+from pipelines import data_dir
 from rasterio.warp import Resampling, calculate_default_transform, reproject
 from tqdm import tqdm
-from urban_heat_pipelines import data_dir
 
 clipped_data_dir = data_dir / "clipped"
 annual_data_dir = data_dir / "annual"
@@ -83,4 +83,5 @@ for year, max_temp in tqdm(max_surface_temp.items(), desc="Writing surface temp"
             dst_transform=dst_transform,
             dst_crs=dst_crs,
             resampling=Resampling.nearest,
+        )
         )
