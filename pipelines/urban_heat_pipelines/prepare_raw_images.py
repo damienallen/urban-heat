@@ -1,5 +1,4 @@
 from datetime import date
-from pathlib import Path
 from shutil import rmtree
 
 import geopandas as gpd
@@ -7,8 +6,7 @@ import numpy as np
 import rasterio
 from rasterio.mask import mask
 from tqdm import tqdm
-
-from pipelines import data_dir
+from urban_heat_pipelines import data_dir
 
 NO_DATA = 0
 
