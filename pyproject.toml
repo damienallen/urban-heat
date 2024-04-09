@@ -1,23 +1,22 @@
 [tool.poetry]
-name = "urban-heat"
+name = "urban-heat-dev"
 version = "2024"
-description = "Data processing scripts for Urban Heat Maps"
+description = "Shared development environment for service and processing scripts"
 authors = ["Damien Allen <dev@dallen.co>"]
 readme = "README.md"
 
+
 [tool.poetry.dependencies]
 python = "~3.12"
-httpx = "^0.27.0"
-rasterio = "^1.3.9"
-geopandas = "^0.14.3"
-tqdm = "^4.66.2"
-
+urban-heat-pipelines = { path = "./pipelines", develop = true }
+urban-heat-service = { path = "./service", develop = true }
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.4"
 mypy = "^1.9.0"
 black = "^24.3.0"
 isort = "^5.13.2"
+
 
 [tool.ruff]
 line-length = 99
@@ -27,6 +26,7 @@ line-length = 99
 
 [tool.black]
 line-length = 99
+
 
 [build-system]
 requires = ["poetry-core"]

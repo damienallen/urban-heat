@@ -5,7 +5,7 @@ import rasterio
 from rasterio.warp import Resampling, calculate_default_transform, reproject
 from tqdm import tqdm
 
-from processing import data_dir
+from pipelines import data_dir
 
 clipped_data_dir = data_dir / "clipped"
 annual_data_dir = data_dir / "annual"

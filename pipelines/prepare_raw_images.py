@@ -8,7 +8,7 @@ import rasterio
 from rasterio.mask import mask
 from tqdm import tqdm
 
-from processing import data_dir
+from pipelines import data_dir
 
 NO_DATA = 0
 
