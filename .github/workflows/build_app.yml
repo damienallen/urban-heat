@@ -6,11 +6,6 @@ on:
       - main
     paths:
       - app/**
-  pull_request:
-    branches:
-      - "*"
-    paths:
-      - app/**
 
 jobs:
   build:

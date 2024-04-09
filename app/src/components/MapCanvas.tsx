@@ -36,6 +36,34 @@ export const MapCanvas = observer(() => {
             currentMap.setStyle(app.styleUrl, { diff: false })
             currentMap.on('style.load', () => {
                 loadContours(contours.layers)
+                loadUrbanExtents()
+            })
+        }
+    }
+
+    const loadUrbanExtents = () => {
+        if (map.current && app.urbanExtents) {
+            const currentMap: maplibregl.Map = map.current
+            const layerId = 'eu-urban-extents'
+
+            if ([...currentMap.getLayersOrder().values()].includes(layerId)) {
+                currentMap.removeLayer(layerId)
+                currentMap.removeSource(layerId)
+            }
+
+            currentMap.addSource(layerId, {
+                type: 'geojson',
+                data: app.urbanExtents,
+            })
+            currentMap.addLayer({
+                id: layerId,
+                type: 'fill',
+                source: layerId,
+                layout: {},
+                paint: {
+                    'fill-color': '#ff0',
+                    'fill-opacity': 0.2,
+                },
             })
         }
     }
@@ -96,6 +124,7 @@ export const MapCanvas = observer(() => {
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
+            app.fetchUrbanExtents()
             contours.processContours()
         })
     }, [])
@@ -113,6 +142,7 @@ export const MapCanvas = observer(() => {
         }
     }, [app.bounds])
 
+    useEffect(() => loadUrbanExtents(), [app.urbanExtents])
     useEffect(() => updateStyle(), [app.styleUrl])
 
     return (
