@@ -13,6 +13,9 @@ const useStyles = createUseStyles({
             marginTop: -8,
             marginBottom: 8,
         },
+        '& .mantine-Modal-content': {
+            padding: '0 8px',
+        },
     },
     title: {
         fontWeight: 'bold',
