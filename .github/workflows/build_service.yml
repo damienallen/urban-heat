@@ -18,4 +18,4 @@ jobs:
           python-version: "3.12"
       - run: pip install --upgrade pip
       - run: pip install pipx
-      - run: pipx install python
+      - run: pipx install poetry
