@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "urban_heat"
 version = "2024"
-description = "Simple backend supporting the Urban Heat Map"
+description = "A simple backend supporting the Urban Heat Map"
 authors = ["Damien Allen <dev@dallen.co>"]
 readme = "README.md"
 
