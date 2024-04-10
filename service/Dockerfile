@@ -6,11 +6,11 @@ ENV PATH /root/.local/bin:$PATH
 
 RUN pip install pipx; pipx install poetry
 WORKDIR /pysetup
-COPY ./service/pyproject.toml ./service/poetry.lock* /pysetup/
+COPY ./README.md ./pyproject.toml ./poetry.lock* /pysetup/
 RUN poetry install --only main
 
 WORKDIR /service
-COPY . F
+COPY . /service/
 
 EXPOSE 8000
 CMD ["uvicorn", "urban_heat.main:app", "--host", "0.0.0.0", "--port", "8000"]
