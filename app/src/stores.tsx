@@ -63,12 +63,12 @@ export class AppStore {
     }
 
     fetchUrbanExtents = async () => {
-        const response = await fetch('https://api.urbanheat.app/')
+        const response = await fetch('https://api.urbanheat.app/extents')
         this.urbanExtents = await response.json()
     }
 
     get styleUrl() {
-        // TODO: reset and protect origins for key
+        // TODO: protect origins for key
         const key = 'bk2NyBkmsa6NdxDbxXvH'
         return `https://api.maptiler.com/maps/${this.mapStyle}/style.json?key=${key}`
     }

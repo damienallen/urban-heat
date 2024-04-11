@@ -20,5 +20,12 @@ app.add_middleware(
 
 
 @app.get("/")
+async def hello():
+    return {
+        "welcome": "Welcome to the urban-heat API, see repository for more information.",
+        "url": "https://github.com/damienallen/urban-heat/tree/main/service"
+    }
+
+@app.get("/extents")
 async def get_urban_extents():
     return urban_extents
