@@ -6,6 +6,7 @@ app = FastAPI()
 
 origins = [
     "https://urbanheat.app",
+    "https://dev.urbanheat.app",
     "http://localhost:5173",
 ]
 
