@@ -63,7 +63,7 @@ export class AppStore {
     }
 
     fetchUrbanExtents = async () => {
-        const response = await fetch('http://localhost:8000/')
+        const response = await fetch('https://api.urbanheat.app/')
         this.urbanExtents = await response.json()
     }
 
