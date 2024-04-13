@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from urban_heat.sources import urban_extents
+from urban_heat.models import get_extent_features
 
-app = FastAPI()
 
 origins = [
     "https://urbanheat.app",
@@ -10,6 +9,7 @@ origins = [
     "http://localhost:5173",
 ]
 
+app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -23,9 +23,14 @@ app.add_middleware(
 async def hello():
     return {
         "welcome": "Welcome to the urban-heat API, see repository for more information.",
-        "url": "https://github.com/damienallen/urban-heat/tree/main/service"
+        "url": "https://github.com/damienallen/urban-heat/tree/main/service",
     }
+
 
 @app.get("/extents")
 async def get_urban_extents():
-    return urban_extents
+    return {
+        "type": "FeatureCollection",
+        "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}},
+        "features": await get_extent_features(),
+    }

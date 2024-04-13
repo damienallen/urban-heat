@@ -42,6 +42,8 @@ class UrbanExtent(Document):
 client = AsyncIOMotorClient("mongodb://mongo:27017")
 
 
-async def get_urban_extents():
+async def get_extent_features():
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
-    yield UrbanExtent.find_all()
+
+    features = await UrbanExtent.find_all().to_list()
+    return [feature.__geo_interface__ for feature in features]
