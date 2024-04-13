@@ -11,7 +11,7 @@ async def update_urban_extents():
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
 
     print("Loading urban extents from file")
-    urban_extents_path = Path(__file__).parent / "urban_extents.geojson"
+    urban_extents_path = Path(__file__).parents[1] / "app" / "public" / "urban_extents.geojson"
     with open(urban_extents_path) as f:
         urban_extents = json.load(f)
 
