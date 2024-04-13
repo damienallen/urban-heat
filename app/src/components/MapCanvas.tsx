@@ -124,8 +124,8 @@ export const MapCanvas = observer(() => {
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
-            app.fetchUrbanExtents()
             contours.processContours()
+            app.fetchUrbanExtents()
         })
     }, [])
 
