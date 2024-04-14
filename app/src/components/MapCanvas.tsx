@@ -57,14 +57,16 @@ export const MapCanvas = observer(() => {
                 data: app.urbanExtents,
             })
 
-            const maxZoom = 11
+            const maxZoom = 12
+            const extentColor = '#777'
+
             currentMap.addLayer({
                 id: `${layerId}-fill`,
                 type: 'fill',
                 source: layerId,
                 layout: {},
                 paint: {
-                    'fill-color': '#ff0',
+                    'fill-color': extentColor,
                     'fill-opacity': 0.2,
                 },
                 maxzoom: maxZoom,
@@ -77,8 +79,8 @@ export const MapCanvas = observer(() => {
                 layout: {},
                 paint: {
                     'line-width': 1.5,
-                    'line-color': '#ff0',
-                    'line-opacity': 0.6,
+                    'line-color': extentColor,
+                    'line-opacity': 0.3,
                 },
                 maxzoom: maxZoom,
             })
@@ -142,8 +144,8 @@ export const MapCanvas = observer(() => {
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
-            contours.processContours()
             app.fetchUrbanExtents()
+            contours.processContours()
         })
     }, [])
 
