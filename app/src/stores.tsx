@@ -23,8 +23,8 @@ export class AppStore {
     public city: string = ''
     public country: string = ''
 
-    public resultsLoading: boolean = false
     public searchResults: string[] = []
+    public urbanExtents: any = undefined
 
     public mapStyle: string = 'dataviz'
     public mapCenter: [number, number] = [4.478, 51.924]
@@ -42,10 +42,6 @@ export class AppStore {
         this.mapStyle = value
     }
 
-    setResultsLoading = (value: boolean) => {
-        this.resultsLoading = value
-    }
-
     setMapCenter = (value: [number, number]) => {
         this.mapCenter = value
     }
@@ -59,18 +55,20 @@ export class AppStore {
 
     queryLocation = (query: string) => {
         const geocodeUrl = `https://geocode.urbanheat.app/q/${query}.js`
-        this.resultsLoading = true
         debounce(async () => {
             const response = await fetch(geocodeUrl)
             const respJson = await response.json()
-
             this.searchResults = respJson.results.filter((o: any) => o.type === 'city')
-            this.resultsLoading = false
         })
     }
 
+    fetchUrbanExtents = async () => {
+        const response = await fetch('urban_extents.geojson')
+        this.urbanExtents = await response.json()
+    }
+
     get styleUrl() {
-        // TODO: reset and protect origins for key
+        // TODO: protect origins for key
         const key = 'bk2NyBkmsa6NdxDbxXvH'
         return `https://api.maptiler.com/maps/${this.mapStyle}/style.json?key=${key}`
     }

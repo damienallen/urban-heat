@@ -36,6 +36,51 @@ export const MapCanvas = observer(() => {
             currentMap.setStyle(app.styleUrl, { diff: false })
             currentMap.on('style.load', () => {
                 loadContours(contours.layers)
+                loadUrbanExtents()
+            })
+        }
+    }
+
+    const loadUrbanExtents = () => {
+        if (map.current && app.urbanExtents) {
+            const currentMap: maplibregl.Map = map.current
+            const layerId = 'eu-urban-extents'
+
+            if ([...currentMap.getLayersOrder().values()].includes(layerId)) {
+                currentMap.removeLayer(`${layerId}-fill`)
+                currentMap.removeLayer(`${layerId}-line`)
+                currentMap.removeSource(layerId)
+            }
+
+            currentMap.addSource(layerId, {
+                type: 'geojson',
+                data: app.urbanExtents,
+            })
+
+            const maxZoom = 11
+            currentMap.addLayer({
+                id: `${layerId}-fill`,
+                type: 'fill',
+                source: layerId,
+                layout: {},
+                paint: {
+                    'fill-color': '#ff0',
+                    'fill-opacity': 0.2,
+                },
+                maxzoom: maxZoom,
+            })
+
+            currentMap.addLayer({
+                id: `${layerId}-line`,
+                type: 'line',
+                source: layerId,
+                layout: {},
+                paint: {
+                    'line-width': 1.5,
+                    'line-color': '#ff0',
+                    'line-opacity': 0.6,
+                },
+                maxzoom: maxZoom,
             })
         }
     }
@@ -76,6 +121,7 @@ export const MapCanvas = observer(() => {
                         'fill-color': '#f00',
                         'fill-opacity': opacity,
                     },
+                    minzoom: 8,
                 })
             }
 
@@ -97,6 +143,7 @@ export const MapCanvas = observer(() => {
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
             contours.processContours()
+            app.fetchUrbanExtents()
         })
     }, [])
 
@@ -113,6 +160,7 @@ export const MapCanvas = observer(() => {
         }
     }, [app.bounds])
 
+    useEffect(() => loadUrbanExtents(), [app.urbanExtents])
     useEffect(() => updateStyle(), [app.styleUrl])
 
     return (

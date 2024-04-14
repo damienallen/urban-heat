@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "urban_heat"
 version = "2024"
-description = "Simple backend supporting the Urban Heat Map"
+description = "A simple backend supporting the Urban Heat Map"
 authors = ["Damien Allen <dev@dallen.co>"]
 readme = "README.md"
 
@@ -11,6 +11,7 @@ python = "~3.12"
 
 beanie = "^1.25.0"
 fastapi = "^0.110.1"
+pydantic = "^2.7.0"
 uvicorn = { extras = ["standard"], version = "^0.29.0" }
 
 
