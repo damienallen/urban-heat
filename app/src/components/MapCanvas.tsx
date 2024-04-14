@@ -35,8 +35,8 @@ export const MapCanvas = observer(() => {
             const currentMap: maplibregl.Map = map.current
             currentMap.setStyle(app.styleUrl, { diff: false })
             currentMap.on('style.load', () => {
-                loadUrbanExtents()
                 loadContours(contours.layers)
+                loadUrbanExtents()
             })
         }
     }
@@ -142,8 +142,8 @@ export const MapCanvas = observer(() => {
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
-            contours.processContours()
             app.fetchUrbanExtents()
+            contours.processContours()
         })
     }, [])
 
