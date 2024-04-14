@@ -47,7 +47,8 @@ export const MapCanvas = observer(() => {
             const layerId = 'eu-urban-extents'
 
             if ([...currentMap.getLayersOrder().values()].includes(layerId)) {
-                currentMap.removeLayer(layerId)
+                currentMap.removeLayer(`${layerId}-fill`)
+                currentMap.removeLayer(`${layerId}-line`)
                 currentMap.removeSource(layerId)
             }
 
@@ -55,8 +56,10 @@ export const MapCanvas = observer(() => {
                 type: 'geojson',
                 data: app.urbanExtents,
             })
+
+            const maxZoom = 11
             currentMap.addLayer({
-                id: layerId,
+                id: `${layerId}-fill`,
                 type: 'fill',
                 source: layerId,
                 layout: {},
@@ -64,6 +67,20 @@ export const MapCanvas = observer(() => {
                     'fill-color': '#ff0',
                     'fill-opacity': 0.2,
                 },
+                maxzoom: maxZoom,
+            })
+
+            currentMap.addLayer({
+                id: `${layerId}-line`,
+                type: 'line',
+                source: layerId,
+                layout: {},
+                paint: {
+                    'line-width': 1.5,
+                    'line-color': '#ff0',
+                    'line-opacity': 0.6,
+                },
+                maxzoom: maxZoom,
             })
         }
     }
@@ -104,6 +121,7 @@ export const MapCanvas = observer(() => {
                         'fill-color': '#f00',
                         'fill-opacity': opacity,
                     },
+                    minzoom: 8,
                 })
             }
 

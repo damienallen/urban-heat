@@ -63,7 +63,7 @@ export class AppStore {
     }
 
     fetchUrbanExtents = async () => {
-        const response = await fetch('https://dev.urbanheat.app/urban_extents.geojson')
+        const response = await fetch('urban_extents.geojson')
         this.urbanExtents = await response.json()
     }
 
