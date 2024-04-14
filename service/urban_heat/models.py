@@ -1,9 +1,16 @@
 from typing import Annotated, Literal, Optional, Union
 
 from motor.motor_asyncio import AsyncIOMotorClient
-from pydantic import BaseModel
+from pydantic import AnyUrl, BaseModel
 
 from beanie import Document, init_beanie
+
+
+class Geometry(BaseModel):
+    type: Literal["Polygon", "MultiPolygon"]
+    coordinates: Union[
+        list[list[Annotated[list[float], 2]]], list[list[list[Annotated[list[float], 2]]]]
+    ]
 
 
 class Properties(BaseModel):
@@ -18,16 +25,31 @@ class Properties(BaseModel):
     FID: str
 
 
-class Geometry(BaseModel):
-    type: Literal["Polygon", "MultiPolygon"]
-    coordinates: Union[
-        list[list[Annotated[list[float], 2]]], list[list[list[Annotated[list[float], 2]]]]
-    ]
+class Stats(BaseModel):
+    histogram: dict[int, float]
+    mean: float
+    median: float
+    min: float
+    max: float
+    st_dev: float
+
+
+class AnnualData(BaseModel):
+    year: int
+    url: AnyUrl
+    stats: Stats
+
+
+class DataSource(BaseModel):
+    key: str
+    label: str
+    data: list[AnnualData]
 
 
 class UrbanExtent(Document):
     geometry: Geometry
     properties: Properties
+    sources: Optional[list[DataSource]]
 
     @property
     def __geo_interface__(self):
