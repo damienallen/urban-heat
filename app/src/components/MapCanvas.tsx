@@ -22,7 +22,7 @@ const useStyles = createUseStyles({
 })
 
 export const MapCanvas = observer(() => {
-    const { app, contours } = useStores()
+    const { app, contours, ui } = useStores()
     const classes = useStyles()
 
     const mapContainer = useRef(null)
@@ -128,6 +128,7 @@ export const MapCanvas = observer(() => {
             }
 
             setContourLayerIds(idList)
+            ui.setLoadingState('Finished', 100)
             console.debug(`${layers.length} contour layers added`)
         }
     }
