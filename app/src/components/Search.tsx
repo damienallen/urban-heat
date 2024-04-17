@@ -43,7 +43,7 @@ export const Search = observer(() => {
         <div className={classes.container}>
             <Autocomplete
                 className={classes.input}
-                placeholder="Search Cities"
+                placeholder="Explore Cities"
                 data={Object.keys(options)}
                 value={query}
                 onChange={(q: string) => updateQuery(q)}
