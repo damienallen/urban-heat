@@ -2,8 +2,9 @@ import os
 
 import geopandas as gpd
 import httpx
-from pipelines import app_dir
 from tqdm import tqdm
+
+from pipelines import app_dir
 
 service_url = "https://m2m.cr.usgs.gov/api/api/json/stable"
 
@@ -15,6 +16,7 @@ r = httpx.post(
     },
 )
 
+r.raise_for_status()
 api_key = r.json()["data"]
 headers = {"X-Auth-Token": api_key}
 
@@ -54,4 +56,4 @@ for _, urau in tqdm(extents.iterrows(), desc="Searching scenes", total=extents.s
 # percent_duplicate = duplicate_scenes / tot
 
 # print(f"Found {len(scenes)} after discarding {duplicate_scenes} duplicates")
-print(f"Found {len(scenes)} scenes")
+print(f"Found {total_scenes} scenes")
