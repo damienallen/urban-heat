@@ -92,7 +92,7 @@ export class ContoursStore {
     public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
 
-    setIsProcessing = (value: boolean) => {
+    setAreProcessing = (value: boolean) => {
         this.areProcessing = value
     }
 
@@ -126,11 +126,12 @@ export class ContoursStore {
 
     processContours = async () => {
         this.setLastJson()
-        this.setIsProcessing(true)
+        this.setAreProcessing(true)
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
         this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)
-        this.setIsProcessing(false)
+        this.setAreProcessing(false)
         this.root.ui.setShowControls(false)
+        this.root.ui.setIsLoading(false)
     }
 
     constructor(public root: Store) {
@@ -139,11 +140,17 @@ export class ContoursStore {
 }
 
 export class UIStore {
+    public isLoading: boolean = true
+
     public showAbout: boolean = false
     public showControls: boolean = false
     public showStyleMenu: boolean = false
 
     public colorScheme: MantineColorScheme = 'light'
+
+    setIsLoading = (value: boolean) => {
+        this.isLoading = value
+    }
 
     toggleShowAbout = () => {
         this.showAbout = !this.showAbout

@@ -26,7 +26,7 @@ export const AboutModal = observer(() => {
     const { app, ui } = useStores()
     const classes = useStyles()
 
-    return ui.showAbout ? (
+    return (
         <Modal
             className={classes.container}
             opened={ui.showAbout}
@@ -56,5 +56,5 @@ export const AboutModal = observer(() => {
                 <i>v{app.version}</i>
             </p>
         </Modal>
-    ) : null
+    )
 })

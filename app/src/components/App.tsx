@@ -1,12 +1,13 @@
 import '@mantine/core/styles.css'
 
+import { LoadingOverlay, MantineProvider } from '@mantine/core'
 import { StoreProvider, useStores } from '../stores'
 
 import { AboutModal } from './AboutModal'
 import { ActionBar } from './ActionBar'
 import { ControlPanel } from './ControlPanel'
-import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
+import { MapLoader } from './MapLoader'
 import { Title } from './Title'
 import { createUseStyles } from 'react-jss'
 
@@ -69,6 +70,8 @@ export const App = () => {
 
                     <AboutModal />
                     <MapCanvas />
+
+                    <MapLoader />
                 </div>
             </MantineProvider>
         </StoreProvider>

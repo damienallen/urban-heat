@@ -8,7 +8,7 @@ const useStyles = createUseStyles({
     container: {
         flex: 0,
         userSelect: 'none',
-        zIndex: 300,
+        zIndex: 500,
         margin: 16,
     },
     title: {
