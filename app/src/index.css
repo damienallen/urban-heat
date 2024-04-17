@@ -26,3 +26,7 @@ body {
   from { transform: rotate(0deg); }
   to { transform: rotate(359deg); }
 }
+
+a {
+  color: #d84100;
+}

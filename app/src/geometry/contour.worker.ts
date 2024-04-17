@@ -5,7 +5,7 @@ import { geoProject } from 'd3-geo-projection'
 
 const d3 = Object.assign({}, { contours, geoProject, geoTransform })
 
-onmessage = async (e) => {
+onmessage = async (e: MessageEvent) => {
     console.log(`Fetching: ${e.data.url}`)
     postMessage({ type: 'progress', state: 'Downloading imagery', progress: 20 })
     const tiff = await fromUrl(e.data.url)
