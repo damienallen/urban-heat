@@ -6,10 +6,8 @@ import { geoProject } from 'd3-geo-projection'
 const d3 = Object.assign({}, { contours, geoProject, geoTransform })
 
 onmessage = async (e) => {
-    console.log(e.data)
-
     console.log(`Fetching: ${e.data.url}`)
-    postMessage({ type: 'progress', state: 'Downloading imagery', progress: 10 })
+    postMessage({ type: 'progress', state: 'Downloading imagery', progress: 20 })
     const tiff = await fromUrl(e.data.url)
 
     const image = await tiff.getImage()
@@ -17,13 +15,13 @@ onmessage = async (e) => {
     const [rX, rY] = image.getResolution()
 
     console.log('Parsing raster data')
-    postMessage({ type: 'progress', state: 'Parsing raster', progress: 30 })
+    postMessage({ type: 'progress', state: 'Parsing data', progress: 30 })
     const data: number[] = (await image.readRasters())[0] as any
     const h = image.getHeight()
     const w = image.getWidth()
 
     console.log(`Contouring thresholds: ${e.data.thresholds}`)
-    postMessage({ type: 'progress', state: 'Generating contours', progress: 50 })
+    postMessage({ type: 'progress', state: 'Contouring', progress: 50 })
     const contourGenerator = d3.contours().size([w, h]).smooth(true).thresholds(e.data.thresholds)
     const rawContours = contourGenerator(data)
 

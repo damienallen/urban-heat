@@ -134,7 +134,7 @@ export class ContoursStore {
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
 
         worker.postMessage({ url: dataUrl, thresholds: this.thresholds })
-        worker.onmessage = (e) => {
+        worker.onmessage = (e: MessageEvent) => {
             if (e.data.type === 'progress') {
                 this.root.ui.setLoadingState(e.data.state, e.data.progress)
             } else if (e.data.type === 'result') {
@@ -153,7 +153,7 @@ export class ContoursStore {
 }
 
 export class UIStore {
-    public loadingProgress: number = 0
+    public loadingProgress: number = 10
     public loadingState: string = 'Loading map'
 
     public showAbout: boolean = false

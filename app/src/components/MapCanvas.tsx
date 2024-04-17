@@ -93,6 +93,7 @@ export const MapCanvas = observer(() => {
 
             // Remove existing layers and sources
             const orderedLayerIds = [...currentMap.getLayersOrder().values()]
+            console.debug(`Removing ${orderedLayerIds.length} existing layers`)
             for (let id of contourLayerIds) {
                 if (orderedLayerIds.includes(id)) {
                     currentMap.removeLayer(id)
@@ -128,7 +129,7 @@ export const MapCanvas = observer(() => {
             }
 
             setContourLayerIds(idList)
-            ui.setLoadingState('Finished', 100)
+            ui.setLoadingState('', 100)
             console.debug(`${layers.length} contour layers added`)
         }
     }
