@@ -1,4 +1,4 @@
-import { LoadingOverlay, RingProgress, Text } from '@mantine/core'
+import { LoadingOverlay, RingProgress } from '@mantine/core'
 
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
@@ -7,25 +7,35 @@ import { useStores } from '../stores'
 const useStyles = createUseStyles({
     container: {
         color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    ring: {
+        flex: 1,
+    },
+    state: {
+        flex: 1,
     },
 })
 
 const Progress = observer(() => {
     const { ui } = useStores()
+    const classes = useStyles()
 
     return (
-        <RingProgress
-            rootColor="#ccc"
-            sections={[{ value: ui.loadingProgress, color: '#fff' }]}
-            size={120}
-            thickness={12}
-            roundCaps
-            label={
-                <Text c="#fff" fw={700} ta="center" size="xl">
-                    {ui.loadingProgress}
-                </Text>
-            }
-        />
+        <div className={classes.container}>
+            <RingProgress
+                className={classes.state}
+                rootColor="#ccc"
+                sections={[{ value: ui.loadingProgress, color: '#fff' }]}
+                size={72}
+                thickness={8}
+                roundCaps
+            />
+            <div className={classes.state}>{ui.loadingState}...</div>
+        </div>
     )
 })
 

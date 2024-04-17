@@ -1,10 +1,13 @@
 import { MantineColorScheme, RangeSliderValue, createTheme } from '@mantine/core'
 
 import React from 'react'
-import { contourWorker } from './geometry/workers'
 import { linspace } from './geometry/utils'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
+
+const worker = new Worker(new URL('./geometry/contour.worker.ts', import.meta.url), {
+    type: 'module',
+})
 
 export class Store {
     public app: AppStore
@@ -127,11 +130,21 @@ export class ContoursStore {
     processContours = async () => {
         this.setLastJson()
         this.setAreProcessing(true)
+
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
-        this.layers = await contourWorker.startContouring(dataUrl, this.thresholds)
-        this.setAreProcessing(false)
-        this.root.ui.setShowControls(false)
-        this.root.ui.setIsLoading(false)
+
+        worker.postMessage({ url: dataUrl, thresholds: this.thresholds })
+        worker.onmessage = (e) => {
+            if (e.data.type === 'progress') {
+                this.root.ui.setLoadingState(e.data.state, e.data.progress)
+            } else if (e.data.type === 'result') {
+                this.layers = e.data.result
+
+                this.setAreProcessing(false)
+                this.root.ui.setLoadingState('Loading contours', 80)
+                this.root.ui.setShowControls(false)
+            }
+        }
     }
 
     constructor(public root: Store) {
@@ -140,7 +153,8 @@ export class ContoursStore {
 }
 
 export class UIStore {
-    public isLoading: boolean = true
+    public loadingProgress: number = 0
+    public loadingState: string = 'Loading map'
 
     public showAbout: boolean = false
     public showControls: boolean = false
@@ -148,8 +162,9 @@ export class UIStore {
 
     public colorScheme: MantineColorScheme = 'light'
 
-    setIsLoading = (value: boolean) => {
-        this.isLoading = value
+    setLoadingState = (state: string, progress: number) => {
+        this.loadingState = state
+        this.loadingProgress = progress
     }
 
     toggleShowAbout = () => {
@@ -170,6 +185,10 @@ export class UIStore {
 
     toggleColorScheme = () => {
         this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
+    }
+
+    get isLoading() {
+        return this.loadingProgress < 100
     }
 
     get disableUpdate() {
