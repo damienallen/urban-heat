@@ -52,6 +52,7 @@ export const MapLoader = observer(() => {
             }}
             overlayProps={{ color: '#000', backgroundOpacity: 0.4, blur: 2 }}
             transitionProps={{ transition: 'fade', duration: 500 }}
+            zIndex={150}
         />
     )
 })
