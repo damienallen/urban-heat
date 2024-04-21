@@ -128,6 +128,7 @@ export class ContoursStore {
     }
 
     processContours = async () => {
+        this.root.ui.setLoadingState('Downloading imagery', 0)
         this.setLastJson()
         this.setAreProcessing(true)
 
@@ -153,6 +154,7 @@ export class ContoursStore {
 }
 
 export class UIStore {
+    public firstLoad: boolean = true
     public loadingProgress: number = 10
     public loadingState: string = 'Loading map'
 
@@ -165,6 +167,7 @@ export class UIStore {
     setLoadingState = (state: string, progress: number) => {
         this.loadingState = state
         this.loadingProgress = progress
+        if (progress === 100) this.firstLoad = false
     }
 
     toggleShowAbout = () => {
@@ -187,8 +190,8 @@ export class UIStore {
         this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
     }
 
-    get isLoading() {
-        return this.loadingProgress < 100
+    get showLoadingOverlay() {
+        return this.loadingProgress < 100 && this.firstLoad
     }
 
     get disableUpdate() {

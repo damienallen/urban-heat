@@ -8,6 +8,7 @@ import {
 
 import { ControlsItem } from './ControlsItem'
 import { HideButton } from './HideButton'
+import { Progress } from './Progress'
 import { UpdateButton } from './UpdateButton'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
@@ -65,6 +66,9 @@ export const ControlsForm = observer(() => {
         <div className={classes.container}>
             <LoadingOverlay
                 visible={contours.areProcessing}
+                loaderProps={{
+                    children: <Progress color="black" />,
+                }}
                 zIndex={150}
                 overlayProps={{ blur: 2 }}
             />
