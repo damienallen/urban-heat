@@ -1,6 +1,7 @@
 import { ControlsForm } from './ControlsForm'
 import { Legend } from './Legend'
 import { OpenButton } from './OpenButton'
+import clsx from 'clsx'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -24,18 +25,28 @@ const useStyles = createUseStyles({
             borderTop: '1px solid rgba(0, 0, 0, 0.2)',
         },
     },
+    ios: {
+        background: 'blue',
+    },
 })
 
 export const ControlPanel = observer(() => {
     const { ui } = useStores()
     const classes = useStyles()
 
+    const isIOS = /iPhone|iPod|iPad/.test(navigator.platform)
+    console.log('iOS', isIOS)
+
+    const containerClass = clsx({
+        [classes.container]: true,
+        [classes.ios]: isIOS,
+    })
     return ui.showControls ? (
-        <div className={classes.container}>
+        <div className={containerClass}>
             <ControlsForm />
         </div>
     ) : (
-        <div className={classes.container}>
+        <div className={containerClass}>
             <OpenButton />
             <Legend />
         </div>
