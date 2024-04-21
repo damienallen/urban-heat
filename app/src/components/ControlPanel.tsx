@@ -26,7 +26,7 @@ const useStyles = createUseStyles({
         },
     },
     ios: {
-        paddingBottom: 24,
+        paddingBottom: 18,
     },
 })
 
