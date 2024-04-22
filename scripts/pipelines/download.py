@@ -6,7 +6,7 @@ import geopandas as gpd
 import httpx
 from tqdm import tqdm
 
-from pipelines import app_dir, data_dir
+from pipelines import app_dir
 
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
@@ -100,8 +100,13 @@ def fetch_urau(
     )
     r.raise_for_status()
 
+    products_list = r.json()["data"]
+    if not products_list:
+        print("All images already downloaded.")
+        return
+
     requested_downloads = {}
-    for product in r.json()["data"]:
+    for product in products_list:
         if product["available"]:
             entity_id = "L2ST_" + product["displayId"] + BAND
             requested_downloads[entity_id] = {
@@ -128,7 +133,7 @@ def fetch_urau(
 
         filename = os.path.basename(url).split("?")[0]
         if not r.status_code == 200:
-            print(f"DOWNLOAD FAILED: { filename}")
+            print(f"DOWNLOAD FAILED: {filename}")
             continue
 
         with open(raw_dir / filename, "wb") as f:
