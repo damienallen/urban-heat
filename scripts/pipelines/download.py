@@ -20,8 +20,6 @@ extents: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
 
 
 def find_scenes(query: dict, headers: dict, offset: int = 0):
-    print(f"{offset}...", end="")
-
     r = httpx.post(
         f"{SERVICE_URL}/scene-search",
         json={
