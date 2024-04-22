@@ -55,8 +55,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           tags: ghcr.io/damienallen/urban-heat/service:latest
-          file: ./service/Dockerfile
-          context: ./service
+          file: ./Dockerfile
+          context: .
           cache-from: type=registry,ref=ghcr.io/damienallen/urban-heat/service:latest
           cache-to: type=inline
           push: true
