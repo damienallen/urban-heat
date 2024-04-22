@@ -6,7 +6,7 @@ ENV PATH /root/.local/bin:$PATH
 
 RUN pip install pipx; pipx install poetry
 WORKDIR /pysetup
-COPY ./README.md ./pyproject.toml ./poetry.lock* /pysetup/
+COPY ../README.md ../pyproject.toml ../poetry.lock* /pysetup/
 RUN poetry install --only main
 
 WORKDIR /service
