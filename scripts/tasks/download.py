@@ -1,10 +1,12 @@
 import os
+from datetime import datetime
 from pathlib import Path
 
 import geopandas as gpd
 import httpx
+from tqdm import tqdm
 
-from pipelines import app_dir
+from tasks import app_dir
 
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
@@ -18,8 +20,6 @@ extents: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
 
 
 def find_scenes(query: dict, headers: dict, offset: int = 0):
-    print(f"{offset}...", end="")
-
     r = httpx.post(
         f"{SERVICE_URL}/scene-search",
         json={
@@ -90,6 +90,54 @@ def fetch_urau(
             entity_ids.append(scene["entityId"])
 
     print(f"\nFound {len(urau_scenes)} scenes, " f"{len(entity_ids)} images will be downloaded.")
+
+    r = httpx.post(
+        f"{SERVICE_URL}/download-options",
+        json={"datasetName": DATASET_NAME, "entityIds": list(set(entity_ids))},
+        headers=headers,
+    )
+    r.raise_for_status()
+
+    products_list = r.json()["data"]
+    if not products_list:
+        print("All images already downloaded.")
+        return
+
+    requested_downloads = {}
+    for product in products_list:
+        if product["available"]:
+            entity_id = "L2ST_" + product["displayId"] + BAND
+            requested_downloads[entity_id] = {
+                "entityId": "L2ST_" + product["displayId"] + BAND,
+                "productId": product["secondaryDownloads"][0]["id"],
+            }
+
+    label = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    r = httpx.post(
+        f"{SERVICE_URL}/download-request",
+        json={"downloads": [d for d in requested_downloads.values()], "label": label},
+        headers=headers,
+        timeout=60,
+    )
+    r.raise_for_status()
+
+    downloads = [d["url"] for d in r.json()["data"]["availableDownloads"]]
+    remaining_downloads = r.json()["data"]["remainingLimits"][0]["recentDownloadCount"]
+    print(f"Found {len(downloads)} avilable downloads ({remaining_downloads} remaining in quota)")
+
+    for url in tqdm(downloads, desc="Downloading scenes"):
+        r = httpx.get(url, timeout=60)
+
+        filename = os.path.basename(url).split("?")[0]
+        if not r.status_code == 200:
+            print(f"DOWNLOAD FAILED: {filename}")
+            continue
+
+        with open(raw_dir / filename, "wb") as f:
+            f.write(r.content)
+
+    print("Done")
 
 
 if __name__ == "__main__":

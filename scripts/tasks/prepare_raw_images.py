@@ -4,9 +4,10 @@ from shutil import rmtree
 import geopandas as gpd
 import numpy as np
 import rasterio
-from pipelines import data_dir
 from rasterio.mask import mask
 from tqdm import tqdm
+
+from tasks import data_dir
 
 NO_DATA = 0
 
