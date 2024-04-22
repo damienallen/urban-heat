@@ -1,4 +1,4 @@
-from typing import Annotated, Literal, Optional, Union
+from typing import Annotated, Literal, Union
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import AnyUrl, BaseModel
@@ -18,7 +18,7 @@ class Properties(BaseModel):
     URAU_CATG: str
     CNTR_CODE: str
     URAU_NAME: str
-    CITY_CPTL: Optional[str]
+    CITY_CPTL: str | None
     FUA_CODE: str
     AREA_SQM: float
     NUTS3_2021: str
@@ -46,10 +46,16 @@ class DataSource(BaseModel):
     data: list[AnnualData]
 
 
+class Scene(BaseModel):
+    entity_id: str
+    filename: str
+
+
 class UrbanExtent(Document):
     geometry: Geometry
     properties: Properties
-    sources: Optional[list[DataSource]]
+    sources: list[DataSource] | None
+    raw_scenes: list[Scene] | None
 
     @property
     def __geo_interface__(self):
