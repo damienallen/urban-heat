@@ -1,9 +1,8 @@
 from typing import Annotated, Literal, Union
 
+from beanie import Document, init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import AnyUrl, BaseModel
-
-from beanie import Document, init_beanie
 
 
 class Geometry(BaseModel):
@@ -75,3 +74,10 @@ async def get_extent_features():
 
     features = await UrbanExtent.find_all().to_list()
     return [feature.__geo_interface__ for feature in features]
+
+
+async def get_urau_by_code(code: str):
+    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+
+    feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
+    return feature
