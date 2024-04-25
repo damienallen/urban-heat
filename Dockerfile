@@ -9,7 +9,7 @@ RUN apt update; \
 
 RUN pip install pipx; pipx install poetry
 WORKDIR /pysetup
-COPY ./README.md ./pyproject.toml ./poetry.lock* /pysetup/
+COPY ./service/README.md ./service/pyproject.toml ./service/poetry.lock* /pysetup/
 RUN poetry install
 
 WORKDIR /service

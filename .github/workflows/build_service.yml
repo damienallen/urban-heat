@@ -7,16 +7,12 @@ on:
     paths:
       - service/**
       - tasks/**
-      - pyproject.toml
-      - poetry.lock
   pull_request:
     branches:
       - "*"
     paths:
       - service/**
       - tasks/**
-      - pyproject.toml
-      - poetry.lock
 
 jobs:
   static-analysis:

@@ -1,11 +1,9 @@
 [tool.poetry]
-name = "urban-heat"
+name = "urban_heat"
 version = "2024"
 description = "A simple backend supporting the Urban Heat Map"
 authors = ["Damien Allen <dev@dallen.co>"]
 readme = "README.md"
-
-# package-mode = false
 
 [tool.poetry.dependencies]
 python = "~3.12"
