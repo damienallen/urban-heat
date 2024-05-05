@@ -7,9 +7,7 @@ from pydantic import AnyUrl, BaseModel
 
 class Geometry(BaseModel):
     type: Literal["Polygon", "MultiPolygon"]
-    coordinates: Union[
-        list[list[Annotated[list[float], 2]]], list[list[list[Annotated[list[float], 2]]]]
-    ]
+    coordinates: list
 
 
 class Properties(BaseModel):
@@ -53,8 +51,8 @@ class Scene(BaseModel):
 class UrbanExtent(Document):
     geometry: Geometry
     properties: Properties
-    sources: list[DataSource] | None
-    raw_scenes: list[Scene] | None
+    sources: list[DataSource] | None = None
+    raw_scenes: list[Scene] | None = None
 
     @property
     def __geo_interface__(self):
