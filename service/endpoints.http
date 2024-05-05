@@ -1,0 +1,12 @@
+### Fetch urban extent by URAU code
+GET https://api.urbanheat.app/urau/NL037C HTTP/1.1
+
+### Update urban extent by URAU code
+PATCH https://api.urbanheat.app/urau/NL037C HTTP/1.1
+content-type: application/json
+X-Token: {{$dotenv %UH_API_TOKEN}}
+
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}

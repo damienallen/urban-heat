@@ -1,4 +1,4 @@
-from typing import Annotated, Literal, Union
+from typing import Literal
 
 from beanie import Document, init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
