@@ -11,7 +11,7 @@ async def update_urban_extents():
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
 
     print("Loading urban extents from file")
-    urban_extents_path = Path(__file__).parents[1] / "app" / "public" / "urban_extents.geojson"
+    urban_extents_path = Path(__file__).parents[2] / "app" / "public" / "urban_extents.geojson"
     with open(urban_extents_path) as f:
         urban_extents = json.load(f)
 
@@ -19,7 +19,7 @@ async def update_urban_extents():
     await UrbanExtent.find_all().delete_many()
 
     for feature in tqdm(urban_extents["features"], desc="Adding features to DB"):
-        f = UrbanExtent(geometry=feature["geometry"], properties=feature["properties"])
+        f = UrbanExtent(geometry=feature["geometry"], properties=feature["properties"], sources=[])
         await f.insert()
 
 

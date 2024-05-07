@@ -46,7 +46,7 @@ class DataSource(BaseModel):
 class UrbanExtent(Document):
     geometry: Geometry
     properties: Properties
-    sources: list[DataSource] | None = None
+    sources: list[DataSource]
 
     @property
     def __geo_interface__(self):

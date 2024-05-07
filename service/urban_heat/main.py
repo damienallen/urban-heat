@@ -4,7 +4,7 @@ from fastapi import FastAPI, Header, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi.security import APIKeyHeader
-from urban_heat.models import UrbanExtent, client, get_extent_features
+from urban_heat.models import DataSource, UrbanExtent, client, get_extent_features
 from urban_heat import API_TOKEN
 
 origins = [
@@ -54,13 +54,27 @@ async def get_urau(code: str):
 
     if not feature:
         raise HTTPException(status_code=404, detail="Record not found")
+
     return feature
 
 
-@app.patch("/urau/{code}/sources", dependencies=[Depends(check_for_token)])
-async def get_urau_sources(code: str):
+@app.get("/urau/{code}/sources", response_model=list[DataSource])
+async def get_urau(code: str):
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
+
+    if not feature:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    return feature.sources
+
+
+@app.patch("/urau/{code}/sources", dependencies=[Depends(check_for_token)])
+async def update_urau_sources(sources: list[DataSource], code: str):
+    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
+    feature.sources = sources
+    await feature.save()
 
     if not feature:
         raise HTTPException(status_code=404, detail="Record not found")
