@@ -43,16 +43,10 @@ class DataSource(BaseModel):
     data: list[AnnualData]
 
 
-class Scene(BaseModel):
-    entity_id: str
-    filename: str
-
-
 class UrbanExtent(Document):
     geometry: Geometry
     properties: Properties
     sources: list[DataSource] | None = None
-    raw_scenes: list[Scene] | None = None
 
     @property
     def __geo_interface__(self):

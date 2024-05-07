@@ -1,7 +1,7 @@
-### Fetch urban extent by URAU code
+### Fetch urban extent by code
 GET https://api.urbanheat.app/urau/NL037C HTTP/1.1
 
-### Update urban extent by URAU code
+### Update urban extent by code
 PATCH https://api.urbanheat.app/urau/NL037C HTTP/1.1
 content-type: application/json
 X-Token: {{$dotenv %UH_API_TOKEN}}

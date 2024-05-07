@@ -38,8 +38,8 @@ async def hello():
     }
 
 
-@app.get("/extents")
-async def get_urban_extents(response_model=list[UrbanExtent]):
+@app.get("/extents", response_model=list[UrbanExtent])
+async def get_urban_extents():
     return {
         "type": "FeatureCollection",
         "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}},
@@ -58,22 +58,11 @@ async def get_urau(code: str):
 
 
 @app.patch("/urau/{code}/sources", dependencies=[Depends(check_for_token)])
-async def get_urau(code: str):
+async def get_urau_sources(code: str):
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
 
     if not feature:
         raise HTTPException(status_code=404, detail="Record not found")
 
-    return {"message": "Record was updated"}
-
-
-@app.patch("/urau/{code}/scenes", dependencies=[Depends(check_for_token)])
-async def get_urau(code: str):
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
-    feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
-
-    if not feature:
-        raise HTTPException(status_code=404, detail="Record not found")
-
-    return {"message": "Record was updated"}
+    return {"detail": "Record was updated"}
