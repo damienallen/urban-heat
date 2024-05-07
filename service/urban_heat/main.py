@@ -1,11 +1,12 @@
 from typing import Annotated
-from beanie import init_beanie
-from fastapi import FastAPI, Header, Depends, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
 
+from beanie import init_beanie
+from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
-from urban_heat.models import DataSource, UrbanExtent, client, get_extent_features
+
 from urban_heat import API_TOKEN
+from urban_heat.models import DataSource, UrbanExtent, client, get_extent_features
 
 origins = [
     "https://urbanheat.app",
@@ -59,7 +60,7 @@ async def get_urau(code: str):
 
 
 @app.get("/urau/{code}/sources", response_model=list[DataSource])
-async def get_urau(code: str):
+async def get_urau_sources(code: str):
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
 

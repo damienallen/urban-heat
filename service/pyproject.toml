@@ -20,10 +20,9 @@ tqdm = "^4.66.2"
 
 
 [tool.poetry.group.dev.dependencies]
-ruff = "^0.3.4"
-mypy = "^1.9.0"
-black = "^24.3.0"
-isort = "^5.13.2"
+pre-commit = "^3.7"
+ruff = "^0.4.3"
+mypy = "^1.10.0"
 
 
 [tool.black]
