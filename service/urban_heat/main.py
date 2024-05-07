@@ -74,10 +74,10 @@ async def get_urau_sources(code: str):
 async def update_urau_sources(sources: list[DataSource], code: str):
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
-    feature.sources = sources
-    await feature.save()
 
     if not feature:
         raise HTTPException(status_code=404, detail="Record not found")
 
+    feature.sources = sources
+    await feature.save()
     return {"detail": "Record was updated"}
