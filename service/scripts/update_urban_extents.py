@@ -1,10 +1,11 @@
-from urban_heat.models import UrbanExtent, client
-from beanie import init_beanie
-
 import asyncio
 import json
 from pathlib import Path
+
+from beanie import init_beanie
 from tqdm import tqdm
+
+from urban_heat.models import UrbanExtent, client
 
 
 async def update_urban_extents():
