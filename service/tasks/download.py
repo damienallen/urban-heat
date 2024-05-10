@@ -9,7 +9,7 @@ import httpx
 import typer
 from tqdm import tqdm
 
-from tasks import app_dir
+from tasks import DOWNLOADS_DIR, app_dir
 
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
@@ -45,7 +45,7 @@ def find_scenes(query: dict, headers: dict, offset: int = 0):
 
 def fetch_urau(
     code: str,
-    raw_dir: Path = Path("/home/damien/cave/heat_maps/raw/"),
+    download_dir: Path = DOWNLOADS_DIR,
     start_date: str = "2013-01-01",
     end_date: str = "2023-12-31",
 ):
@@ -83,7 +83,7 @@ def fetch_urau(
 
     print(f"Finding scenes with {code=}")
     urau_scenes = find_scenes(scene_filter, headers)
-    existing_ids = [s.stem[:-7] for s in raw_dir.glob("*.TIF")]
+    existing_ids = [s.stem[:-7] for s in download_dir.glob("*.TIF")]
 
     entity_ids = []
     for scene in urau_scenes:
@@ -140,7 +140,7 @@ def fetch_urau(
             print(f"DOWNLOAD FAILED: {filename}")
             continue
 
-        with open(raw_dir / filename, "wb") as f:
+        with open(download_dir / filename, "wb") as f:
             f.write(r.content)
 
     print("Done")
