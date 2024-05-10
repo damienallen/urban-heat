@@ -4,7 +4,7 @@ import httpx
 from pydantic import BaseModel
 from tinydb import Query, TinyDB
 
-from tasks import DATA_DIR, SERVICE_URL
+from urban_heat.tasks import DATA_DIR, SERVICE_URL
 
 db = TinyDB(DATA_DIR / "downloads.json")
 

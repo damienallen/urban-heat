@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        {"name":"Download","type":"debugpy","request":"launch","module":"service.tasks.download", "args": ["NL003C"]},
+        {"name":"Add Country","type":"debugpy","request":"launch","module":"tasks.add_country", "args": ["NL003C"]},
+        {"name":"Download","type":"debugpy","request":"launch","module":"service.tasks.download"},
     ]
 }

@@ -7,7 +7,7 @@ import rasterio
 from rasterio.mask import mask
 from tqdm import tqdm
 
-from tasks import DATA_DIR
+from urban_heat.tasks import DATA_DIR
 
 NO_DATA = 0
 

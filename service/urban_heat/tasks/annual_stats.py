@@ -3,7 +3,7 @@ import rasterio
 from rasterio.warp import Resampling, calculate_default_transform, reproject
 from tqdm import tqdm
 
-from tasks import DATA_DIR
+from urban_heat.tasks import DATA_DIR
 
 clipped_data_dir = DATA_DIR / "clipped"
 annual_data_dir = DATA_DIR / "annual"
