@@ -24,6 +24,10 @@ class DownloadInventory(BaseModel):
     scenes: list[Scene]
 
 
+def get_inventory() -> DownloadInventory:
+    return DownloadInventory(scenes=[s for s in Scenes.all()])
+
+
 def get_auth_header() -> dict[str, str]:
     print("Logging into EROS M2M")
     r = httpx.post(
