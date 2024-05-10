@@ -13,9 +13,10 @@ Scenes = Query()
 
 class Scene(BaseModel):
     entity_id: str
+    display_id: str
     file_path: str
-    downloaded: bool = False
-    skipped: bool = False
+    saved: bool = False
+    skip: bool = False
     failed: bool = False
     pending: bool = False
 
@@ -25,7 +26,16 @@ class DownloadInventory(BaseModel):
 
 
 def get_inventory() -> DownloadInventory:
-    return DownloadInventory(scenes=[s for s in Scenes.all()])
+    return DownloadInventory(scenes=[s for s in db.all()])
+
+
+def get_pending() -> DownloadInventory:
+    return DownloadInventory(
+        scenes=[
+            s
+            for s in db.search((Scenes.saved == False) & (Scenes.skip == False))  # noqa: E712
+        ]
+    )
 
 
 def get_auth_header() -> dict[str, str]:

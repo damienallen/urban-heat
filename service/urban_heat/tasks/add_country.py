@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import geopandas as gpd
@@ -7,7 +6,7 @@ import typer
 from tqdm import tqdm
 
 from urban_heat.tasks import APP_DIR, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL
-from urban_heat.tasks.inventory import DownloadInventory, Scene, Scenes, db, get_auth_header
+from urban_heat.tasks.inventory import Scene, Scenes, db, get_auth_header
 
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60
@@ -42,16 +41,21 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
     existing_ids = [s.stem[:-7] for s in downloads_dir.glob("*.TIF")]
 
     for raw_scene in tqdm(usgs_scenes, desc="Scanning existing downloads"):
-        entity_id = raw_scene["displayId"]
-        scene = Scene(entity_id=entity_id, file_path=str(downloads_dir / f"{entity_id}.TIF"))
-        if entity_id in existing_ids:
-            scene.downloaded = True
+        entity_id = raw_scene["entityId"]
+        display_id = raw_scene["displayId"]
+        scene = Scene(
+            entity_id=entity_id,
+            display_id=display_id,
+            file_path=str(downloads_dir / f"{display_id}.TIF"),
+        )
+        if display_id in existing_ids:
+            scene.saved = True
         elif raw_scene["cloudCover"] > MAX_CLOUD_COVER:
-            scene.skipped = True
+            scene.skip = True
         else:
             scene.pending = True
 
-        db.upsert(scene.model_dump(), Scenes.entity_id == entity_id)
+        db.upsert(scene.model_dump(), Scenes.entity_id == display_id)
 
     scenes_pending_download = db.search(Scenes.pending == True)  # noqa: E712
     print(
