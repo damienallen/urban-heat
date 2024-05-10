@@ -19,3 +19,4 @@ repos:
       - id: mypy
         additional_dependencies:
           - "types-aiofiles>=23.2.0.20240403"
+          - "types-pyyaml>=6.0.12.20240311"

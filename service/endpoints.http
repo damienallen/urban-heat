@@ -36,3 +36,10 @@ X-Token: {{$dotenv %UH_API_TOKEN}}
     ]
   }
 ]
+
+###
+PATCH https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
+content-type: application/json
+X-Token: {{$dotenv %UH_API_TOKEN}}
+
+[]

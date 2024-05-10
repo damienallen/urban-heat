@@ -4,7 +4,7 @@ from pathlib import Path
 import geopandas as gpd
 import httpx
 
-from tasks import app_dir
+from tasks import APP_DIR
 
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
@@ -13,7 +13,7 @@ BAND = "_ST_B10_TIF"
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60
 
-urban_extents_path = app_dir / "public" / "urban_extents.geojson"
+urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
 extents: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
 
 

@@ -1,6 +1,5 @@
 .env
 ,B
-data/
 
 # Python
 __pycache__/

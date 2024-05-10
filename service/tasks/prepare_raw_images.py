@@ -7,14 +7,14 @@ import rasterio
 from rasterio.mask import mask
 from tqdm import tqdm
 
-from tasks import data_dir
+from tasks import DATA_DIR
 
 NO_DATA = 0
 
 # File handling
-raw_data_dir = data_dir / "raw"
+raw_data_dir = DATA_DIR / "raw"
 
-clipped_data_dir = data_dir / "clipped"
+clipped_data_dir = DATA_DIR / "clipped"
 rmtree(clipped_data_dir)
 clipped_data_dir.mkdir(exist_ok=True)
 
@@ -35,7 +35,7 @@ for image_path in raw_data_dir.glob("*.TIF"):
 images = sorted(images, key=lambda img: img["capture_date"])  # type: ignore
 
 # Mask for clipping
-mask_path = data_dir / "zh_extent.gpkg"
+mask_path = DATA_DIR / "zh_extent.gpkg"
 mask_gdf = gpd.read_file(mask_path)
 
 pbar = tqdm(images)

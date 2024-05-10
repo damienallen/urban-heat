@@ -7,9 +7,11 @@ import aiofiles
 import geopandas as gpd
 import httpx
 import typer
+import yaml
+from pydantic import BaseModel
 from tqdm import tqdm
 
-from tasks import DOWNLOADS_DIR, app_dir
+from tasks import APP_DIR, DOWNLOADS_DIR, DOWNLOADS_YAML_PATH
 
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
@@ -18,8 +20,49 @@ BAND = "_ST_B10_TIF"
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60
 
-urban_extents_path = app_dir / "public" / "urban_extents.geojson"
+urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
 extents: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
+
+
+class Scene(BaseModel):
+    entity_id: str
+    file_path: str
+    downloaded: bool = False
+    skipped: bool = False
+
+
+class DownloadInventory(BaseModel):
+    scenes: dict[str, list[Scene]]
+
+
+def get_download_inventory() -> DownloadInventory:
+    if not DOWNLOADS_YAML_PATH.exists():
+        return DownloadInventory(scenes={})
+
+    with open(DOWNLOADS_YAML_PATH, "r") as f:
+        return DownloadInventory(**yaml.safe_load(f))
+
+
+def update_download_inventory(code: str, scenes: list[Scene]):
+    inventory = get_download_inventory()
+    with open(DOWNLOADS_YAML_PATH, "w+") as f:
+        inventory.scenes[code] = scenes
+        yaml.safe_dump(inventory.model_dump(), f)
+
+
+def fetch_auth_token() -> dict[str, str]:
+    print("Logging into EROS M2M")
+    r = httpx.post(
+        f"{SERVICE_URL}/login-token",
+        json={
+            "username": os.environ.get("EROS_USERNAME"),
+            "token": os.environ.get("EROS_PASSWORD"),
+        },
+    )
+
+    r.raise_for_status()
+    api_key = r.json()["data"]
+    return {"X-Auth-Token": api_key}
 
 
 def find_scenes(query: dict, headers: dict, offset: int = 0):
@@ -43,63 +86,34 @@ def find_scenes(query: dict, headers: dict, offset: int = 0):
     return scenes + r.json()["data"]["results"]
 
 
-def fetch_urau(
-    code: str,
-    download_dir: Path = DOWNLOADS_DIR,
-    start_date: str = "2013-01-01",
-    end_date: str = "2023-12-31",
-):
-    print("[AUTH] Logging into EROS M2M")
-    r = httpx.post(
-        f"{SERVICE_URL}/login-token",
-        json={
-            "username": os.environ.get("EROS_USERNAME"),
-            "token": os.environ.get("EROS_PASSWORD"),
-        },
-    )
-
-    r.raise_for_status()
-    api_key = r.json()["data"]
-    headers = {"X-Auth-Token": api_key}
-
-    urau_extent = extents[extents["URAU_CODE"] == code]
-    if urau_extent.empty:
-        raise ValueError(f"Unable to find are with code '{code}'")
-
-    scene_filter = {
-        "spatialFilter": {
-            "filterType": "mbr",
-            "lowerLeft": {
-                "latitude": urau_extent.geometry.bounds.miny.values[0],
-                "longitude": urau_extent.geometry.bounds.minx.values[0],
-            },
-            "upperRight": {
-                "latitude": urau_extent.geometry.bounds.maxy.values[0],
-                "longitude": urau_extent.geometry.bounds.maxx.values[0],
-            },
-        },
-        "acquisitionFilter": {"start": start_date, "end": end_date},
-    }
-
-    print(f"Finding scenes with {code=}")
-    urau_scenes = find_scenes(scene_filter, headers)
+def filter_scenes(code: str, usgs_scenes: list[dict], download_dir: Path) -> list[Scene]:
     existing_ids = [s.stem[:-7] for s in download_dir.glob("*.TIF")]
 
-    entity_ids = []
-    for scene in urau_scenes:
-        display_id = scene["displayId"]
+    scenes: list[Scene] = []
+    for raw_scene in usgs_scenes:
+        display_id = raw_scene["displayId"]
+        scene = Scene(entity_id=code, file_path=str(download_dir / f"{display_id}.TIF"))
         if display_id in existing_ids:
+            scene.downloaded = True
             print(f"Skipping {display_id}, already downloaded")
-        elif scene["cloudCover"] > MAX_CLOUD_COVER:
-            pass
-        else:
-            entity_ids.append(scene["entityId"])
+        elif raw_scene["cloudCover"] > MAX_CLOUD_COVER:
+            scene.skipped = True
+        scenes.append(scene)
 
-    print(f"\nFound {len(urau_scenes)} scenes, " f"{len(entity_ids)} images will be downloaded.")
+    update_download_inventory(code, scenes)
+    scenes_pending_download = [s for s in scenes if s.downloaded is False and s.skipped is False]
+    print(
+        f"\nFound {len(usgs_scenes)} scenes, "
+        f"{len(scenes_pending_download)} images will be downloaded."
+    )
 
+    return scenes_pending_download
+
+
+def download_scenes(scenes: list[Scene], download_dir: Path, headers: dict[str, str]):
     r = httpx.post(
         f"{SERVICE_URL}/download-options",
-        json={"datasetName": DATASET_NAME, "entityIds": list(set(entity_ids))},
+        json={"datasetName": DATASET_NAME, "entityIds": list(set([s.entity_id for s in scenes]))},
         headers=headers,
     )
     r.raise_for_status()
@@ -144,6 +158,42 @@ def fetch_urau(
             f.write(r.content)
 
     print("Done")
+
+
+def fetch_urau(
+    code: str,
+    download_dir: Path = DOWNLOADS_DIR,
+    start_date: str = "2013-01-01",
+    end_date: str = "2023-12-31",
+):
+    headers = fetch_auth_token()
+    urau_extent = extents[extents["URAU_CODE"] == code]
+    if urau_extent.empty:
+        raise ValueError(f"Unable to find are with code '{code}'")
+
+    print(f"Finding scenes with {code=}")
+    usgs_scenes = find_scenes(
+        {
+            "spatialFilter": {
+                "filterType": "mbr",
+                "lowerLeft": {
+                    "latitude": urau_extent.geometry.bounds.miny.values[0],
+                    "longitude": urau_extent.geometry.bounds.minx.values[0],
+                },
+                "upperRight": {
+                    "latitude": urau_extent.geometry.bounds.maxy.values[0],
+                    "longitude": urau_extent.geometry.bounds.maxx.values[0],
+                },
+            },
+            "acquisitionFilter": {"start": start_date, "end": end_date},
+        },
+        headers,
+    )
+
+    scenes_pending_download = filter_scenes(
+        code=code, usgs_scenes=usgs_scenes, download_dir=download_dir
+    )
+    download_scenes(scenes=scenes_pending_download, download_dir=download_dir, headers=headers)
 
 
 if __name__ == "__main__":

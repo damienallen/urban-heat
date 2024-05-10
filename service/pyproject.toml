@@ -27,6 +27,7 @@ mypy = "^1.10.0"
 pre-commit = "^3.7"
 ruff = "^0.4.3"
 types-aiofiles = "^23.2.0.20240403"
+types-pyyaml = "^6.0.12.20240311"
 
 
 [tool.black]

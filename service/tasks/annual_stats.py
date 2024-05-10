@@ -3,10 +3,10 @@ import rasterio
 from rasterio.warp import Resampling, calculate_default_transform, reproject
 from tqdm import tqdm
 
-from tasks import data_dir
+from tasks import DATA_DIR
 
-clipped_data_dir = data_dir / "clipped"
-annual_data_dir = data_dir / "annual"
+clipped_data_dir = DATA_DIR / "clipped"
+annual_data_dir = DATA_DIR / "annual"
 
 clipped_images = [f for f in clipped_data_dir.glob("*.tif")]
 
