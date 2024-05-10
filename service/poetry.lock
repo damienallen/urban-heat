@@ -27,6 +27,24 @@ files = [
 ]
 
 [[package]]
+name = "aiotinydb"
+version = "2.0.0"
+description = "asyncio compatibility shim for tinydb"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "aiotinydb-2.0.0-py3-none-any.whl", hash = "sha256:1009fcbbc4315eb250edfe8fded28f1b01598be222b86d6929fb95847da21696"},
+    {file = "aiotinydb-2.0.0.tar.gz", hash = "sha256:19baa7225b205c4956a440da12e237626aea9345061210c739198f5d753a98f6"},
+]
+
+[package.dependencies]
+aiofiles = ">=0.8.0"
+tinydb = ">=4.7.0"
+
+[package.extras]
+test = ["pytest (>=7.0.1)", "pytest-cov (>=3.0.0)"]
+
+[[package]]
 name = "annotated-types"
 version = "0.6.0"
 description = "Reusable constraint types to use with typing.Annotated"
@@ -1336,6 +1354,17 @@ anyio = ">=3.4.0,<5"
 full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7)", "pyyaml"]
 
 [[package]]
+name = "tinydb"
+version = "4.8.0"
+description = "TinyDB is a tiny, document oriented database optimized for your happiness :)"
+optional = false
+python-versions = ">=3.7,<4.0"
+files = [
+    {file = "tinydb-4.8.0-py3-none-any.whl", hash = "sha256:30c06d12383d7c332e404ca6a6103fb2b32cbf25712689648c39d9a6bd34bd3d"},
+    {file = "tinydb-4.8.0.tar.gz", hash = "sha256:6dd686a9c5a75dfa9280088fd79a419aefe19cd7f4bd85eba203540ef856d564"},
+]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -1687,4 +1716,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.12"
-content-hash = "f1c726fe96b6a7a28f15a534fdcb3655672a7d0840e8bed66d102ad8b92f8f0e"
+content-hash = "76f689bcef49279b2d313c7a9a04b3966a5ee96d925d80940f09818072832c0d"
