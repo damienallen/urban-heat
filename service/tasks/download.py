@@ -1,9 +1,12 @@
+import asyncio
 import os
 from datetime import datetime
 from pathlib import Path
 
+import aiofiles
 import geopandas as gpd
 import httpx
+import typer
 from tqdm import tqdm
 
 from tasks import app_dir
@@ -41,7 +44,10 @@ def find_scenes(query: dict, headers: dict, offset: int = 0):
 
 
 def fetch_urau(
-    code: str, raw_dir: Path, start_date: str = "2013-01-01", end_date: str = "2023-12-31"
+    code: str,
+    raw_dir: Path = Path("/home/damien/cave/heat_maps/raw/"),
+    start_date: str = "2013-01-01",
+    end_date: str = "2023-12-31",
 ):
     print("[AUTH] Logging into EROS M2M")
     r = httpx.post(
@@ -141,4 +147,4 @@ def fetch_urau(
 
 
 if __name__ == "__main__":
-    fetch_urau(code="NL001C", raw_dir=Path("/home/damien/cave/heat_maps/raw/"))
+    typer.run(fetch_urau)
