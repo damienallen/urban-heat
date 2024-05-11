@@ -8,8 +8,8 @@ import httpx
 import typer
 from tqdm import tqdm
 
-from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL
-from urban_heat.tasks.inventory import get_auth_header, get_pending
+from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header
+from urban_heat.tasks.inventory import get_pending, report_inventory
 
 
 def download_scenes(downloads_dir: Path = DOWNLOADS_DIR):
@@ -23,7 +23,7 @@ def download_scenes(downloads_dir: Path = DOWNLOADS_DIR):
         f"{SERVICE_URL}/download-options",
         json={
             "datasetName": DATASET_NAME,
-            "entityIds": list(set([s.entity_id for s in pending_inventory.scenes])),
+            "entityIds": list(set([s.entity_id for s in pending_inventory])),
         },
         headers=headers,
         timeout=60,
@@ -69,7 +69,7 @@ def download_scenes(downloads_dir: Path = DOWNLOADS_DIR):
         with open(downloads_dir / filename, "wb") as f:
             f.write(r.content)
 
-    print("Done")
+    report_inventory()
 
 
 if __name__ == "__main__":

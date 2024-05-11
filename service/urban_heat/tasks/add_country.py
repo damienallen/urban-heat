@@ -6,7 +6,7 @@ import typer
 from tqdm import tqdm
 
 from urban_heat.tasks import APP_DIR, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header
-from urban_heat.tasks.inventory import Scene, Scenes, db
+from urban_heat.tasks.inventory import Scene, Scenes, db, report_inventory
 
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60
@@ -51,17 +51,11 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
         if display_id in existing_ids:
             scene.saved = True
         elif raw_scene["cloudCover"] > MAX_CLOUD_COVER:
-            scene.skip = True
+            scene.skipped = True
         else:
             scene.pending = True
 
         db.upsert(scene.model_dump(), Scenes.entity_id == display_id)
-
-    scenes_pending_download = db.search(Scenes.pending == True)  # noqa: E712
-    print(
-        f"\nFound {len(usgs_scenes)} scenes, "
-        f"{len(scenes_pending_download)} images will be downloaded."
-    )
 
 
 def add_country(
@@ -95,8 +89,9 @@ def add_country(
         headers,
     )
 
-    print(f"\nFound scenes for {country_extents.shape[0]} urban extents")
+    print(f"\nPreparing scenes for {country_extents.shape[0]} urban extents")
     prepare_scenes(usgs_scenes=usgs_scenes, downloads_dir=downloads_dir)
+    report_inventory()
 
 
 if __name__ == "__main__":
