@@ -4,7 +4,13 @@ import httpx
 import typer
 from tqdm import tqdm
 
-from urban_heat.tasks import DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, extents_gdf, get_auth_header
+from urban_heat.tasks import (
+    DATASET_NAME,
+    DOWNLOADS_DIR,
+    SERVICE_URL,
+    get_auth_header,
+    get_extents_by_country,
+)
 from urban_heat.tasks.inventory import Scene, Scenes, db, report_inventory
 
 MAX_RESULTS = 100
@@ -64,10 +70,7 @@ def add_country(
     end_date: str = "2023-12-31",
 ):
     headers = get_auth_header()
-    country_extents = extents_gdf[extents_gdf["URAU_CODE"].str.contains(country_code)]
-
-    if country_extents.empty:
-        raise ValueError(f"Unable to find are with code '{country_code}'")
+    country_extents = get_extents_by_country(code=country_code)
 
     print(f"Finding scenes with {country_code=}")
     usgs_scenes = search_scenes(

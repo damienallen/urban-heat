@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {"name":"Add Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.add_country", "args": ["NL"]},
+        {"name":"Process Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.process_country", "args": ["NL"]},
         {"name":"Download","type":"debugpy","request":"launch","module":"urban_heat.tasks.download"},
     ]
 }
