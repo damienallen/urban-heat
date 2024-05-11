@@ -12,32 +12,46 @@ from tqdm.asyncio import tqdm
 from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header
 from urban_heat.tasks.inventory import Scene, Scenes, aio_db, report_inventory_async
 
-BATCH_SIZE = 5
+BATCH_SIZE = 100
+MAX_CONCURRENT = 5
 
 
 async def process_downloads(downloads: list[str], downloads_dir: Path):
     async with httpx.AsyncClient() as client:
         async with aio_db as db:
+            semaphore = asyncio.Semaphore(MAX_CONCURRENT)
+            tasks = [
+                asyncio.create_task(download_file(url, downloads_dir, client, db, semaphore))
+                for url in downloads
+            ]
             await tqdm.gather(
-                *[download_file(url, downloads_dir, client, db) for url in downloads],
+                *tasks,
                 desc="Downloading scenes",
             )
 
 
-async def download_file(url: str, downloads_dir: Path, client: httpx.AsyncClient, db: AIOTinyDB):
-    r = await client.get(url, timeout=60)
-    filename = os.path.basename(url).split("?")[0]
+async def download_file(
+    url: str,
+    downloads_dir: Path,
+    client: httpx.AsyncClient,
+    db: AIOTinyDB,
+    semaphore: asyncio.Semaphore,
+):
+    async with semaphore:
+        print(url)
+        r = await client.get(url, timeout=60)
+        filename = os.path.basename(url).split("?")[0]
 
-    if not r.status_code == 200:
-        print(f"DOWNLOAD FAILED: {filename}")
-        db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
-        return
+        if not r.status_code == 200:
+            print(f"DOWNLOAD FAILED: {filename}")
+            db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
+            return
 
-    async with aio_open(downloads_dir / filename, "wb") as f:
-        async for chunk in r.aiter_bytes():
-            await f.write(chunk)
+        async with aio_open(downloads_dir / filename, "wb") as f:
+            async for chunk in r.aiter_bytes():
+                await f.write(chunk)
 
-    db.update({"saved": True, "failed": False}, (Scenes.display_id == filename[:-11]))
+        db.update({"saved": True, "failed": False}, (Scenes.display_id == filename[:-11]))
 
 
 async def request_downloads(scenes: list[Scene], headers: dict[str, str]) -> list[str]:
@@ -73,13 +87,7 @@ async def request_downloads(scenes: list[Scene], headers: dict[str, str]) -> lis
             )
             r.raise_for_status()
 
-    pending_downloads = [d["url"] for d in r.json()["data"]["availableDownloads"]]
-    remaining_downloads = r.json()["data"]["remainingLimits"][0]["recentDownloadCount"]
-    print(
-        f"Found {len(pending_downloads)} available downloads ({remaining_downloads} remaining in quota)"
-    )
-
-    return pending_downloads
+    return [d["url"] for d in r.json()["data"]["availableDownloads"]]
 
 
 async def consume_queue(batch_size: int, downloads_dir: Path):
