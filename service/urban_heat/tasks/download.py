@@ -12,7 +12,7 @@ from tqdm.asyncio import tqdm
 from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header
 from urban_heat.tasks.inventory import Scene, Scenes, aio_db, report_inventory_async
 
-BATCH_SIZE = 100
+BATCH_SIZE = 50
 MAX_CONCURRENT = 5
 
 
@@ -38,7 +38,6 @@ async def download_file(
     semaphore: asyncio.Semaphore,
 ):
     async with semaphore:
-        print(url)
         r = await client.get(url, timeout=60)
         filename = os.path.basename(url).split("?")[0]
 
@@ -60,7 +59,7 @@ async def request_downloads(scenes: list[Scene], headers: dict[str, str]) -> lis
             f"{SERVICE_URL}/download-options",
             json={
                 "datasetName": DATASET_NAME,
-                "entityIds": list(set([s["entity_id"] for s in scenes])),
+                "entityIds": list(set([s.entity_id for s in scenes])),
             },
             headers=headers,
             timeout=60,
@@ -103,7 +102,7 @@ async def consume_queue(batch_size: int, downloads_dir: Path):
             print("Finished processing download queue.")
             break
 
-        scene_batch = pending_inventory[:batch_size]
+        scene_batch = [Scene(**s) for s in pending_inventory[:batch_size]]
         print(f"Downloading batch of {len(scene_batch)} scenes")
 
         downloads = await request_downloads(scene_batch[:batch_size], headers)
