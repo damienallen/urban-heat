@@ -50,10 +50,13 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
         )
         if display_id in existing_ids:
             scene.saved = True
+            scene.skipped = False
+            scene.failed = False
         elif raw_scene["cloudCover"] > MAX_CLOUD_COVER:
             scene.skipped = True
+            scene.failed = False
         else:
-            scene.pending = True
+            scene.saved = False
 
         db.upsert(scene.model_dump(), Scenes.entity_id == display_id)
 

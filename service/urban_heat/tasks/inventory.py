@@ -14,7 +14,6 @@ class Scene(BaseModel):
     file_path: str
     saved: bool = False
     failed: bool = False
-    pending: bool = False
     skipped: bool = False
 
 
@@ -26,12 +25,12 @@ def get_saved() -> list[Scene]:
     return [s for s in db.search((Scenes.saved == True))]
 
 
+def get_pending() -> list[Scene]:
+    return [s for s in db.search((Scenes.saved == False) & (Scenes.skipped == False))]
+
+
 def get_failed() -> list[Scene]:
     return [s for s in db.search((Scenes.failed == True))]
-
-
-def get_pending() -> list[Scene]:
-    return [s for s in db.search((Scenes.pending == True))]
 
 
 def get_skipped() -> list[Scene]:
@@ -49,7 +48,7 @@ def report_inventory():
         "DOWNLOAD INVENTORY",
         f" | Total: {total_scenes}",
         f" | Saved: {saved_scenes}",
-        f" | Failed: {failed_scenes}",
         f" | Pending: {pending_scenes}",
+        f" | Failed: {failed_scenes}",
         f" | Skipped: {skipped_scenes}",
     )
