@@ -15,7 +15,7 @@ from urban_heat.tasks.inventory import Scene, Scenes, aio_db, report_inventory_a
 BATCH_SIZE = 50
 MAX_CONCURRENT = 5
 
-RETRY_TIMEOUT = 600
+RETRY_TIMEOUT = 300
 
 
 async def process_downloads(downloads: list[str], downloads_dir: Path):
