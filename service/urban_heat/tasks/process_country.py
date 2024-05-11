@@ -20,7 +20,7 @@ NO_DATA = 0
 
 def clip_scene(code: str, scene: dict, mask_gdf: gpd.GeoDataFrame, pbar: tqdm):
     image_path = scene["path"]
-    pbar.set_description(scene["capture_date"].strftime("%y-%m-%d"))
+    pbar.set_description("Clipping " + scene["capture_date"].strftime("%y-%m-%d"))
 
     with rasterio.open(image_path) as src:
         masked_data, masked_transform = mask(src, mask_gdf.geometry, invert=False)
@@ -57,9 +57,8 @@ def clip_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
     mask_gdf_utm = {}
 
     # Fetch and sort list of raw Level-2 LST images
-    print("Search for raw images within country URAU extents")
     images = []
-    for image_path in DOWNLOADS_DIR.glob("*.TIF"):
+    for image_path in tqdm([f for f in DOWNLOADS_DIR.glob("*.TIF")], desc="Matching extents"):
         with rasterio.open(image_path) as src:
             if src.crs not in mask_gdf_utm:
                 mask_gdf_utm[src.crs] = mask_gdf.to_crs(src.crs)
