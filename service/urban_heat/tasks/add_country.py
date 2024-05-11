@@ -5,8 +5,8 @@ import httpx
 import typer
 from tqdm import tqdm
 
-from urban_heat.tasks import APP_DIR, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL
-from urban_heat.tasks.inventory import Scene, Scenes, db, get_auth_header
+from urban_heat.tasks import APP_DIR, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header
+from urban_heat.tasks.inventory import Scene, Scenes, db
 
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60

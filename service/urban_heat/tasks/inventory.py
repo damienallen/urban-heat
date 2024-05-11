@@ -1,12 +1,9 @@
-import os
-
-import httpx
 from pydantic import BaseModel
 from tinydb import Query, TinyDB
 
-from urban_heat.tasks import DATA_DIR, SERVICE_URL
+from urban_heat.tasks import DATA_DIR
 
-db = TinyDB(DATA_DIR / "downloads.json")
+db = TinyDB(DATA_DIR / "scenes.json")
 
 Scenes = Query()
 
@@ -36,18 +33,3 @@ def get_pending() -> DownloadInventory:
             for s in db.search((Scenes.saved == False) & (Scenes.skip == False))  # noqa: E712
         ]
     )
-
-
-def get_auth_header() -> dict[str, str]:
-    print("Logging into EROS M2M")
-    r = httpx.post(
-        f"{SERVICE_URL}/login-token",
-        json={
-            "username": os.environ.get("EROS_USERNAME"),
-            "token": os.environ.get("EROS_PASSWORD"),
-        },
-    )
-
-    r.raise_for_status()
-    api_key = r.json()["data"]
-    return {"X-Auth-Token": api_key}
