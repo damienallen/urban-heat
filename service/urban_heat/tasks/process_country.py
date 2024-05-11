@@ -1,3 +1,4 @@
+import os
 from datetime import date
 from pathlib import Path
 
@@ -5,9 +6,11 @@ import geopandas as gpd
 import numpy as np
 import rasterio
 import typer
+from pydantic import BaseModel, ConfigDict
 from rasterio.mask import mask
 from shapely.geometry import Polygon
 from tqdm import tqdm
+from tqdm.contrib.concurrent import process_map
 
 from urban_heat.tasks import (
     CLIPPED_DIR,
@@ -18,12 +21,19 @@ from urban_heat.tasks import (
 NO_DATA = 0
 
 
-def clip_scene(code: str, scene: dict, mask_gdf: gpd.GeoDataFrame, pbar: tqdm):
-    image_path = scene["path"]
-    pbar.set_description("Clipping " + scene["capture_date"].strftime("%y-%m-%d"))
+class ClippingScene(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    code: str
+    scene: dict
+    mask_gdf: gpd.GeoDataFrame
+
+
+def clip_scene(clipping_scene: ClippingScene):
+    image_path = clipping_scene.scene["path"]
 
     with rasterio.open(image_path) as src:
-        masked_data, masked_transform = mask(src, mask_gdf.geometry, invert=False)
+        masked_data, masked_transform = mask(src, clipping_scene.mask_gdf.geometry, invert=False)
 
         dst_meta = src.meta.copy()
         dst_meta.update(
@@ -42,7 +52,7 @@ def clip_scene(code: str, scene: dict, mask_gdf: gpd.GeoDataFrame, pbar: tqdm):
         temp_c = masked_data * scale_factor + addititive_offset - 273.15
         temp_c = np.where(temp_c < 0, NO_DATA, temp_c)
 
-        clipped_images_dir = CLIPPED_DIR / code
+        clipped_images_dir = CLIPPED_DIR / clipping_scene.code
         clipped_images_dir.mkdir(exist_ok=True)
 
         clipped_image_path = clipped_images_dir / f"{image_path.stem}.tif"
@@ -94,9 +104,17 @@ def clip_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
             }
         )
 
-    pbar = tqdm(sorted(images, key=lambda img: img["capture_date"]))  # type: ignore
-    for scene in pbar:
-        clip_scene(code=country_code, scene=scene, mask_gdf=mask_gdf_utm[scene["crs"]], pbar=pbar)
+    # Multi-core clipping
+    images = sorted(images, key=lambda img: img["capture_date"])  # type: ignore
+    process_map(
+        clip_scene,
+        [
+            ClippingScene(code=country_code, scene=scene, mask_gdf=mask_gdf_utm[scene["crs"]])
+            for scene in images
+        ],
+        max_workers=os.cpu_count(),
+        desc="Clipping",
+    )
 
     print("Done.")
 
