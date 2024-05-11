@@ -1,18 +1,14 @@
 from pathlib import Path
 
-import geopandas as gpd
 import httpx
 import typer
 from tqdm import tqdm
 
-from urban_heat.tasks import APP_DIR, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header
+from urban_heat.tasks import DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, extents_gdf, get_auth_header
 from urban_heat.tasks.inventory import Scene, Scenes, db, report_inventory
 
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60
-
-urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
-extents: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
 
 
 def search_scenes(query: dict, headers: dict, offset: int = 0):
@@ -68,7 +64,7 @@ def add_country(
     end_date: str = "2023-12-31",
 ):
     headers = get_auth_header()
-    country_extents = extents[extents["URAU_CODE"].str.contains(country_code)]
+    country_extents = extents_gdf[extents_gdf["URAU_CODE"].str.contains(country_code)]
 
     if country_extents.empty:
         raise ValueError(f"Unable to find are with code '{country_code}'")
