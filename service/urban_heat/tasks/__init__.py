@@ -26,3 +26,18 @@ def get_auth_header() -> dict[str, str]:
     r.raise_for_status()
     api_key = r.json()["data"]
     return {"X-Auth-Token": api_key}
+
+
+async def get_auth_header_async(client: httpx.AsyncClient) -> dict[str, str]:
+    print("Logging into EROS M2M")
+    r = await client.post(
+        f"{SERVICE_URL}/login-token",
+        json={
+            "username": os.environ.get("EROS_USERNAME"),
+            "token": os.environ.get("EROS_PASSWORD"),
+        },
+    )
+
+    r.raise_for_status()
+    api_key = r.json()["data"]
+    return {"X-Auth-Token": api_key}
