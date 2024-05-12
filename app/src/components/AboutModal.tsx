@@ -48,7 +48,7 @@ export const AboutModal = observer(() => {
             </p>
             <p>
                 Isotherm contours are generated from a moderate resolution satellite image source
-                using your device's hardware.
+                using client-side worker processes.
             </p>
             <p>
                 Questions & comments are welcome:{' '}

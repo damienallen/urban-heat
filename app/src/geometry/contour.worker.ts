@@ -26,7 +26,7 @@ onmessage = async (e: MessageEvent) => {
     const rawContours = contourGenerator(data)
 
     console.log('Projecting contours to WGS84')
-    postMessage({ type: 'progress', state: 'Re-projecting', progress: 80 })
+    postMessage({ type: 'progress', state: 'Projecting', progress: 80 })
     const projection = d3.geoTransform({
         point: function (x: number, y: number) {
             this.stream.point(oX + x * rX, oY + y * rY)
