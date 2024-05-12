@@ -7,7 +7,7 @@ const d3 = Object.assign({}, { contours, geoProject, geoTransform })
 
 onmessage = async (e: MessageEvent) => {
     console.log(`Fetching: ${e.data.url}`)
-    postMessage({ type: 'progress', state: 'Downloading imagery', progress: 20 })
+    postMessage({ type: 'progress', state: 'Fetching images', progress: 20 })
     const tiff = await fromUrl(e.data.url)
 
     const image = await tiff.getImage()
@@ -15,7 +15,7 @@ onmessage = async (e: MessageEvent) => {
     const [rX, rY] = image.getResolution()
 
     console.log('Parsing raster data')
-    postMessage({ type: 'progress', state: 'Parsing data', progress: 30 })
+    postMessage({ type: 'progress', state: 'Loading images', progress: 30 })
     const data: number[] = (await image.readRasters())[0] as any
     const h = image.getHeight()
     const w = image.getWidth()
