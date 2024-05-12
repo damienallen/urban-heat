@@ -113,6 +113,7 @@ def clip_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
             for scene in images
         ],
         max_workers=os.cpu_count(),
+        chunksize=1,
         desc="Clipping",
     )
 

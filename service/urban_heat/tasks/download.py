@@ -12,7 +12,7 @@ from tqdm.asyncio import tqdm
 from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header_async
 from urban_heat.tasks.inventory import Scene, Scenes, aio_db, report_inventory_async
 
-BATCH_SIZE = 50
+BATCH_SIZE = 100
 MAX_CONCURRENT = 5
 
 RETRY_TIMEOUT = 300
@@ -40,11 +40,16 @@ async def download_file(
     semaphore: asyncio.Semaphore,
 ):
     async with semaphore:
-        r = await client.get(url, timeout=60)
-        filename = os.path.basename(url).split("?")[0]
+        try:
+            r = await client.get(url, timeout=60)
+            filename = os.path.basename(url).split("?")[0]
+        except httpx.ReadError:
+            print(f"[READ ERROR] Download Failed: {filename}")
+            db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
+            return
 
         if not r.status_code == 200:
-            print(f"DOWNLOAD FAILED: {filename}")
+            print(f"[{r.status_code}] Download Failed: {filename}")
             db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
             return
 

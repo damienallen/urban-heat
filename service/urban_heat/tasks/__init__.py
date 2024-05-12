@@ -7,10 +7,10 @@ import httpx
 DATA_DIR = Path(__file__).parents[3] / "data"
 APP_DIR = Path(__file__).parents[3] / "app"
 
-DOWNLOADS_DIR = Path(os.environ.get("UH_DOWNLOADS_DIR", "/home/damien/cave/heat_maps/raw/"))
+DOWNLOADS_DIR = Path(os.environ.get("UH_DOWNLOADS_DIR", DATA_DIR / "raw"))
 DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
-CLIPPED_DIR = Path(os.environ.get("UH_CLIPPED_DIR", "/home/damien/cave/heat_maps/clipped/"))
+CLIPPED_DIR = Path(os.environ.get("UH_CLIPPED_DIR", DATA_DIR / "clipped"))
 CLIPPED_DIR.mkdir(parents=True, exist_ok=True)
 
 urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
