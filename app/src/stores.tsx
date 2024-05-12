@@ -71,9 +71,8 @@ export class AppStore {
     }
 
     get styleUrl() {
-        // TODO: protect origins for key
-        const key = 'bk2NyBkmsa6NdxDbxXvH'
-        return `https://api.maptiler.com/maps/${this.mapStyle}/style.json?key=${key}`
+        const maptilerApiKey = 'wDiAbMXktsF0wdW1skrt'
+        return `https://api.maptiler.com/maps/${this.mapStyle}/style.json?key=${maptilerApiKey}`
     }
 
     constructor(public root: Store) {
