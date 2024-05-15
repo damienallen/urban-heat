@@ -70,7 +70,7 @@ def process_images_by_urau(
     mask_path = urau_dir / "mask.tif"
     create_mask(urau.geometry, resolution, mask_path)
     with rasterio.open(mask_path) as src:
-        utm_crs = src.crs
+        src_crs = src.crs
         utm_bounds = src.bounds
         src_transform = src.transform
         src_width = src.width
@@ -81,18 +81,18 @@ def process_images_by_urau(
 
     # Calculate max surface temp
     max_surface_temp = {}
+    urau_utm = {}
     for image_path in tqdm(clipped_images, desc="Calculating max surface temp"):
         year = image_path.stem[17:21]
-        urau_utm = urau_gdf.to_crs(utm_crs).geometry.iloc[0]
 
         with rasterio.open(image_path) as src:
-            if not any([src.index(x, y) for (x, y) in urau_utm.boundary.coords]):
-                continue
+            if (utm_crs := str(src.crs)) not in urau_utm:
+                urau_utm[utm_crs] = urau_gdf.to_crs(utm_crs).geometry.iloc[0]
 
-            masked_surface_temp, _ = mask(
-                src,
-                [urau_utm],
-            )
+            try:
+                masked_surface_temp, _ = mask(src, [urau_utm[utm_crs]], crop=True)
+            except ValueError:
+                continue
 
         if year not in max_surface_temp:
             max_surface_temp[year] = masked_surface_temp
@@ -105,7 +105,7 @@ def process_images_by_urau(
 
     # Prepare for projection
     dst_transform, dst_width, dst_height = calculate_default_transform(
-        utm_crs,
+        src_crs,
         DST_CRS,
         src_width,
         src_height,
@@ -128,7 +128,7 @@ def process_images_by_urau(
                 source=max_temp,
                 destination=rasterio.band(dst, 1),
                 src_transform=src_transform,
-                src_crs=utm_crs,
+                src_crs=src_crs,
                 dst_transform=dst_transform,
                 dst_crs=DST_CRS,
                 resampling=Resampling.nearest,

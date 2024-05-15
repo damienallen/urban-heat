@@ -135,7 +135,7 @@ def clip_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
                     crs=src.crs,
                 )
 
-            intersection = mask_gdf_utm[src.crs].overlay(image_bounds_gdf, how="intersection")
+            intersection = mask_gdf_utm[str(src.crs)].overlay(image_bounds_gdf, how="intersection")
             if intersection.empty:
                 continue
 
