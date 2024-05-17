@@ -63,8 +63,7 @@ def process_images_by_urau(
     urau_dir: Path = sources_dir / urau_code
     urau_dir.mkdir(exist_ok=True)
 
-    urau_gdf = gpd.GeoDataFrame(geometry=[urau.geometry], crs=DST_CRS)
-
+    # Sample image resolution
     clipped_images = [f for f in (clipped_dir / urau_code[:2]).glob("*.tif")]
     with rasterio.open(clipped_images[0]) as src:
         resolution = (
@@ -81,10 +80,10 @@ def process_images_by_urau(
     for image_path in tqdm(clipped_images, desc="Computing annual data"):
         with rasterio.open(image_path) as src:
             # Continue if geometry is outside URAU
-            if not box(*src.bounds).intersects(urau_gdf.geometry.iloc[0]):
+            if not box(*src.bounds).intersects(urau.geometry):
                 continue
 
-            masked_image, masked_transform = mask(src, [urau_gdf.geometry.iloc[0]])
+            masked_image, masked_transform = mask(src, [urau.geometry])
             masked_surface_temp = np.empty(ref_shape, dtype=masked_image.dtype)
 
             reproject(
