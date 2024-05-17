@@ -13,7 +13,7 @@ COPY ./README.md ./pyproject.toml ./poetry.lock* /pysetup/
 RUN poetry install
 
 WORKDIR /service
-COPY . /service/
+COPY ./urban_heat /service/urban_heat/
 
 EXPOSE 8000
 CMD ["uvicorn", "urban_heat.main:app", "--host", "0.0.0.0", "--port", "8000"]
