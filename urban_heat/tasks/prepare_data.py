@@ -5,7 +5,6 @@ import numpy as np
 import rasterio
 import typer
 from affine import Affine
-from rasterio.coords import BoundingBox
 from rasterio.features import geometry_mask
 from rasterio.mask import mask
 from rasterio.transform import from_origin
@@ -15,6 +14,7 @@ from shapely.geometry import box
 from tqdm import tqdm
 
 from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
+from urban_heat.tasks.data_sources import process_data_source
 
 
 def create_mask(
@@ -53,7 +53,7 @@ def process_images_by_urau(
     urau: gpd.GeoSeries,
     clipped_dir: Path = CLIPPED_DIR,
     sources_dir: Path = SOURCES_DIR,
-    data_source_key: str = "max_surface_temperature",
+    data_source_key: str = "max_surface_temp",
 ):
     urau_code = urau["URAU_CODE"]
     urau_dir: Path = sources_dir / urau_code
@@ -71,8 +71,8 @@ def process_images_by_urau(
     mask_path = urau_dir / "mask.tif"
     ref_shape, ref_transform, metadata = create_mask(urau.geometry, resolution, mask_path)
 
-    # Calculate max surface temp
-    max_surface_temp = {}
+    # Calculate annual data source values
+    data_source_by_year: dict[str, np.ndarray] = {}
     for image_path in tqdm(clipped_images, desc="Computing annual data"):
         with rasterio.open(image_path) as src:
             # Continue if geometry is outside URAU
@@ -92,23 +92,20 @@ def process_images_by_urau(
                 resampling=Resampling.nearest,
             )
 
-        year = image_path.stem[17:21]
-        if year not in max_surface_temp:
-            max_surface_temp[year] = masked_surface_temp
-        else:
-            max_surface_temp[year] = np.where(
-                masked_surface_temp > max_surface_temp[year],
-                masked_surface_temp,
-                max_surface_temp[year],
-            )
+        data_source_by_year = process_data_source(
+            data_source_key=data_source_key,
+            data_source_dict=data_source_by_year,
+            masked_data=masked_surface_temp,
+            year=image_path.stem[17:21],
+        )
 
     # Export reprojected data
     data_source_dir: Path = SOURCES_DIR / urau_code / data_source_key
     data_source_dir.mkdir(exist_ok=True)
 
-    for year, max_temp in tqdm(max_surface_temp.items(), desc="Writing data source"):
+    for year, max_temp in tqdm(data_source_by_year.items(), desc="Writing data source"):
         with rasterio.open(
-            data_source_dir / f"max_surface_temp_{year}.tif", "w", **metadata
+            data_source_dir / f"{data_source_key}_{year}.tif", "w", **metadata
         ) as dst:
             dst.write(max_temp, 1)
 
@@ -122,7 +119,7 @@ def prepare_data_source(
         urau_area_km2 = int(urau["AREA_SQM"] / (1000 * 1000))
         print(
             f"[{ind + 1}/{extents_gdf.shape[0]}] {urau["URAU_CODE"]} "
-            f"-> {urau["URAU_NAME"]}, {country_code} ({urau_area_km2} km2)"
+            f"-> {urau["URAU_NAME"]}{country_code} ({urau_area_km2} km2)"
         )
         process_images_by_urau(urau, clipped_dir=clipped_dir, sources_dir=sources_dir)
 
