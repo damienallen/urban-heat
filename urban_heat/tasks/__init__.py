@@ -22,6 +22,8 @@ extents_gdf: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
 BAND = "_ST_B10_TIF"
+DST_CRS = "EPSG:4326"
+NO_DATA = 0
 
 
 def get_auth_header() -> dict[str, str]:

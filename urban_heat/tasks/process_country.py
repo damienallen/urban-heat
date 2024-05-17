@@ -19,11 +19,10 @@ from urban_heat.tasks import (
     CLIPPED_DIR,
     DATA_DIR,
     DOWNLOADS_DIR,
+    DST_CRS,
+    NO_DATA,
     get_extents_by_country,
 )
-
-NO_DATA = 0
-DST_CRS = "EPSG:4326"
 
 SCENCES_JSON = DATA_DIR / "scenes_by_country.json"
 db = TinyDB(SCENCES_JSON)

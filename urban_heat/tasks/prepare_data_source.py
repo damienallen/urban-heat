@@ -12,9 +12,7 @@ from rasterio.warp import calculate_default_transform, reproject
 from shapely import Polygon
 from tqdm import tqdm
 
-from urban_heat.tasks import CLIPPED_DIR, SOURCES_DIR, get_extents_by_country
-
-DST_CRS = "EPSG:4326"
+from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
 
 
 def create_mask(
