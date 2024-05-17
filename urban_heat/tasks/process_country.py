@@ -141,7 +141,6 @@ def clip_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
 
             image_metadata.append(
                 SceneMetadata(
-                    code=country_code,
                     capture_date=date(
                         year=int(image_path.stem[26:30]),
                         month=int(image_path.stem[30:32]),

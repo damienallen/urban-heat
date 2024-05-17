@@ -2,7 +2,11 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0
     hooks:
+      - id: check-added-large-files
       - id: check-merge-conflict
+      - id: check-json
+      - id: check-toml
+      - id: check-yaml
 
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.4.3
@@ -10,11 +14,3 @@ repos:
       - id: ruff
         args: ["--select", "I", "--fix"]
       - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.0
-    hooks:
-      - id: mypy
-        additional_dependencies:
-          - "types-aiofiles>=23.2.0.20240403"
-          - "types-pyyaml>=6.0.12.20240311"

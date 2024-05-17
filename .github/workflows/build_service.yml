@@ -5,22 +5,19 @@ on:
     branches:
       - main
     paths:
-      - service/**
+      - urban_heat/**
       - tasks/**
   pull_request:
     branches:
       - "*"
     paths:
-      - service/**
+      - urban_heat/**
       - tasks/**
 
 jobs:
-  static-analysis:
-    name: Static Analysis
+  checks:
+    name: Checks
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./service
 
     steps:
       - uses: actions/checkout@v4
@@ -41,7 +38,7 @@ jobs:
   build:
     name: Docker Build
     needs:
-      - static-analysis
+      - checks
     runs-on: ubuntu-latest
 
     steps:
