@@ -7,15 +7,14 @@ import typer
 from rasterio.features import geometry_mask
 from rasterio.mask import mask
 from rasterio.transform import from_origin
+from rasterio.warp import Resampling, reproject
 from shapely import Polygon
 from tqdm import tqdm
 
 from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
 
 
-def create_mask(
-    geometry: Polygon, resolution: tuple[float, float], output_path: Path
-) -> np.ndarray:
+def create_mask(geometry: Polygon, resolution: tuple[float, float], output_path: Path) -> tuple:
     # Extract bounds
     xmin, ymin, xmax, ymax = geometry.bounds
 
@@ -40,8 +39,9 @@ def create_mask(
         crs=DST_CRS,
     ) as dst:
         dst.write(mask.astype("uint8"), indexes=1)
+        meta = dst.meta.copy()
 
-    return mask
+    return mask.shape, transform, meta
 
 
 def process_images_by_urau(
@@ -64,30 +64,30 @@ def process_images_by_urau(
 
     # Generate raster template from exents
     mask_path = urau_dir / "mask.tif"
-    create_mask(urau.geometry, resolution, mask_path)
-    with rasterio.open(mask_path) as src:
-        src_crs = src.crs
-        utm_bounds = src.bounds
-        src_width = src.width
-        src_height = src.height
-
-        raster_metadata = src.meta.copy()
-        raster_metadata.update(compress="lzw")
+    ref_shape, ref_transform, metadata = create_mask(urau.geometry, resolution, mask_path)
 
     # Calculate max surface temp
     max_surface_temp = {}
-    urau_utm = {}
-    for image_path in tqdm(clipped_images, desc="Calculating max surface temp"):
+    for image_path in tqdm(clipped_images[:100], desc="Calculating max surface temp"):
         year = image_path.stem[17:21]
 
         with rasterio.open(image_path) as src:
-            if (utm_crs := str(src.crs)) not in urau_utm:
-                urau_utm[utm_crs] = urau_gdf.to_crs(utm_crs).geometry.iloc[0]
-
             try:
-                masked_surface_temp, _ = mask(src, [urau_utm[utm_crs]], crop=True)
+                masked_image, masked_transform = mask(src, [urau_gdf.geometry.iloc[0]])
             except ValueError:
                 continue
+
+            masked_surface_temp = np.empty(ref_shape, dtype=masked_image.dtype)
+
+            reproject(
+                source=masked_image,
+                destination=masked_surface_temp,
+                src_transform=masked_transform,
+                src_crs=src.crs,
+                dst_transform=ref_transform,
+                dst_crs=src.crs,
+                resampling=Resampling.nearest,
+            )
 
         if year not in max_surface_temp:
             max_surface_temp[year] = masked_surface_temp
@@ -104,9 +104,9 @@ def process_images_by_urau(
 
     for year, max_temp in tqdm(max_surface_temp.items(), desc="Writing surface temp"):
         with rasterio.open(
-            data_source_dir / f"max_surface_temp_{year}.tif", "w", **raster_metadata
+            data_source_dir / f"max_surface_temp_{year}.tif", "w", **metadata
         ) as dst:
-            dst.write(max_temp)
+            dst.write(max_temp, 1)
 
 
 def prepare_data_source(
