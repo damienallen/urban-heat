@@ -15,7 +15,7 @@ from urban_heat.tasks import (
 from urban_heat.tasks.inventory import Scene, Scenes, db, report_inventory
 
 MAX_RESULTS = 100
-MAX_CLOUD_COVER = 60
+MAX_CLOUD_COVER = 50
 
 
 def search_scenes(query: dict, headers: dict, offset: int = 0):
@@ -40,18 +40,19 @@ def search_scenes(query: dict, headers: dict, offset: int = 0):
 
 
 def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
-    existing_ids = [s.stem[:-7] for s in downloads_dir.glob("*.TIF")]
     existing_count = 0
-
     for raw_scene in tqdm(usgs_scenes, desc="Scanning existing downloads"):
         entity_id = raw_scene["entityId"]
         display_id = raw_scene["displayId"]
+        file_path = downloads_dir / f"{display_id}_ST_B10.TIF"
+
         scene = Scene(
             entity_id=entity_id,
             display_id=display_id,
             file_path=str(downloads_dir / f"{display_id}.TIF"),
         )
-        if display_id in existing_ids:
+
+        if file_path.exists() or db.count((Scenes.display_id == display_id)) > 0:
             scene.saved = True
             scene.skipped = False
             scene.failed = False
@@ -62,7 +63,7 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
         else:
             scene.saved = False
 
-        db.upsert(scene.model_dump(), Scenes.entity_id == display_id)
+        db.upsert(scene.model_dump(), Scenes.display_id == display_id)
 
     print(f"{existing_count} entities already existed and were skipped")
 
