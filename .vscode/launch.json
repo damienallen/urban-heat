@@ -7,6 +7,6 @@
         {"name":"Add Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.add_country", "args": ["NL"]},
         {"name":"Process Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.process_country", "args": ["NL"]},
         {"name":"Download","type":"debugpy","request":"launch","module":"urban_heat.tasks.download"},
-        {"name":"Prepare DataSource","type":"debugpy","request":"launch","module":"urban_heat.tasks.prepare_data_source", "args": ["NL"]},
+        {"name":"Prepare Data","type":"debugpy","request":"launch","module":"urban_heat.tasks.prepare_data", "args": ["NL"]},
     ]
 }

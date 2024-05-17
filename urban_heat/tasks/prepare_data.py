@@ -4,17 +4,22 @@ import geopandas as gpd
 import numpy as np
 import rasterio
 import typer
+from affine import Affine
+from rasterio.coords import BoundingBox
 from rasterio.features import geometry_mask
 from rasterio.mask import mask
 from rasterio.transform import from_origin
 from rasterio.warp import Resampling, reproject
 from shapely import Polygon
+from shapely.geometry import box
 from tqdm import tqdm
 
 from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
 
 
-def create_mask(geometry: Polygon, resolution: tuple[float, float], output_path: Path) -> tuple:
+def create_mask(
+    geometry: Polygon, resolution: tuple[float, float], output_path: Path
+) -> tuple[tuple[int], Affine, dict]:
     # Extract bounds
     xmin, ymin, xmax, ymax = geometry.bounds
 
@@ -68,15 +73,13 @@ def process_images_by_urau(
 
     # Calculate max surface temp
     max_surface_temp = {}
-    for image_path in tqdm(clipped_images[:100], desc="Calculating max surface temp"):
-        year = image_path.stem[17:21]
-
+    for image_path in tqdm(clipped_images, desc="Computing max LST"):
         with rasterio.open(image_path) as src:
-            try:
-                masked_image, masked_transform = mask(src, [urau_gdf.geometry.iloc[0]])
-            except ValueError:
+            # Continue if geometry is outside URAU
+            if not urau_gdf.geometry.iloc[0].contains(box(*src.bounds)):
                 continue
 
+            masked_image, masked_transform = mask(src, [urau_gdf.geometry.iloc[0]])
             masked_surface_temp = np.empty(ref_shape, dtype=masked_image.dtype)
 
             reproject(
@@ -89,6 +92,7 @@ def process_images_by_urau(
                 resampling=Resampling.nearest,
             )
 
+        year = image_path.stem[17:21]
         if year not in max_surface_temp:
             max_surface_temp[year] = masked_surface_temp
         else:

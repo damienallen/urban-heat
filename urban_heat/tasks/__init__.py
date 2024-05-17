@@ -13,7 +13,7 @@ DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)
 CLIPPED_DIR = Path(os.environ.get("UH_CLIPPED_DIR", DATA_DIR / "clipped"))
 CLIPPED_DIR.mkdir(parents=True, exist_ok=True)
 
-SOURCES_DIR = Path(os.environ.get("UH_SOURCES_DIR", DATA_DIR / "sources"))
+SOURCES_DIR = Path(os.environ.get("UH_SOURCES_DIR", "/home/damien/cave/heat_maps/sources/"))
 SOURCES_DIR.mkdir(parents=True, exist_ok=True)
 
 urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
