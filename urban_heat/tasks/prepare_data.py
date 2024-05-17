@@ -63,12 +63,13 @@ def process_images_by_urau(
     urau_dir: Path = sources_dir / urau_code
     urau_dir.mkdir(exist_ok=True)
 
+    urau_gdf = gpd.GeoDataFrame(geometry=[urau.geometry], crs=DST_CRS)
+
     clipped_images = [f for f in (clipped_dir / urau_code[:2]).glob("*.tif")]
     with rasterio.open(clipped_images[0]) as src:
-        urau_gdf = gpd.GeoDataFrame(geometry=[urau.geometry], crs=DST_CRS)
         resolution = (
-            float(((urau_gdf.bounds.maxx - urau_gdf.bounds.minx) / src.width).iloc[0]),
-            float(((urau_gdf.bounds.maxy - urau_gdf.bounds.miny) / src.height).iloc[0]),
+            ((src.bounds.right - src.bounds.left) / src.width),
+            ((src.bounds.top - src.bounds.bottom) / src.height),
         )
 
     # Generate raster template from exents
