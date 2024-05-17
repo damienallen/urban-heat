@@ -133,7 +133,7 @@ def prepare_data_source(
         ],
         max_workers=os.cpu_count(),
         chunksize=1,
-        desc=f"Processing URAU in {country_code}",
+        desc=f"[{country_code}] Processing URAU",
     )
 
     print("Done.")
