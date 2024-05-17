@@ -1,20 +1,31 @@
+import os
 from pathlib import Path
 
-import geopandas as gpd
 import numpy as np
+import pandas as pd
 import rasterio
 import typer
 from affine import Affine
+from pydantic import BaseModel, ConfigDict
 from rasterio.features import geometry_mask
 from rasterio.mask import mask
 from rasterio.transform import from_origin
 from rasterio.warp import Resampling, reproject
 from shapely import Polygon
 from shapely.geometry import box
-from tqdm import tqdm
+from tqdm.contrib.concurrent import process_map
 
 from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
 from urban_heat.tasks.data_sources import process_data_source
+
+
+class ProcessingConfig(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    urau: pd.Series
+    clipped_dir: Path = CLIPPED_DIR
+    sources_dir: Path = SOURCES_DIR
+    data_source_key: str = "max_surface_temp"
 
 
 def create_mask(
@@ -53,18 +64,13 @@ def create_mask(
     return mask.shape, transform, meta
 
 
-def process_images_by_urau(
-    urau: gpd.GeoSeries,
-    clipped_dir: Path = CLIPPED_DIR,
-    sources_dir: Path = SOURCES_DIR,
-    data_source_key: str = "max_surface_temp",
-):
-    urau_code = urau["URAU_CODE"]
-    urau_dir: Path = sources_dir / urau_code
+def process_images_by_urau(config: ProcessingConfig):
+    urau_code = config.urau["URAU_CODE"]
+    urau_dir: Path = config.sources_dir / urau_code
     urau_dir.mkdir(exist_ok=True)
 
     # Sample image resolution
-    clipped_images = [f for f in (clipped_dir / urau_code[:2]).glob("*.tif")]
+    clipped_images = [f for f in (config.clipped_dir / urau_code[:2]).glob("*.tif")]
     with rasterio.open(clipped_images[0]) as src:
         resolution = (
             ((src.bounds.right - src.bounds.left) / src.width),
@@ -72,18 +78,19 @@ def process_images_by_urau(
         )
 
     # Generate raster template from exents
-    mask_path = urau_dir / "mask.tif"
-    ref_shape, ref_transform, metadata = create_mask(urau.geometry, resolution, mask_path)
+    ref_shape, ref_transform, metadata = create_mask(
+        geometry=config.urau.geometry, resolution=resolution, output_path=urau_dir / "mask.tif"
+    )
 
     # Calculate annual data source values
     data_source_by_year: dict[str, np.ndarray] = {}
-    for image_path in tqdm(clipped_images, desc="Computing annual data"):
+    for image_path in clipped_images:
         with rasterio.open(image_path) as src:
             # Continue if geometry is outside URAU
-            if not box(*src.bounds).intersects(urau.geometry):
+            if not box(*src.bounds).intersects(config.urau.geometry):
                 continue
 
-            masked_image, masked_transform = mask(src, [urau.geometry])
+            masked_image, masked_transform = mask(src, [config.urau.geometry])
             masked_surface_temp = np.empty(ref_shape, dtype=masked_image.dtype)
 
             reproject(
@@ -97,19 +104,18 @@ def process_images_by_urau(
             )
 
         data_source_by_year = process_data_source(
-            data_source_key=data_source_key,
+            data_source_key=config.data_source_key,
             data_source_dict=data_source_by_year,
             masked_data=masked_surface_temp,
             year=image_path.stem[17:21],
         )
 
     # Export reprojected data
-    data_source_dir: Path = SOURCES_DIR / urau_code / data_source_key
+    data_source_dir: Path = SOURCES_DIR / urau_code / config.data_source_key
     data_source_dir.mkdir(exist_ok=True)
-
     for year, max_temp in data_source_by_year.items():
         with rasterio.open(
-            data_source_dir / f"{data_source_key}_{year}.tif", "w", **metadata
+            data_source_dir / f"{config.data_source_key}_{year}.tif", "w", **metadata
         ) as dst:
             dst.write(max_temp, 1)
 
@@ -117,15 +123,18 @@ def process_images_by_urau(
 def prepare_data_source(
     country_code: str, clipped_dir: Path = CLIPPED_DIR, sources_dir: Path = SOURCES_DIR
 ):
-    extents_gdf = get_extents_by_country(code=country_code)
+    extents = get_extents_by_country(code=country_code)
 
-    for ind, urau in extents_gdf.iterrows():
-        urau_area_km2 = int(urau["AREA_SQM"] / (1000 * 1000))
-        print(
-            f"[{ind + 1}/{extents_gdf.shape[0]}] {urau["URAU_CODE"]} "
-            f"-> {urau["URAU_NAME"]}{country_code} ({urau_area_km2} km2)"
-        )
-        process_images_by_urau(urau, clipped_dir=clipped_dir, sources_dir=sources_dir)
+    process_map(
+        process_images_by_urau,
+        [
+            ProcessingConfig(urau=urau, clipped_dir=clipped_dir, sources_dir=sources_dir)
+            for urau in extents
+        ],
+        max_workers=os.cpu_count(),
+        chunksize=1,
+        desc="Processing images",
+    )
 
     print("Done.")
 
