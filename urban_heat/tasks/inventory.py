@@ -48,8 +48,8 @@ def report_inventory():
     skipped_scenes = len(get_skipped())
 
     print(
-        "DOWNLOAD INVENTORY",
-        f" | Total: {total_scenes}",
+        "INVENTORY",
+        f" > Total: {total_scenes}",
         f" | Saved: {saved_scenes}",
         f" | Pending: {pending_scenes}",
         f" | Failed: {failed_scenes}",
@@ -66,8 +66,8 @@ async def report_inventory_async():
         skipped_scenes = len(aio_db.search((Scenes.skipped == True)))
 
         print(
-            "DOWNLOAD INVENTORY",
-            f" | Total: {total_scenes}",
+            "INVENTORY",
+            f" > Total: {total_scenes}",
             f" | Saved: {saved_scenes}",
             f" | Pending: {pending_scenes}",
             f" | Failed: {failed_scenes}",

@@ -4,6 +4,7 @@ from pathlib import Path
 import geopandas as gpd
 import httpx
 
+# Filesystem
 DATA_DIR = Path(__file__).parents[2] / "data"
 APP_DIR = Path(__file__).parents[2] / "app"
 
@@ -16,14 +17,17 @@ CLIPPED_DIR.mkdir(parents=True, exist_ok=True)
 SOURCES_DIR = Path(os.environ.get("UH_SOURCES_DIR", "/home/damien/cave/heat_maps/sources/"))
 SOURCES_DIR.mkdir(parents=True, exist_ok=True)
 
-urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
-extents_gdf: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
-
+# USGS EROS
 SERVICE_URL = "https://m2m.cr.usgs.gov/api/api/json/stable"
 DATASET_NAME = "landsat_ot_c2_l2"
 BAND = "_ST_B10_TIF"
+
+# Ouputs
 DST_CRS = "EPSG:4326"
 NO_DATA = 0
+
+urban_extents_path = APP_DIR / "public" / "urban_extents.geojson"
+extents_gdf: gpd.GeoDataFrame = gpd.read_file(urban_extents_path)
 
 
 def get_auth_header() -> dict[str, str]:
