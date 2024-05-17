@@ -129,7 +129,7 @@ def prepare_data_source(
         process_images_by_urau,
         [
             ProcessingConfig(urau=urau, clipped_dir=clipped_dir, sources_dir=sources_dir)
-            for urau in extents
+            for _, urau in extents.iterrows()
         ],
         max_workers=os.cpu_count(),
         chunksize=1,

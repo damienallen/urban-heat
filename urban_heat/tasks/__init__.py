@@ -56,8 +56,8 @@ async def get_auth_header_async(client: httpx.AsyncClient) -> dict[str, str]:
     return {"X-Auth-Token": api_key}
 
 
-def get_extents_by_country(code: str) -> list[gpd.GeoSeries]:
+def get_extents_by_country(code: str) -> gpd.GeoDataFrame:
     country_extents = extents_gdf[extents_gdf["URAU_CODE"].str.contains(code)]
     if country_extents.empty:
         raise ValueError(f"Unable to find are with code '{code}'")
-    return [s for _, s in country_extents.iterrows()]
+    return country_extents.reset_index()

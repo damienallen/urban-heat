@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import httpx
@@ -18,7 +19,6 @@ MAX_CLOUD_COVER = 60
 
 
 def search_scenes(query: dict, headers: dict, offset: int = 0):
-    print(".", end="")
     r = httpx.post(
         f"{SERVICE_URL}/scene-search",
         json={
@@ -41,6 +41,7 @@ def search_scenes(query: dict, headers: dict, offset: int = 0):
 
 def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
     existing_ids = [s.stem[:-7] for s in downloads_dir.glob("*.TIF")]
+    existing_count = 0
 
     for raw_scene in tqdm(usgs_scenes, desc="Scanning existing downloads"):
         entity_id = raw_scene["entityId"]
@@ -54,6 +55,7 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
             scene.saved = True
             scene.skipped = False
             scene.failed = False
+            existing_count += 1
         elif raw_scene["cloudCover"] > MAX_CLOUD_COVER:
             scene.skipped = True
             scene.failed = False
@@ -62,6 +64,8 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
 
         db.upsert(scene.model_dump(), Scenes.entity_id == display_id)
 
+    print(f"{existing_count} entities already existed and were skipped")
+
 
 def add_country(
     country_code: str,
@@ -69,30 +73,38 @@ def add_country(
     start_date: str = "2013-01-01",
     end_date: str = "2023-12-31",
 ):
-    headers = get_auth_header()
     country_extents = get_extents_by_country(code=country_code)
+    headers = get_auth_header()
+    usgs_scenes = []
 
-    print(f"Finding scenes with {country_code=}")
-    usgs_scenes = search_scenes(
-        {
-            "spatialFilter": {
-                "filterType": "mbr",
-                "lowerLeft": {
-                    "latitude": country_extents.total_bounds[1],
-                    "longitude": country_extents.total_bounds[0],
+    for _, urau in tqdm(
+        country_extents.iterrows(),
+        desc=f"Finding scenes with {country_code=}",
+        total=country_extents.shape[0],
+    ):
+        usgs_scenes += search_scenes(
+            {
+                "spatialFilter": {
+                    "filterType": "mbr",
+                    "lowerLeft": {
+                        "latitude": urau.geometry.bounds[1],
+                        "longitude": urau.geometry.bounds[0],
+                    },
+                    "upperRight": {
+                        "latitude": urau.geometry.bounds[3],
+                        "longitude": urau.geometry.bounds[2],
+                    },
                 },
-                "upperRight": {
-                    "latitude": country_extents.total_bounds[3],
-                    "longitude": country_extents.total_bounds[2],
-                },
+                "acquisitionFilter": {"start": start_date, "end": end_date},
             },
-            "acquisitionFilter": {"start": start_date, "end": end_date},
-        },
-        headers,
-    )
+            headers,
+        )
+
+    unique_scenes = list(set([json.dumps(s) for s in usgs_scenes]))
+    print(f"Found {len(unique_scenes)} unique scenes, {len(usgs_scenes)} total")
 
     print(f"\nPreparing scenes for {country_extents.shape[0]} urban extents")
-    prepare_scenes(usgs_scenes=usgs_scenes, downloads_dir=downloads_dir)
+    prepare_scenes(usgs_scenes=[json.loads(s) for s in unique_scenes], downloads_dir=downloads_dir)
     report_inventory()
 
 
