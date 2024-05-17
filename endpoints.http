@@ -1,0 +1,45 @@
+@code = NL037C
+
+### Fetch urban extent
+GET https://api.urbanheat.app/urau/{{code}} HTTP/1.1
+
+### Fetch urban extent sources
+GET https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
+
+
+### Update urban extent
+PATCH https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
+content-type: application/json
+X-Token: {{$dotenv %UH_API_TOKEN}}
+
+[
+  {
+    "key": "string",
+    "label": "string",
+    "data": [
+      {
+        "year": 0,
+        "url": "https://example.com/",
+        "stats": {
+          "histogram": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "mean": 0,
+          "median": 0,
+          "min": 0,
+          "max": 0,
+          "st_dev": 0
+        }
+      }
+    ]
+  }
+]
+
+###
+PATCH https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
+content-type: application/json
+X-Token: {{$dotenv %UH_API_TOKEN}}
+
+[]
