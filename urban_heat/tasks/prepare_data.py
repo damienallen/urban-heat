@@ -103,7 +103,7 @@ def process_images_by_urau(
     data_source_dir: Path = SOURCES_DIR / urau_code / data_source_key
     data_source_dir.mkdir(exist_ok=True)
 
-    for year, max_temp in tqdm(data_source_by_year.items(), desc="Writing data source"):
+    for year, max_temp in data_source_by_year.items():
         with rasterio.open(
             data_source_dir / f"{data_source_key}_{year}.tif", "w", **metadata
         ) as dst:
