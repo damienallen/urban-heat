@@ -4,8 +4,8 @@ from pathlib import Path
 import geopandas as gpd
 import httpx
 
-DATA_DIR = Path(__file__).parents[3] / "data"
-APP_DIR = Path(__file__).parents[3] / "app"
+DATA_DIR = Path(__file__).parents[2] / "data"
+APP_DIR = Path(__file__).parents[2] / "app"
 
 DOWNLOADS_DIR = Path(os.environ.get("UH_DOWNLOADS_DIR", DATA_DIR / "raw"))
 DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)

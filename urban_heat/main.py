@@ -35,7 +35,7 @@ async def check_for_token(x_token: Annotated[str, Header()]):
 async def hello():
     return {
         "welcome": "Welcome to the urban-heat API, see repository for more information.",
-        "url": "https://github.com/damienallen/urban-heat/tree/main/service",
+        "url": "https://github.com/damienallen/urban-heat/tree/main",
     }
 
 

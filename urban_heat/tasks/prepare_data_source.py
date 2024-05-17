@@ -4,11 +4,9 @@ import geopandas as gpd
 import numpy as np
 import rasterio
 import typer
-from rasterio.enums import Resampling
 from rasterio.features import geometry_mask
 from rasterio.mask import mask
 from rasterio.transform import from_origin
-from rasterio.warp import calculate_default_transform, reproject
 from shapely import Polygon
 from tqdm import tqdm
 
@@ -70,7 +68,6 @@ def process_images_by_urau(
     with rasterio.open(mask_path) as src:
         src_crs = src.crs
         utm_bounds = src.bounds
-        src_transform = src.transform
         src_width = src.width
         src_height = src.height
 
@@ -101,19 +98,6 @@ def process_images_by_urau(
                 max_surface_temp[year],
             )
 
-    # Prepare for projection
-    dst_transform, dst_width, dst_height = calculate_default_transform(
-        src_crs,
-        DST_CRS,
-        src_width,
-        src_height,
-        *utm_bounds,
-    )
-
-    raster_metadata.update(
-        {"crs": DST_CRS, "transform": dst_transform, "width": dst_width, "height": dst_height}
-    )
-
     # Export reprojected data
     data_source_dir: Path = SOURCES_DIR / urau_code / data_source_key
     data_source_dir.mkdir(exist_ok=True)
@@ -122,15 +106,7 @@ def process_images_by_urau(
         with rasterio.open(
             data_source_dir / f"max_surface_temp_{year}.tif", "w", **raster_metadata
         ) as dst:
-            reproject(
-                source=max_temp,
-                destination=rasterio.band(dst, 1),
-                src_transform=src_transform,
-                src_crs=src_crs,
-                dst_transform=dst_transform,
-                dst_crs=DST_CRS,
-                resampling=Resampling.nearest,
-            )
+            dst.write(max_temp)
 
 
 def prepare_data_source(

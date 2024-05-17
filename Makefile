@@ -4,4 +4,4 @@ app:
 	cd app; yarn dev
 
 service:
-	uvicorn service.urban_heat.main:app --reload
+	uvicorn urban_heat.main:app --reload
