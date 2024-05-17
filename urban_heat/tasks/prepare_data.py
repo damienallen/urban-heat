@@ -45,6 +45,10 @@ def create_mask(
     ) as dst:
         dst.write(mask.astype("uint8"), indexes=1)
         meta = dst.meta.copy()
+        meta.update(
+            dtype=rasterio.uint8,
+            compress="lzw",
+        )
 
     return mask.shape, transform, meta
 
