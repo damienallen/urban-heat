@@ -1,6 +1,5 @@
 from typing import Annotated
 
-from beanie import init_beanie
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
