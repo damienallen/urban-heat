@@ -2,14 +2,16 @@ import os
 from pathlib import Path
 
 import httpx
+import numpy as np
+import numpy.ma as ma
+import rasterio
 import typer
 from boto3.session import Session
-from pydantic import BaseModel, ConfigDict
-from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
 
 from urban_heat import API_URL, get_auth_headers
-from urban_heat.tasks import SOURCES_DIR
+from urban_heat.models import Stats
+from urban_heat.tasks import NO_DATA, SOURCES_DIR
 
 S3_KEY = os.environ.get("UH_S3_KEY")
 S3_SECRET = os.environ.get("UH_S3_SECRET")
@@ -32,11 +34,23 @@ client = session.client(
 )
 
 
-class UploadConfig(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+def get_raster_stats(image_path: Path) -> Stats:
+    with rasterio.open(image_path) as src:
+        img = src.read()
 
-    file_path: Path
-    sources_dir: Path
+        masked_data = ma.masked_equal(img, NO_DATA)
+        unique, counts = np.unique(img, return_counts=True)
+        histogram_dict = dict(zip(unique, counts))
+        del histogram_dict[NO_DATA]
+
+        return Stats(
+            histogram=histogram_dict,
+            mean=round(masked_data.mean(), 1),
+            median=int(ma.median(masked_data)),
+            min=masked_data.min(),
+            max=masked_data.max(),
+            st_dev=round(masked_data.std(), 1),
+        )
 
 
 def upload_annual_data(image_path: Path):
@@ -53,14 +67,7 @@ def upload_annual_data(image_path: Path):
         json={
             "year": int(image_path.stem.split("_")[-1]),
             "url": f"{S3_CDN_ENDPOINT}/{relative_path}",
-            "stats": {
-                "histogram": {"1": 0, "2": 0, "3": 0},
-                "mean": 0,
-                "median": 0,
-                "min": 0,
-                "max": 0,
-                "st_dev": 0,
-            },
+            "stats": get_raster_stats(image_path).model_dump(),
         },
         headers=get_auth_headers(),
     )
@@ -72,7 +79,7 @@ def upload_sources(sources_dir: Path = SOURCES_DIR):
     r.raise_for_status()
 
     urau_codes = r.json()
-    for code in tqdm(urau_codes):
+    for code in urau_codes:
         urau_dir = sources_dir / code
         if not urau_dir.exists():
             continue
@@ -89,7 +96,7 @@ def upload_sources(sources_dir: Path = SOURCES_DIR):
                     sorted([f for f in source_dir.glob("*.tif")]),
                     max_workers=os.cpu_count(),
                     chunksize=1,
-                    desc=f"Uploading {source_dir.parts[-1]} | {code}",
+                    desc=f"Uploading {code} ({source_dir.parts[-1]})",
                 )
 
     print("Done.")
