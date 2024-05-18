@@ -77,7 +77,7 @@ def add_country(
 
     for _, urau in tqdm(
         country_extents.iterrows(),
-        desc=f"Finding scenes in {country_code}",
+        desc=f"Querying scenes in {country_code}",
         total=country_extents.shape[0],
     ):
         usgs_scenes += search_scenes(
@@ -101,7 +101,6 @@ def add_country(
     unique_scenes = list(set([json.dumps(s) for s in usgs_scenes]))
     print(f"Found {len(unique_scenes)} unique scenes, {len(usgs_scenes)} total")
 
-    print(f"\nPreparing scenes for {country_extents.shape[0]} urban extents")
     prepare_scenes(usgs_scenes=[json.loads(s) for s in unique_scenes], downloads_dir=downloads_dir)
     report_inventory()
 
