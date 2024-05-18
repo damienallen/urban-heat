@@ -39,7 +39,6 @@ class AnnualData(BaseModel):
 
 class DataSource(BaseModel):
     key: str
-    label: str
     data: list[AnnualData]
 
 
