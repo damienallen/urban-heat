@@ -12,7 +12,7 @@ from urban_heat.tasks import (
     get_auth_header,
     get_extents_by_country,
 )
-from urban_heat.tasks.inventory import Scene, Scenes, db, report_inventory
+from urban_heat.tasks.utils.inventory import Scene, Scenes, db, report_inventory
 
 MAX_RESULTS = 100
 MAX_CLOUD_COVER = 60

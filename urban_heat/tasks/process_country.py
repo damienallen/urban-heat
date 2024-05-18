@@ -16,7 +16,7 @@ from shapely.geometry import box
 from tqdm.contrib.concurrent import process_map
 
 from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
-from urban_heat.tasks.data_sources import process_data_source
+from urban_heat.tasks.utils.sources import process_data_source
 
 
 class ProcessingConfig(BaseModel):

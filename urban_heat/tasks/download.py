@@ -10,7 +10,7 @@ from aiotinydb import AIOTinyDB
 from tqdm.asyncio import tqdm
 
 from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header_async
-from urban_heat.tasks.inventory import Scene, Scenes, aio_db, report_inventory_async
+from urban_heat.tasks.utils.inventory import Scene, Scenes, aio_db, report_inventory_async
 
 BATCH_SIZE = 100
 MAX_CONCURRENT = 5
