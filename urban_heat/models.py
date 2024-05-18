@@ -23,7 +23,7 @@ class Properties(BaseModel):
 
 
 class Stats(BaseModel):
-    histogram: dict[int, float]
+    histogram: dict[int, int]
     mean: float
     median: float
     min: float
