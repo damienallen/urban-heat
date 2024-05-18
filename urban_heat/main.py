@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 
 from urban_heat import API_TOKEN, APP_URL
-from urban_heat.models import DataSource, UrbanExtent, get_extent_features, init_db
+from urban_heat.models import AnnualData, DataSource, UrbanExtent, get_extent_features, init_db
 
 origins = [
     APP_URL,
@@ -77,6 +77,39 @@ async def update_urau_sources(sources: list[DataSource], code: str):
         raise HTTPException(status_code=404, detail="Record not found")
 
     feature.sources = sources
+    await feature.save()
+    return {"detail": "Record was updated"}
+
+
+@app.post("/urau/{code}/source/add/{key}", dependencies=[Depends(check_for_token)])
+async def add_urau_annual_data(annual_data: AnnualData, code: str, key: str):
+    await init_db()
+    feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
+
+    if not feature:
+        raise HTTPException(status_code=404, detail="Record not found")
+
+    if len(feature.sources) < 1:
+        feature.sources = [DataSource(key=key, data=[annual_data])]
+    else:
+        source_ind = next(
+            (ind for ind, source in enumerate(feature.sources) if getattr(source, "key") == key)
+        )
+
+        source_records = feature.sources[source_ind].data
+        if not source_records or annual_data.year not in [r.year for r in source_records]:
+            source_records.append(annual_data)
+        else:
+            year_ind = next(
+                (
+                    ind
+                    for ind, record in enumerate(source_records)
+                    if getattr(record, "year") == annual_data.year
+                )
+            )
+            source_records[year_ind].stats = annual_data.stats
+            source_records[year_ind].url = annual_data.url
+
     await feature.save()
     return {"detail": "Record was updated"}
 
