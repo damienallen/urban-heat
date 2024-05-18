@@ -130,8 +130,8 @@ export class ContoursStore {
         this.root.ui.setLoadingState('Downloading imagery', 0)
         this.setLastJson()
         this.setAreProcessing(true)
-
         const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
+        // const dataUrl = `https://urban-heat-data.ams3.cdn.digitaloceanspaces.com/NL037C/max_surface_temp_${this.year}.tif`
 
         worker.postMessage({ url: dataUrl, thresholds: this.thresholds })
         worker.onmessage = (e: MessageEvent) => {
