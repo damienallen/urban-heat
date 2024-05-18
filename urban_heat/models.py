@@ -25,10 +25,10 @@ class Properties(BaseModel):
 class Stats(BaseModel):
     histogram: dict[int, int]
     mean: float
-    median: float
-    min: float
-    max: float
     st_dev: float
+    median: int
+    min: int
+    max: int
 
 
 class AnnualData(BaseModel):
