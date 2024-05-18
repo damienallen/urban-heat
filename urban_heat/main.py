@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, Header, HTTPException
@@ -44,6 +45,20 @@ async def get_urban_extents():
         "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}},
         "features": await get_extent_features(),
     }
+
+
+@app.get("/source_counts", response_model=dict[str, int])
+async def get_source_counts():
+    await init_db()
+
+    countries = {}
+    for extent in await UrbanExtent.find_all().to_list():
+        if extent.properties.CNTR_CODE in countries:
+            countries[extent.properties.CNTR_CODE] += len(extent.sources)
+        else:
+            countries[extent.properties.CNTR_CODE] = len(extent.sources)
+
+    return OrderedDict(sorted(countries.items()))
 
 
 @app.get("/urau/{code}", response_model=UrbanExtent)
