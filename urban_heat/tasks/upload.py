@@ -19,9 +19,7 @@ S3_SECRET = os.environ.get("UH_S3_SECRET")
 S3_REGION = os.environ.get("UH_S3_REGION")
 S3_BUCKET = os.environ.get("UH_S3_BUCKET")
 S3_ENDPOINT = os.environ.get("UH_S3_ENDPOINT")
-S3_CDN_ENDPOINT = os.environ.get(
-    "UH_S3_CDN_ENDPOINT", "https://urban-heat-data.ams3.cdn.digitaloceanspaces.com"
-)
+S3_CDN_ENDPOINT = os.environ.get("UH_S3_CDN_ENDPOINT")
 
 # Initiate S3 session
 session = Session()
@@ -87,7 +85,7 @@ def upload_sources(sources_dir: Path = SOURCES_DIR):
         r = httpx.get(f"{API_URL}/urau/{code}/sources")
         r.raise_for_status()
 
-        # TODO: check data source per year
+        # TODO: check data source per year (i.e. needed to add 2024)
         urau_sources = r.json()
         if not urau_sources:
             for source_dir in [d for d in urau_dir.glob("*") if d.is_dir()]:
