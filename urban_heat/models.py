@@ -11,15 +11,15 @@ class Geometry(BaseModel):
 
 
 class Properties(BaseModel):
+    FID: str
+    AREA_SQM: float
+    FUA_CODE: str
     URAU_CODE: str
     URAU_CATG: str
-    CNTR_CODE: str
     URAU_NAME: str
-    CITY_CPTL: str | None
-    FUA_CODE: str
-    AREA_SQM: float
+    CNTR_CODE: str
     NUTS3_2021: str
-    FID: str
+    CITY_CPTL: str | None
 
 
 class Stats(BaseModel):

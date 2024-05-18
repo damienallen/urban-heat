@@ -8,6 +8,6 @@
         {"name":"Download","type":"debugpy","request":"launch","module":"urban_heat.tasks.download"},
         {"name":"Collect Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.collect_country", "args": ["LU"]},
         {"name":"Process Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.process_country", "args": ["LU"]},
-        {"name":"Upload","type":"debugpy","request":"launch","module":"urban_heat.tasks.upload", "args": ["LU"]},
+        {"name":"Upload","type":"debugpy","request":"launch","module":"urban_heat.tasks.upload"},
     ]
 }

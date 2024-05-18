@@ -133,7 +133,7 @@ def process_country_sources(
         ],
         max_workers=os.cpu_count(),
         chunksize=1,
-        desc=f"[{country_code}] Processing URAU",
+        desc=f"[{country_code}] Computing annual data",
     )
 
     print("Done.")
