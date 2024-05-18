@@ -39,10 +39,10 @@ async def download_file(
     db: AIOTinyDB,
     semaphore: asyncio.Semaphore,
 ):
+    filename = os.path.basename(url).split("?")[0]
     async with semaphore:
         try:
             r = await client.get(url, timeout=60)
-            filename = os.path.basename(url).split("?")[0]
         except httpx.ReadError:
             print(f"[READ ERROR] Download Failed: {filename}")
             db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
