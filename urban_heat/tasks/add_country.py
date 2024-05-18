@@ -15,7 +15,7 @@ from urban_heat.tasks import (
 from urban_heat.tasks.inventory import Scene, Scenes, db, report_inventory
 
 MAX_RESULTS = 100
-MAX_CLOUD_COVER = 50
+MAX_CLOUD_COVER = 60
 
 
 def search_scenes(query: dict, headers: dict, offset: int = 0):
@@ -49,7 +49,8 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
         scene = Scene(
             entity_id=entity_id,
             display_id=display_id,
-            file_path=str(downloads_dir / f"{display_id}.TIF"),
+            file_path=str(file_path),
+            cloud_cover=int(raw_scene["cloudCover"]),
         )
 
         if file_path.exists() or db.count((Scenes.display_id == display_id)) > 0:
