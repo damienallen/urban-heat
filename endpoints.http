@@ -1,3 +1,4 @@
+@key = max_surface_temp
 @code = NL037C
 
 
@@ -11,35 +12,27 @@ GET https://api.urbanheat.app/urau/{{code}} HTTP/1.1
 GET https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
 
 
-### Update urban extent
-PATCH https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
+### Add source
+POST https://api.urbanheat.app/urau/{{code}}/source/add/{{key}} HTTP/1.1
 content-type: application/json
 X-Token: {{$dotenv %UH_API_TOKEN}}
 
-[
-  {
-    "key": "string",
-    "label": "string",
-    "data": [
-      {
-        "year": 0,
-        "url": "https://example.com/",
-        "stats": {
-          "histogram": {
-            "1": 0,
-            "2": 0,
-            "3": 0
-          },
-          "mean": 0,
-          "median": 0,
-          "min": 0,
-          "max": 0,
-          "st_dev": 0
-        }
-      }
-    ]
+{
+  "year": 0,
+  "url": "https://example.com/",
+  "stats": {
+    "histogram": {
+      "1": 0,
+      "2": 0,
+      "3": 0
+    },
+    "mean": 0,
+    "median": 0,
+    "min": 0,
+    "max": 0,
+    "st_dev": 0
   }
-]
+}
 
 ###
 PATCH https://api.urbanheat.app/urau/{{code}}/sources HTTP/1.1
