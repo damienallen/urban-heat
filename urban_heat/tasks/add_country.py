@@ -42,18 +42,14 @@ def search_scenes(query: dict, headers: dict, offset: int = 0):
 def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
     existing_count = 0
     for raw_scene in tqdm(usgs_scenes, desc="Scanning existing downloads"):
-        entity_id = raw_scene["entityId"]
-        display_id = raw_scene["displayId"]
-        file_path = downloads_dir / f"{display_id}_ST_B10.TIF"
-
         scene = Scene(
-            entity_id=entity_id,
-            display_id=display_id,
-            file_path=str(file_path),
+            entity_id=raw_scene["entityId"],
+            display_id=raw_scene["displayId"],
+            file_path=str(downloads_dir / f"{raw_scene['displayId']}_ST_B10.TIF"),
             cloud_cover=int(raw_scene["cloudCover"]),
         )
 
-        if file_path.exists() or db.count((Scenes.display_id == display_id)) > 0:
+        if Path(scene.file_path).exists() or db.count((Scenes.entity_id == scene.entity_id)) > 0:
             scene.saved = True
             scene.skipped = False
             scene.failed = False
@@ -64,7 +60,7 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
         else:
             scene.saved = False
 
-        db.upsert(scene.model_dump(), Scenes.display_id == display_id)
+        db.upsert(scene.model_dump(), Scenes.entity_id == scene.entity_id)
 
     print(f"{existing_count} entities already existed and were skipped")
 
@@ -81,7 +77,7 @@ def add_country(
 
     for _, urau in tqdm(
         country_extents.iterrows(),
-        desc=f"Finding scenes with {country_code=}",
+        desc=f"Finding scenes in {country_code}",
         total=country_extents.shape[0],
     ):
         usgs_scenes += search_scenes(
