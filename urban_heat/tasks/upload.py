@@ -8,15 +8,18 @@ from pydantic import BaseModel, ConfigDict
 from tqdm import tqdm
 from tqdm.contrib.concurrent import process_map
 
-from urban_heat import API_URL
+from urban_heat import API_URL, get_auth_headers
 from urban_heat.tasks import SOURCES_DIR
 
 S3_KEY = os.environ.get("UH_S3_KEY")
 S3_SECRET = os.environ.get("UH_S3_SECRET")
 
-S3_ENDPOINT = os.environ.get("UH_S3_ENDPOINT")
 S3_REGION = os.environ.get("UH_S3_REGION")
 S3_BUCKET = os.environ.get("UH_S3_BUCKET")
+S3_ENDPOINT = os.environ.get("UH_S3_ENDPOINT")
+S3_CDN_ENDPOINT = os.environ.get(
+    "UH_S3_CDN_ENDPOINT", "https://urban-heat-data.ams3.cdn.digitaloceanspaces.com"
+)
 
 # Initiate S3 session
 session = Session()
@@ -37,12 +40,31 @@ class UploadConfig(BaseModel):
 
 
 def upload_annual_data(image_path: Path):
+    relative_path = f"{image_path.parts[-3]}/{image_path.parts[-1]}"
     client.upload_file(
         str(image_path),
         S3_BUCKET,
-        "/".join(image_path.parts[-3:]),
+        relative_path,
         ExtraArgs={"ACL": "public-read"},
     )
+
+    r = httpx.post(
+        f"{API_URL}/urau/{image_path.parts[-3]}/source/add/{image_path.parts[-2]}",
+        json={
+            "year": int(image_path.stem.split("_")[-1]),
+            "url": f"{S3_CDN_ENDPOINT}/{relative_path}",
+            "stats": {
+                "histogram": {"1": 0, "2": 0, "3": 0},
+                "mean": 0,
+                "median": 0,
+                "min": 0,
+                "max": 0,
+                "st_dev": 0,
+            },
+        },
+        headers=get_auth_headers(),
+    )
+    r.raise_for_status()
 
 
 def upload_sources(sources_dir: Path = SOURCES_DIR):
@@ -58,9 +80,8 @@ def upload_sources(sources_dir: Path = SOURCES_DIR):
         r = httpx.get(f"{API_URL}/urau/{code}/sources")
         r.raise_for_status()
 
-        urau_sources = r.json()
-
         # TODO: check data source per year
+        urau_sources = r.json()
         if not urau_sources:
             for source_dir in [d for d in urau_dir.glob("*") if d.is_dir()]:
                 process_map(

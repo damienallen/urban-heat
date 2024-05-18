@@ -1,5 +1,5 @@
 @key = max_surface_temp
-@code = NL037C
+@code = BE001C
 
 
 ### Fetch urban extent codes
