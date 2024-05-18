@@ -58,18 +58,20 @@ class UrbanExtent(Document):
         }
 
 
-client = AsyncIOMotorClient("mongodb://mongo:27017")
+async def init_db():
+    client = AsyncIOMotorClient("mongodb://mongo:27017")
+    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
 
 
 async def get_extent_features():
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    await init_db()
 
     features = await UrbanExtent.find_all().to_list()
     return [feature.__geo_interface__ for feature in features]
 
 
 async def get_urau_by_code(code: str):
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    await init_db()
 
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
     return feature

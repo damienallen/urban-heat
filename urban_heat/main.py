@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 
 from urban_heat import API_TOKEN
-from urban_heat.models import DataSource, UrbanExtent, client, get_extent_features
+from urban_heat.models import DataSource, UrbanExtent, get_extent_features, init_db
 
 origins = [
     "https://urbanheat.app",
@@ -50,7 +50,7 @@ async def get_urban_extents():
 
 @app.get("/urau/{code}", response_model=UrbanExtent)
 async def get_urau(code: str):
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    await init_db()
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
 
     if not feature:
@@ -61,7 +61,7 @@ async def get_urau(code: str):
 
 @app.get("/urau/{code}/sources", response_model=list[DataSource])
 async def get_urau_sources(code: str):
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    await init_db()
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
 
     if not feature:
@@ -72,7 +72,7 @@ async def get_urau_sources(code: str):
 
 @app.patch("/urau/{code}/sources", dependencies=[Depends(check_for_token)])
 async def update_urau_sources(sources: list[DataSource], code: str):
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    await init_db()
     feature = await UrbanExtent.find_one(UrbanExtent.properties.URAU_CODE == code)
 
     if not feature:
@@ -81,3 +81,11 @@ async def update_urau_sources(sources: list[DataSource], code: str):
     feature.sources = sources
     await feature.save()
     return {"detail": "Record was updated"}
+
+
+@app.get("/codes", response_model=list[str])
+async def get_urau_codes():
+    await init_db()
+
+    features = await UrbanExtent.find_all().to_list()
+    return sorted([f.properties.URAU_CODE for f in features])
