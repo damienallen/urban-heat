@@ -1,175 +1,143 @@
 import os
-from datetime import date
 from pathlib import Path
 
-import geopandas as gpd
 import numpy as np
+import pandas as pd
 import rasterio
 import typer
+from affine import Affine
 from pydantic import BaseModel, ConfigDict
-from rasterio.enums import Resampling
+from rasterio.features import geometry_mask
 from rasterio.mask import mask
-from rasterio.warp import calculate_default_transform, reproject
-from shapely.geometry import Polygon
-from tinydb import Query, TinyDB
-from tqdm import tqdm
+from rasterio.transform import from_origin
+from rasterio.warp import Resampling, reproject
+from shapely import Polygon
+from shapely.geometry import box
 from tqdm.contrib.concurrent import process_map
 
-from urban_heat.tasks import (
-    CLIPPED_DIR,
-    DATA_DIR,
-    DOWNLOADS_DIR,
-    DST_CRS,
-    NO_DATA,
-    get_extents_by_country,
-)
-
-SCENCES_JSON = DATA_DIR / "scenes_by_country.json"
-db = TinyDB(SCENCES_JSON)
-Countries = Query()
+from urban_heat.tasks import CLIPPED_DIR, DST_CRS, SOURCES_DIR, get_extents_by_country
+from urban_heat.tasks.data_sources import process_data_source
 
 
-class SceneMetadata(BaseModel):
-    capture_date: str
-    path: str
-    crs: str
-
-
-class CountryScenes(BaseModel):
-    code: str
-    scenes: list[SceneMetadata]
-
-
-class ClippingScene(BaseModel):
+class ProcessingConfig(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    code: str
-    metadata: SceneMetadata
-    mask_gdf: gpd.GeoDataFrame
+    urau: pd.Series
+    clipped_dir: Path = CLIPPED_DIR
+    sources_dir: Path = SOURCES_DIR
+    data_source_key: str = "max_surface_temp"
 
 
-def clip_scene(clipping_scene: ClippingScene):
-    image_path = Path(clipping_scene.metadata.path)
+def create_mask(
+    geometry: Polygon, resolution: tuple[float, float], output_path: Path
+) -> tuple[tuple[int], Affine, dict]:
+    # Extract bounds
+    xmin, ymin, xmax, ymax = geometry.bounds
 
-    with rasterio.open(image_path) as src:
-        masked_data, masked_transform = mask(src, clipping_scene.mask_gdf.geometry, invert=False)
+    # Calculate number of rows and columns
+    width = int((xmax - xmin) / resolution[0])
+    height = int((ymax - ymin) / resolution[1])
 
-        # Apply scale factor and convert to celcius
-        # https://www.usgs.gov/faqs/how-do-i-use-a-scale-factor-landsat-level-2-science-products
-        scale_factor = 0.00341802
-        addititive_offset = 149
-        temp_c = masked_data * scale_factor + addititive_offset - 273.15
-        temp_c = np.where(temp_c < 0, NO_DATA, temp_c)
+    # Write mask to raster
+    transform = from_origin(xmin, ymax, *resolution)
+    mask = geometry_mask([geometry], (height, width), transform=transform, invert=True)
 
-        clipped_images_dir = CLIPPED_DIR / clipping_scene.code
-        clipped_images_dir.mkdir(exist_ok=True)
-
-        clipped_image_path = clipped_images_dir / f"{image_path.stem}.tif"
-
-        # Transform to WGS84
-        transform, width, height = calculate_default_transform(
-            src.crs, DST_CRS, src.width, src.height, *src.bounds
-        )
-
-        dst_meta = src.meta.copy()
-        dst_meta.update(
+    with rasterio.open(
+        output_path,
+        "w",
+        driver="GTiff",
+        height=height,
+        width=width,
+        count=1,
+        dtype=np.uint8,
+        nodata=0,
+        transform=transform,
+        crs=DST_CRS,
+    ) as dst:
+        dst.write(mask.astype("uint8"), indexes=1)
+        meta = dst.meta.copy()
+        meta.update(
             dtype=rasterio.uint8,
-            height=int(masked_data.shape[1]),
-            width=int(masked_data.shape[2]),
-            nodata=NO_DATA,
-            crs=DST_CRS,
-            transform=transform,
             compress="lzw",
         )
 
-        with rasterio.open(clipped_image_path, "w", **dst_meta) as dst:
+    return mask.shape, transform, meta
+
+
+def process_images_by_urau(config: ProcessingConfig):
+    urau_code = config.urau["URAU_CODE"]
+    urau_dir: Path = config.sources_dir / urau_code
+    urau_dir.mkdir(exist_ok=True)
+
+    # Sample image resolution
+    clipped_images = [f for f in (config.clipped_dir / urau_code[:2]).glob("*.tif")]
+    with rasterio.open(clipped_images[0]) as src:
+        resolution = (
+            ((src.bounds.right - src.bounds.left) / src.width),
+            ((src.bounds.top - src.bounds.bottom) / src.height),
+        )
+
+    # Generate raster template from exents
+    ref_shape, ref_transform, metadata = create_mask(
+        geometry=config.urau.geometry, resolution=resolution, output_path=urau_dir / "mask.tif"
+    )
+
+    # Calculate annual data source values
+    data_source_by_year: dict[str, np.ndarray] = {}
+    for image_path in clipped_images:
+        with rasterio.open(image_path) as src:
+            # Continue if geometry is outside URAU
+            if not box(*src.bounds).intersects(config.urau.geometry):
+                continue
+
+            masked_image, masked_transform = mask(src, [config.urau.geometry])
+            masked_surface_temp = np.empty(ref_shape, dtype=masked_image.dtype)
+
             reproject(
-                source=temp_c,
-                destination=rasterio.band(dst, 1),
+                source=masked_image,
+                destination=masked_surface_temp,
                 src_transform=masked_transform,
                 src_crs=src.crs,
-                dst_transform=transform,
-                dst_crs=DST_CRS,
+                dst_transform=ref_transform,
+                dst_crs=src.crs,
                 resampling=Resampling.nearest,
             )
 
+        data_source_by_year = process_data_source(
+            data_source_key=config.data_source_key,
+            data_source_dict=data_source_by_year,
+            masked_data=masked_surface_temp,
+            year=image_path.stem[17:21],
+        )
 
-def clip_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
-    scenes_gdf = get_extents_by_country(code=country_code)
-    mask_gdf: gpd.GeoDataFrame = scenes_gdf.explode(index_parts=False).filter(items=["geometry"])
-    mask_gdf_utm = {}
+    # Export reprojected data
+    data_source_dir: Path = SOURCES_DIR / urau_code / config.data_source_key
+    data_source_dir.mkdir(exist_ok=True)
+    for year, max_temp in data_source_by_year.items():
+        with rasterio.open(
+            data_source_dir / f"{config.data_source_key}_{year}.tif", "w", **metadata
+        ) as dst:
+            dst.write(max_temp, 1)
 
-    # Fetch and sort list of raw Level-2 LST images
-    query = db.search((Countries.code == country_code))
-    if len(query):
-        print("Using cached scenes.")
-        country_scenes = CountryScenes(**query[0])
 
-        for image_path in tqdm(
-            [Path(s.path) for s in country_scenes.scenes], desc="Making CRS masks"
-        ):
-            with rasterio.open(image_path) as src:
-                if (src_crs := str(src.crs)) not in mask_gdf_utm:
-                    mask_gdf_utm[src_crs] = mask_gdf.to_crs(src_crs)
+def process_country_sources(
+    country_code: str, clipped_dir: Path = CLIPPED_DIR, sources_dir: Path = SOURCES_DIR
+):
+    extents = get_extents_by_country(code=country_code)
 
-    else:
-        image_metadata = []
-        for image_path in tqdm([f for f in downloads_dir.glob("*.TIF")], desc="Matching extents"):
-            with rasterio.open(image_path) as src:
-                if (src_crs := str(src.crs)) not in mask_gdf_utm:
-                    mask_gdf_utm[src_crs] = mask_gdf.to_crs(src_crs)
-
-                image_bounds_gdf = gpd.GeoDataFrame(
-                    geometry=[
-                        Polygon(
-                            (
-                                (src.bounds.left, src.bounds.top),
-                                (src.bounds.right, src.bounds.top),
-                                (src.bounds.right, src.bounds.bottom),
-                                (src.bounds.left, src.bounds.bottom),
-                                (src.bounds.left, src.bounds.top),
-                            )
-                        )
-                    ],
-                    crs=src.crs,
-                )
-
-            intersection = mask_gdf_utm[str(src.crs)].overlay(image_bounds_gdf, how="intersection")
-            if intersection.empty:
-                continue
-
-            image_metadata.append(
-                SceneMetadata(
-                    capture_date=date(
-                        year=int(image_path.stem[26:30]),
-                        month=int(image_path.stem[30:32]),
-                        day=int(image_path.stem[32:34]),
-                    ).strftime("%Y-%m-%d"),
-                    path=str(image_path),
-                    crs=str(src.crs),
-                )
-            )
-
-        image_metadata = sorted(image_metadata, key=lambda img: img.capture_date)  # type: ignore
-        country_scenes = CountryScenes(code=country_code, scenes=image_metadata)
-        db.insert(country_scenes.model_dump())
-
-    # Multi-core clipping
     process_map(
-        clip_scene,
+        process_images_by_urau,
         [
-            ClippingScene(
-                code=country_code, metadata=metadata, mask_gdf=mask_gdf_utm[metadata.crs]
-            )
-            for metadata in country_scenes.scenes
+            ProcessingConfig(urau=urau, clipped_dir=clipped_dir, sources_dir=sources_dir)
+            for _, urau in extents.iterrows()
         ],
         max_workers=os.cpu_count(),
         chunksize=1,
-        desc="Clipping",
+        desc=f"[{country_code}] Processing URAU",
     )
 
     print("Done.")
 
 
 if __name__ == "__main__":
-    typer.run(clip_country_scenes)
+    typer.run(process_country_sources)

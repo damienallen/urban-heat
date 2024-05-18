@@ -5,8 +5,9 @@
     "version": "0.2.0",
     "configurations": [
         {"name":"Add Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.add_country", "args": ["LU"]},
-        {"name":"Process Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.process_country", "args": ["LU"]},
         {"name":"Download","type":"debugpy","request":"launch","module":"urban_heat.tasks.download"},
-        {"name":"Prepare Data","type":"debugpy","request":"launch","module":"urban_heat.tasks.prepare_data", "args": ["LU"]},
+        {"name":"Collect Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.collect_country", "args": ["LU"]},
+        {"name":"Process Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.process_country", "args": ["LU"]},
+        {"name":"Upload","type":"debugpy","request":"launch","module":"urban_heat.tasks.upload", "args": ["LU"]},
     ]
 }
