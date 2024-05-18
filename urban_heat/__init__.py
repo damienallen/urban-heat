@@ -1,4 +1,5 @@
 import os
 
 API_TOKEN = os.environ.get("UH_API_TOKEN", None)
-HOST = os.environ.get("UH_HOST", "https://urbanheat.app")
+APP_URL = os.environ.get("UH_APP_URL", "https://urbanheat.app")
+API_URL = os.environ.get("UH_API_URL", "https://api.urbanheat.app")
