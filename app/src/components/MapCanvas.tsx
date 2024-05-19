@@ -102,6 +102,7 @@ export const MapCanvas = observer(() => {
                     }, new maplibregl.LngLatBounds(coordinates[0], coordinates[0]))
 
                     currentMap.fitBounds(bounds, {
+                        padding: 200,
                         maxZoom: 12,
                         duration: 1200
                     })
