@@ -56,6 +56,10 @@ export class AppStore {
         ]
     }
 
+    setUrbanExtents = (value: any) => {
+        this.urbanExtents = value
+    }
+
     queryLocation = (query: string) => {
         const geocodeUrl = `https://geocode.urbanheat.app/q/${query}.js`
         debounce(async () => {
@@ -67,7 +71,7 @@ export class AppStore {
 
     fetchUrbanExtents = async () => {
         const response = await fetch('urban_extents.geojson')
-        this.urbanExtents = await response.json()
+        this.setUrbanExtents(await response.json())
     }
 
     get styleUrl() {
@@ -81,6 +85,9 @@ export class AppStore {
 }
 
 export class ContoursStore {
+    private dataUrl = 'https://urban-heat-data.ams3.cdn.digitaloceanspaces.com'
+    private sourceKey = 'max_surface_temp'
+
     public areProcessing: boolean = true
     public layers: any[] = []
     public lastJson: string = ''
@@ -93,6 +100,7 @@ export class ContoursStore {
 
     public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
+    public urau: string = 'NL037C'
 
     setAreProcessing = (value: boolean) => {
         this.areProcessing = value
@@ -114,6 +122,14 @@ export class ContoursStore {
         this.year = Number(value)
     }
 
+    setUrau = (value: string) => {
+        this.urau = value
+    }
+
+    setLayers = (value: any[]) => {
+        this.layers= value
+    }
+
     get thresholds() {
         return linspace(this.range[0], this.range[1], this.step)
     }
@@ -123,6 +139,7 @@ export class ContoursStore {
             range: this.range,
             step: this.step,
             year: this.year,
+            urau: this.urau
         })
     }
 
@@ -130,17 +147,15 @@ export class ContoursStore {
         this.root.ui.setLoadingState('Downloading imagery', 0)
         this.setLastJson()
         this.setAreProcessing(true)
-        const dataUrl = `https://sites.dallen.dev/urban-heat/zh/max_surface_temp_${this.year}.tif`
-        // const dataUrl = `https://urban-heat-data.ams3.cdn.digitaloceanspaces.com/NL037C/max_surface_temp_${this.year}.tif`
 
-        worker.postMessage({ url: dataUrl, thresholds: this.thresholds })
+        worker.postMessage({ url: `${this.dataUrl}/${this.urau}/${this.sourceKey}_${this.year}.tif`, thresholds: this.thresholds })
         worker.onmessage = (e: MessageEvent) => {
             if (e.data.type === 'progress') {
                 this.root.ui.setLoadingState(e.data.state, e.data.progress)
             } else if (e.data.type === 'result') {
-                this.layers = e.data.result
-
+                this.setLayers(e.data.result)
                 this.setAreProcessing(false)
+
                 this.root.ui.setLoadingState('Loading contours', 80)
                 this.root.ui.setShowControls(false)
             }
