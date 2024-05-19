@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@mantine/core'
 
-import { Sliders } from '@phosphor-icons/react'
+import { Sliders } from '@phosphor-icons/react/Sliders'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'

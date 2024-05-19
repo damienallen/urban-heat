@@ -1,6 +1,6 @@
 import { Autocomplete } from '@mantine/core'
 import { ProcessingStatus } from './ProcessingStatus'
-import { X } from '@phosphor-icons/react'
+import { X } from '@phosphor-icons/react/X'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useState } from 'react'

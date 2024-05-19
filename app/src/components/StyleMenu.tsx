@@ -1,5 +1,5 @@
 import { Menu } from '@mantine/core'
-import { StackSimple } from '@phosphor-icons/react'
+import { StackSimple } from '@phosphor-icons/react/StackSimple'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'

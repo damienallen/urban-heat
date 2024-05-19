@@ -1,4 +1,5 @@
-import { Buildings, Gear } from '@phosphor-icons/react'
+import { Buildings } from '@phosphor-icons/react/Buildings'
+import { Gear } from '@phosphor-icons/react/Gear'
 
 import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'

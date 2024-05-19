@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core'
-import { Gear } from '@phosphor-icons/react'
+import { Gear } from '@phosphor-icons/react/Gear'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
