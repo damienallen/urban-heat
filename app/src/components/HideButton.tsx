@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core'
-import { CaretLineDown } from '@phosphor-icons/react'
+import { CaretLineDown } from '@phosphor-icons/react/CaretLineDown'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'

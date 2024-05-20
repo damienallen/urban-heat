@@ -1,4 +1,4 @@
-import { Info } from '@phosphor-icons/react'
+import { Info } from '@phosphor-icons/react/Info'
 import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
 

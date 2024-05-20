@@ -84,6 +84,39 @@ export const MapCanvas = observer(() => {
                 },
                 maxzoom: maxZoom,
             })
+
+            // Load contours and center map on click
+            currentMap.on('click', `${layerId}-fill`, (e) => {
+                const feature = e.features![0]
+                if (!contours.areProcessing) {
+                    const urauCode = feature.properties.URAU_CODE
+                    console.debug(`Selected URAU: ${urauCode}`)
+                    contours.setUrau(urauCode)
+                    contours.processContours()
+                }
+                
+                if (e.lngLat) {
+                    const coordinates = (feature.geometry as any).coordinates[0]
+                    const bounds = coordinates.reduce((bounds: any, coord: any) => {
+                        return bounds.extend(coord)
+                    }, new maplibregl.LngLatBounds(coordinates[0], coordinates[0]))
+
+                    currentMap.fitBounds(bounds, {
+                        padding: 200,
+                        maxZoom: 12,
+                        duration: 1200
+                    })
+                }
+            })
+
+            currentMap.on('mouseenter', `${layerId}-fill`, () => {
+                currentMap.getCanvas().style.cursor = 'pointer'
+            });
+    
+            // Change the cursor back to default when it leaves the vector layer
+            currentMap.on('mouseleave', `${layerId}-fill`, () => {
+                currentMap.getCanvas().style.cursor = ''
+            });
         }
     }
 
