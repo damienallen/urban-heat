@@ -47,16 +47,26 @@ async def get_urban_extents():
     }
 
 
-@app.get("/source_counts", response_model=dict[str, int])
+@app.get("/urau/source_counts", response_model=dict[str, dict[str, int]])
 async def get_source_counts():
     await init_db()
 
     countries = {}
     for extent in await UrbanExtent.find_all().to_list():
-        if extent.properties.CNTR_CODE in countries:
-            countries[extent.properties.CNTR_CODE] += len(extent.sources)
+        if extent.properties.CNTR_CODE not in countries:
+            countries[extent.properties.CNTR_CODE] = {
+                "complete": 0,
+                "partial": 0,
+                "missing": 0,
+            }
+
+        if extent.sources and (source_count := sum([len(s.data) for s in extent.sources])):
+            if source_count == 11:
+                countries[extent.properties.CNTR_CODE]["complete"] += 1
+            else:
+                countries[extent.properties.CNTR_CODE]["partial"] += 1
         else:
-            countries[extent.properties.CNTR_CODE] = len(extent.sources)
+            countries[extent.properties.CNTR_CODE]["missing"] += 1
 
     return OrderedDict(sorted(countries.items()))
 
