@@ -50,6 +50,8 @@ class ClippingScene(BaseModel):
 
 def clip_scene(clipping_scene: ClippingScene):
     image_path = Path(clipping_scene.metadata.path)
+    if image_path.exists():
+        return
 
     with rasterio.open(image_path) as src:
         masked_data, masked_transform = mask(src, clipping_scene.mask_gdf.geometry, invert=False)
@@ -67,7 +69,7 @@ def clip_scene(clipping_scene: ClippingScene):
         clipped_image_path = clipped_images_dir / f"{image_path.stem}.tif"
 
         # Transform to WGS84
-        transform, width, height = calculate_default_transform(
+        transform, _, _ = calculate_default_transform(
             src.crs, DST_CRS, src.width, src.height, *src.bounds
         )
 

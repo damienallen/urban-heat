@@ -41,6 +41,9 @@ def get_raster_stats(image_path: Path) -> Stats:
         histogram_dict = dict(zip(unique, counts))
         del histogram_dict[NO_DATA]
 
+        if not histogram_dict:
+            raise ValueError("No data found within masked area")
+
         return Stats(
             histogram=histogram_dict,
             mean=round(masked_data.mean(), 1),
@@ -52,7 +55,15 @@ def get_raster_stats(image_path: Path) -> Stats:
 
 
 def upload_annual_data(image_path: Path):
-    relative_path = f"{image_path.parts[-3]}/{image_path.parts[-1]}"
+    urau_code = image_path.parts[-3]
+    relative_path = f"{urau_code}/{image_path.parts[-1]}"
+
+    try:
+        raster_stats = get_raster_stats(image_path)
+    except ValueError:
+        print(f"Unable to generate stats for {urau_code}, skipping")
+        return
+
     client.upload_file(
         str(image_path),
         S3_BUCKET,
@@ -61,11 +72,11 @@ def upload_annual_data(image_path: Path):
     )
 
     r = httpx.post(
-        f"{API_URL}/urau/{image_path.parts[-3]}/source/add/{image_path.parts[-2]}",
+        f"{API_URL}/urau/{urau_code}/source/add/{image_path.parts[-2]}",
         json={
             "year": int(image_path.stem.split("_")[-1]),
             "url": f"{S3_CDN_ENDPOINT}/{relative_path}",
-            "stats": get_raster_stats(image_path).model_dump(),
+            "stats": raster_stats.model_dump(),
         },
         headers=get_auth_headers(),
     )
