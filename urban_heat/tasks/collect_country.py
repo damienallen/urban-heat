@@ -49,8 +49,13 @@ class ClippingScene(BaseModel):
 
 
 def clip_scene(clipping_scene: ClippingScene):
+    clipped_images_dir = CLIPPED_DIR / clipping_scene.code
+    clipped_images_dir.mkdir(exist_ok=True)
+
     image_path = Path(clipping_scene.metadata.path)
-    if image_path.exists():
+    clipped_image_path = clipped_images_dir / f"{image_path.stem}.tif"
+
+    if clipped_image_path.exists():
         return
 
     with rasterio.open(image_path) as src:
@@ -62,11 +67,6 @@ def clip_scene(clipping_scene: ClippingScene):
         addititive_offset = 149
         temp_c = masked_data * scale_factor + addititive_offset - 273.15
         temp_c = np.where(temp_c < 0, NO_DATA, temp_c)
-
-        clipped_images_dir = CLIPPED_DIR / clipping_scene.code
-        clipped_images_dir.mkdir(exist_ok=True)
-
-        clipped_image_path = clipped_images_dir / f"{image_path.stem}.tif"
 
         # Transform to WGS84
         transform, _, _ = calculate_default_transform(
