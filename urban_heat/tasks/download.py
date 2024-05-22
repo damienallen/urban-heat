@@ -10,20 +10,19 @@ from aiotinydb import AIOTinyDB
 from tqdm.asyncio import tqdm
 
 from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header_async
-from urban_heat.tasks.utils.inventory import Scene, Scenes, aio_db, report_inventory_async
+from urban_heat.tasks.utils.inventory import Scene, Scenes, aio_db, db, report_inventory_async
 
 BATCH_SIZE = 100
 MAX_CONCURRENT = 5
-
 RETRY_TIMEOUT = 300
 
 
 async def process_downloads(downloads: list[str], downloads_dir: Path):
     async with httpx.AsyncClient() as client:
-        async with aio_db as db:
+        async with aio_db as adb:
             semaphore = asyncio.Semaphore(MAX_CONCURRENT)
             tasks = [
-                asyncio.create_task(download_file(url, downloads_dir, client, db, semaphore))
+                asyncio.create_task(download_file(url, downloads_dir, client, adb, semaphore))
                 for url in downloads
             ]
             await tqdm.gather(
@@ -36,7 +35,7 @@ async def download_file(
     url: str,
     downloads_dir: Path,
     client: httpx.AsyncClient,
-    db: AIOTinyDB,
+    adb: AIOTinyDB,
     semaphore: asyncio.Semaphore,
 ):
     filename = os.path.basename(url).split("?")[0]
@@ -45,19 +44,19 @@ async def download_file(
             r = await client.get(url, timeout=60)
         except httpx.ReadError:
             print(f"[READ ERROR] Download Failed: {filename}")
-            db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
+            adb.update({"failed": True}, (Scenes.display_id == filename[:-11]))
             return
 
         if not r.status_code == 200:
             print(f"[{r.status_code}] Download Failed: {filename}")
-            db.update({"failed": True}, (Scenes.display_id == filename[:-11]))
+            adb.update({"failed": True}, (Scenes.display_id == filename[:-11]))
             return
 
         async with aio_open(downloads_dir / filename, "wb") as f:
             async for chunk in r.aiter_bytes():
                 await f.write(chunk)
 
-        db.update({"saved": True, "failed": False}, (Scenes.display_id == filename[:-11]))
+        adb.update({"saved": True, "failed": False}, (Scenes.display_id == filename[:-11]))
 
 
 async def request_downloads(scenes: list[Scene]) -> list[str]:
@@ -77,12 +76,18 @@ async def request_downloads(scenes: list[Scene]) -> list[str]:
         if products_list := r.json()["data"]:
             requested_downloads = {}
             for product in products_list:
+                display_id = product["displayId"]
                 if product["available"]:
-                    entity_id = "L2ST_" + product["displayId"] + BAND
+                    entity_id = "L2ST_" + display_id + BAND
                     requested_downloads[entity_id] = {
-                        "entityId": "L2ST_" + product["displayId"] + BAND,
+                        "entityId": "L2ST_" + display_id + BAND,
                         "productId": product["secondaryDownloads"][0]["id"],
                     }
+                else:
+                    db.update(
+                        {"saved": False, "failed": False, "skipped": True},
+                        (Scenes.display_id == display_id),
+                    )
 
             label = datetime.now().strftime("%Y%m%d_%H%M%S")
 
