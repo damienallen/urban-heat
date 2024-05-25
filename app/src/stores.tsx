@@ -116,7 +116,7 @@ export class ContoursStore {
     public layers: any[] = []
     public lastJson: string = ''
 
-    public range: RangeSliderValue = [1, 3]
+    public range: RangeSliderValue = [2, 4]
     public annualData: AnnualData[] = []
 
     public availableYears: number[] = linspace(2013, 2023, 1)

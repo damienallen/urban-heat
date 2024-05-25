@@ -95,14 +95,16 @@ export const ControlsForm = observer(() => {
                     <RangeSlider
                         label={null}
                         minRange={2}
+                        maxRange={3}
                         min={0}
-                        max={4}
+                        max={5}
                         marks={[
                             { value: 0, label: 'x̄' },
                             { value: 1 },
                             { value: 2, label: '2σ' },
                             { value: 3 },
                             { value: 4, label: '4σ' },
+                            { value: 5 },
                         ]}
                         defaultValue={contours.range}
                         onChangeEnd={(range: RangeSliderValue) => contours.setRange(range)}
