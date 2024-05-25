@@ -140,7 +140,6 @@ export class ContoursStore {
     public range: RangeSliderValue = [1, 3]
     public annualData: AnnualData[] = []
 
-    public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
     public selected: FeatureProperties | null = null
 
@@ -173,6 +172,10 @@ export class ContoursStore {
 
     setAnnualData = (value: AnnualData[]) => {
         this.annualData = value
+    }
+
+    get availableYears() {
+        return this.annualData?.map((data: AnnualData) => data.year).sort((a, b) => a - b)
     }
 
     get thresholds() {
