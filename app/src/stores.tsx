@@ -122,17 +122,10 @@ export class ContoursStore {
     public minThreshold: number = 30
     public maxThreshold: number = 60
 
+    public annualData: AnnualData[] = []
     public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
     public urau: string = ''
-
-    public annualData: AnnualData[] = []
-    public histogram: Histogram = {}
-    public mean: number = 0
-    public stDev: number = 0
-    public median: number = 0
-    public min: number = 0
-    public max: number = 0
 
     setAreProcessing = (value: boolean) => {
         this.areProcessing = value
@@ -167,32 +160,6 @@ export class ContoursStore {
         this.annualData = value
     }
 
-    setHistogram = (value: Histogram) => {
-        // TODO: how to store this?
-        console.log(value)
-        // this.setHistogram(value)
-    }
-
-    setMean = (value: number) => {
-        this.mean = value
-    }
-
-    setStDev = (value: number) => {
-        this.stDev = value
-    }
-
-    setMedian = (value: number) => {
-        this.median = value
-    }
-
-    setMin = (value: number) => {
-        this.min = value
-    }
-
-    setMax = (value: number) => {
-        this.max = value
-    }
-
     get thresholds() {
         return linspace(this.range[0], this.range[1], this.step)
     }
@@ -206,6 +173,21 @@ export class ContoursStore {
         })
     }
 
+    get data() {
+        const currentDatasetStats = this.annualData.find(
+            (data: AnnualData) => data.year === this.year
+        )
+        return currentDatasetStats
+    }
+
+    get stats() {
+        return this.data?.stats
+    }
+
+    get url() {
+        return this.data?.url
+    }
+
     setInitialUrau = async () => {
         const urauCode = 'NL037C'
         this.setUrau(urauCode)
@@ -214,10 +196,10 @@ export class ContoursStore {
     initUrau = async () => {
         const response = await fetch(`${this.apiRoot}/urau/${this.urau}/sources`)
         const respJson = await response.json()
-        const source: DataSource = respJson.find(
-            (source: DataSource) => source.key === this.sourceKey
+
+        this.setAnnualData(
+            respJson.find((source: DataSource) => source.key === this.sourceKey).data
         )
-        this.setAnnualData(source.data)
 
         const latestYear = this.annualData.reduce((max, s) => (s.year > max.year ? s : max))
         this.setYear(latestYear.year)
@@ -225,21 +207,13 @@ export class ContoursStore {
     }
 
     loadAnnualData = async () => {
-        const annualData = this.annualData.find((data: AnnualData) => data.year === this.year)
-
-        if (annualData) {
-            this.setMean(annualData.stats.mean)
-            this.setStDev(annualData.stats.st_dev)
-            this.setMedian(annualData.stats.median)
-            this.setMin(annualData.stats.min)
-            this.setMax(annualData.stats.max)
-            this.setHistogram(annualData.stats.histogram)
-
-            this.setRange([this.mean + this.stDev, this.mean + 2 * this.stDev])
+        if (this.stats && this.url) {
+            this.setRange([
+                this.stats.mean + this.stats.st_dev,
+                this.stats.mean + 2 * this.stats.st_dev,
+            ])
             this.setStep(Math.max(Math.min(Math.floor(this.range[1] - this.range[0]), 5), 2))
-
-            console.log('Loading annual dataset', annualData)
-            this.processContours(annualData.url)
+            this.processContours(this.url)
         } else {
             console.error(`Unable to find data for year '${this.year}'`)
         }
