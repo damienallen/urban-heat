@@ -35,9 +35,11 @@ onmessage = async (e: MessageEvent) => {
 
     let projectedContours = []
     for (let contourGeojson of rawContours) {
-        let projectedGeojson = geoProject(contourGeojson, projection)
-        projectedGeojson.threshold = contourGeojson.value
-        projectedContours.push(projectedGeojson)
+        if (contourGeojson.coordinates.length) {
+            let projectedGeojson = geoProject(contourGeojson, projection)
+            projectedGeojson.threshold = contourGeojson.value
+            projectedContours.push(projectedGeojson)
+        }
     }
 
     postMessage({ type: 'result', result: projectedContours })
