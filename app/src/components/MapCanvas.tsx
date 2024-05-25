@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from 'react'
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
+import { slugify } from '../utils'
+import { useNavigate } from 'react-router-dom'
 
 const useStyles = createUseStyles({
     map: {
@@ -24,6 +26,7 @@ const useStyles = createUseStyles({
 export const MapCanvas = observer(() => {
     const { app, contours, ui } = useStores()
     const classes = useStyles()
+    const navigate = useNavigate()
 
     const mapContainer = useRef(null)
     const map = useRef(null)
@@ -91,6 +94,11 @@ export const MapCanvas = observer(() => {
                 if (!contours.areProcessing) {
                     console.debug(`Selected URAU: ${feature.properties.URAU_CODE}`)
                     contours.setSelected(feature.properties as FeatureProperties)
+                    navigate(
+                        `/${feature.properties.CNTR_CODE.toLowerCase()}/${slugify(
+                            feature.properties.URAU_NAME
+                        )}`
+                    )
                 }
 
                 if (e.lngLat) {

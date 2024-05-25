@@ -2,11 +2,11 @@ import { MantineColorScheme, RangeSliderValue, createTheme } from '@mantine/core
 
 import { MapGeoJSONFeature } from 'maplibre-gl'
 import React from 'react'
-import { linspace } from './geometry/utils'
+import { linspace } from './utils'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
 
-const worker = new Worker(new URL('./geometry/contour.worker.ts', import.meta.url), {
+const worker = new Worker(new URL('./contour.worker.ts', import.meta.url), {
     type: 'module',
 })
 
