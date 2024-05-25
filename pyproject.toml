@@ -1,8 +1,13 @@
 [tool.poetry]
 name = "urban_heat"
-version = "2024"
 description = "A simple backend supporting the Urban Heat Map"
+version = "2024"
+
+repository = "https://github.com/damienallen/urban-heat"
+license = "AGPL-3.0"
 authors = ["Damien Allen <dev@dallen.co>"]
+
+homepage = "https://urbanheat.app"
 readme = "README.md"
 
 [tool.poetry.dependencies]

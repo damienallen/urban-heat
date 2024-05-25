@@ -1,9 +1,15 @@
 {
   "name": "urban-heat",
   "homepage": "https://urbanheat.app",
+  "author": "Damien Allen",
+  "license": "AGPL-3.0",
   "private": true,
-  "version": "2024.5.1",
+  "version": "2024.6",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/damienallen/urban-heat.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
