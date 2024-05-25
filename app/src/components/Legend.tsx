@@ -28,19 +28,24 @@ export const Legend = observer(() => {
     const { contours } = useStores()
     const classes = useStyles()
 
-    let items = []
-    for (let ind = 0; ind < contours.thresholds.length; ind++) {
-        const opacity = (0.8 * (ind + 1)) / (contours.thresholds.length + 1)
-        items.push(
-            <div
-                key={`threshold-${ind}`}
-                className={classes.threholdItem}
-                style={{ background: `rgba(255, 0, 0, ${opacity})` }}
-            >
-                {contours.thresholds[ind]}°C
-            </div>
-        )
-    }
+    if (contours.stats) {
+        let items = []
+        for (let ind = 0; ind < contours.thresholds.length; ind++) {
+            const opacity = (0.8 * (ind + 1)) / (contours.thresholds.length + 1)
+            const tempDifference = (contours.thresholds[ind] - contours.stats.mean).toFixed(0)
+            items.push(
+                <div
+                    key={`threshold-${ind}`}
+                    className={classes.threholdItem}
+                    style={{ background: `rgba(255, 0, 0, ${opacity})` }}
+                >
+                    +{tempDifference}°C
+                </div>
+            )
+        }
 
-    return <div className={classes.items}>{items}</div>
+        return <div className={classes.items}>{items}</div>
+    } else {
+        return null
+    }
 })
