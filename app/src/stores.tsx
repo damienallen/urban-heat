@@ -1,5 +1,6 @@
 import { MantineColorScheme, RangeSliderValue, createTheme } from '@mantine/core'
 
+import { MapGeoJSONFeature } from 'maplibre-gl'
 import React from 'react'
 import { linspace } from './geometry/utils'
 import { makeAutoObservable } from 'mobx'
@@ -8,6 +9,18 @@ import packageJson from '../package.json'
 const worker = new Worker(new URL('./geometry/contour.worker.ts', import.meta.url), {
     type: 'module',
 })
+
+export interface FeatureProperties {
+    FID: string
+    AREA_SQM: number
+    FUA_CODE: string
+    URAU_CODE: string
+    URAU_CATG: string
+    URAU_NAME: string
+    CNTR_CODE: string
+    NUTS3_2021: string
+    CITY_CPTL: string | null
+}
 
 interface DataSource {
     key: string
@@ -46,16 +59,22 @@ export class Store {
 }
 
 export class AppStore {
+    public currentPath = '/'
+
     public version: string = packageJson.version
     public city: string = ''
     public country: string = ''
 
     public searchResults: string[] = []
-    public urbanExtents: any = undefined
+    public urbanExtents: MapGeoJSONFeature | undefined = undefined
 
     public mapStyle: string = 'dataviz'
     public mapCenter: [number, number] = [4.478, 51.924]
     public bounds: [[number, number], [number, number]] | undefined = undefined
+
+    setPath = (value: string) => {
+        this.currentPath = value
+    }
 
     setCity = (value: string) => {
         this.city = value
@@ -80,7 +99,7 @@ export class AppStore {
         ]
     }
 
-    setUrbanExtents = (value: any) => {
+    setUrbanExtents = (value: MapGeoJSONFeature) => {
         this.urbanExtents = value
     }
 
@@ -92,6 +111,8 @@ export class AppStore {
             this.searchResults = respJson.results.filter((o: any) => o.type === 'city')
         })
     }
+
+    updateRoute = () => {}
 
     fetchUrbanExtents = async () => {
         const response = await fetch('urban_extents.geojson')
@@ -121,7 +142,7 @@ export class ContoursStore {
 
     public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
-    public urau: string = ''
+    public selected: FeatureProperties | null = null
 
     setAreProcessing = (value: boolean) => {
         this.areProcessing = value
@@ -143,9 +164,11 @@ export class ContoursStore {
         this.year = Number(value)
     }
 
-    setUrau = (value: string) => {
-        this.urau = value
-        this.initUrau()
+    setSelected = (properties: FeatureProperties | null) => {
+        this.selected = properties
+        if (properties !== null) {
+            this.initUrau()
+        }
     }
 
     setAnnualData = (value: AnnualData[]) => {
@@ -156,7 +179,7 @@ export class ContoursStore {
         if (this.stats) {
             const low = this.stats.mean + this.range[0] * this.stats.st_dev
             const high = this.stats.mean + this.range[1] * this.stats.st_dev
-            return linspace(low, high, this.stats.st_dev)
+            return linspace(low, high, this.stats.st_dev).map((val: number) => Math.round(val))
         } else {
             return []
         }
@@ -166,7 +189,7 @@ export class ContoursStore {
         return JSON.stringify({
             range: this.range,
             year: this.year,
-            urau: this.urau,
+            selectedUrau: this.selected,
         })
     }
 
@@ -186,12 +209,21 @@ export class ContoursStore {
     }
 
     setInitialUrau = async () => {
-        const urauCode = 'NL037C'
-        this.setUrau(urauCode)
+        this.setSelected({
+            URAU_CODE: 'NL037C',
+            URAU_CATG: 'C',
+            CNTR_CODE: 'NL',
+            URAU_NAME: 'Rotterdam ',
+            CITY_CPTL: null,
+            FUA_CODE: 'NL037F',
+            AREA_SQM: 562733118.219429,
+            NUTS3_2021: 'NL33C',
+            FID: 'NL037C',
+        })
     }
 
     initUrau = async () => {
-        const response = await fetch(`${this.apiRoot}/urau/${this.urau}/sources`)
+        const response = await fetch(`${this.apiRoot}/urau/${this.selected!.URAU_CODE}/sources`)
         const respJson = await response.json()
 
         this.setAnnualData(
@@ -200,6 +232,8 @@ export class ContoursStore {
 
         const latestYear = this.annualData.reduce((max, s) => (s.year > max.year ? s : max))
         this.setYear(latestYear.year)
+
+        this.root.app.updateRoute()
         this.processContours()
     }
 

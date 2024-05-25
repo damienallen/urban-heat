@@ -1,11 +1,11 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+import { FeatureProperties, useStores } from '../stores'
 import { useEffect, useRef, useState } from 'react'
 
 import { createUseStyles } from 'react-jss'
 import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
-import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     map: {
@@ -89,9 +89,8 @@ export const MapCanvas = observer(() => {
             currentMap.on('click', `${layerId}-fill`, (e) => {
                 const feature = e.features![0]
                 if (!contours.areProcessing) {
-                    const urauCode = feature.properties.URAU_CODE
-                    console.debug(`Selected URAU: ${urauCode}`)
-                    contours.setUrau(urauCode)
+                    console.debug(`Selected URAU: ${feature.properties.URAU_CODE}`)
+                    contours.setSelected(feature.properties as FeatureProperties)
                 }
 
                 if (e.lngLat) {

@@ -33,7 +33,8 @@
     "mobx-react": "^9.1",
     "react": "^18.3",
     "react-dom": "^18.3",
-    "react-jss": "^10.10"
+    "react-jss": "^10.10",
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
     "@types/d3": "^7.4",

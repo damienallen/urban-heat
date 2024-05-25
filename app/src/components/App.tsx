@@ -8,6 +8,7 @@ import { ControlPanel } from './ControlPanel'
 import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
 import { MapLoader } from './MapLoader'
+import { RouteChangeHandler } from './RouteChangeHandler'
 import { Title } from './Title'
 import { createUseStyles } from 'react-jss'
 
@@ -58,6 +59,7 @@ export const App = () => {
 
     return (
         <StoreProvider>
+            <RouteChangeHandler />
             <MantineProvider defaultColorScheme={ui.colorScheme} theme={ui.theme}>
                 <div className={classes.app}>
                     <div className={`${classes.row} ${classes.top}`}>
