@@ -46,13 +46,6 @@ export const ControlsForm = observer(() => {
     const { contours, ui } = useStores()
     const classes = useStyles()
 
-    // TODO: dynamic based on range/steps
-    const marks = [
-        { value: contours.minThreshold, label: `${contours.minThreshold}°C` },
-        ...contours.thresholds.map((v: number) => ({ value: v })),
-        { value: contours.maxThreshold, label: `${contours.maxThreshold}°C` },
-    ]
-
     const source = (
         <div>
             Source:{' '}
@@ -97,24 +90,20 @@ export const ControlsForm = observer(() => {
                 />
             </ControlsItem>
 
-            <ControlsItem label="Step Size">
-                <NativeSelect
-                    value={contours.step}
-                    data={['2', '3', '4', '5']}
-                    onChange={(e: React.ChangeEvent) =>
-                        contours.setStep((e.currentTarget as HTMLInputElement).value)
-                    }
-                    disabled={contours.areProcessing}
-                />
-            </ControlsItem>
-
             <ControlsItem label="Thresholds">
                 <div className={classes.sliderInput}>
                     <RangeSlider
+                        label={null}
                         minRange={2}
-                        min={contours.minThreshold}
-                        max={contours.maxThreshold}
-                        marks={marks}
+                        min={0}
+                        max={4}
+                        marks={[
+                            { value: 0, label: 'x̄' },
+                            { value: 1 },
+                            { value: 2, label: '2σ' },
+                            { value: 3 },
+                            { value: 4, label: '4σ' },
+                        ]}
                         defaultValue={contours.range}
                         onChangeEnd={(range: RangeSliderValue) => contours.setRange(range)}
                         disabled={contours.areProcessing}

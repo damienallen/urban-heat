@@ -25,7 +25,7 @@ export const UpdateButton = observer(() => {
     return (
         <span className={classes.container}>
             <Button
-                onClick={() => contours.loadAnnualData()}
+                onClick={() => contours.processContours()}
                 rightSection={<Gear size={24} weight="duotone" />}
                 disabled={ui.disableUpdate}
             >

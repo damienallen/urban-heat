@@ -116,13 +116,9 @@ export class ContoursStore {
     public layers: any[] = []
     public lastJson: string = ''
 
-    public range: RangeSliderValue = [44, 48]
-    public step: number = 2
-
-    public minThreshold: number = 30
-    public maxThreshold: number = 60
-
+    public range: RangeSliderValue = [1, 3]
     public annualData: AnnualData[] = []
+
     public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
     public urau: string = ''
@@ -143,10 +139,6 @@ export class ContoursStore {
         this.range = value
     }
 
-    setStep = (value: string | number) => {
-        this.step = Number(value)
-    }
-
     setYear = (value: string | number) => {
         this.year = Number(value)
     }
@@ -161,13 +153,18 @@ export class ContoursStore {
     }
 
     get thresholds() {
-        return linspace(this.range[0], this.range[1], this.step)
+        if (this.stats) {
+            const low = this.stats.mean + this.range[0] * this.stats.st_dev
+            const high = this.stats.mean + this.range[1] * this.stats.st_dev
+            return linspace(low, high, this.stats.st_dev)
+        } else {
+            return []
+        }
     }
 
     get json() {
         return JSON.stringify({
             range: this.range,
-            step: this.step,
             year: this.year,
             urau: this.urau,
         })
@@ -203,41 +200,32 @@ export class ContoursStore {
 
         const latestYear = this.annualData.reduce((max, s) => (s.year > max.year ? s : max))
         this.setYear(latestYear.year)
-        this.loadAnnualData()
+        this.processContours()
     }
 
-    loadAnnualData = async () => {
+    processContours = async () => {
         if (this.stats && this.url) {
-            this.setRange([
-                this.stats.mean + this.stats.st_dev,
-                this.stats.mean + 2 * this.stats.st_dev,
-            ])
-            this.setStep(Math.max(Math.min(Math.floor(this.range[1] - this.range[0]), 5), 2))
-            this.processContours(this.url)
+            this.root.ui.setLoadingState('Downloading imagery', 0)
+            this.setLastJson()
+            this.setAreProcessing(true)
+
+            worker.postMessage({
+                url: this.url,
+                thresholds: this.thresholds,
+            })
+            worker.onmessage = (e: MessageEvent) => {
+                if (e.data.type === 'progress') {
+                    this.root.ui.setLoadingState(e.data.state, e.data.progress)
+                } else if (e.data.type === 'result') {
+                    this.setLayers(e.data.result)
+                    this.setAreProcessing(false)
+
+                    this.root.ui.setLoadingState('Loading contours', 80)
+                    this.root.ui.setShowControls(false)
+                }
+            }
         } else {
             console.error(`Unable to find data for year '${this.year}'`)
-        }
-    }
-
-    processContours = async (url: string) => {
-        this.root.ui.setLoadingState('Downloading imagery', 0)
-        this.setLastJson()
-        this.setAreProcessing(true)
-
-        worker.postMessage({
-            url: url,
-            thresholds: this.thresholds,
-        })
-        worker.onmessage = (e: MessageEvent) => {
-            if (e.data.type === 'progress') {
-                this.root.ui.setLoadingState(e.data.state, e.data.progress)
-            } else if (e.data.type === 'result') {
-                this.setLayers(e.data.result)
-                this.setAreProcessing(false)
-
-                this.root.ui.setLoadingState('Loading contours', 80)
-                this.root.ui.setShowControls(false)
-            }
         }
     }
 
