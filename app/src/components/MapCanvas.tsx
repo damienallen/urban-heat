@@ -92,9 +92,8 @@ export const MapCanvas = observer(() => {
                     const urauCode = feature.properties.URAU_CODE
                     console.debug(`Selected URAU: ${urauCode}`)
                     contours.setUrau(urauCode)
-                    contours.processContours()
                 }
-                
+
                 if (e.lngLat) {
                     const coordinates = (feature.geometry as any).coordinates[0]
                     const bounds = coordinates.reduce((bounds: any, coord: any) => {
@@ -104,19 +103,19 @@ export const MapCanvas = observer(() => {
                     currentMap.fitBounds(bounds, {
                         padding: 200,
                         maxZoom: 12,
-                        duration: 1200
+                        duration: 1200,
                     })
                 }
             })
 
             currentMap.on('mouseenter', `${layerId}-fill`, () => {
                 currentMap.getCanvas().style.cursor = 'pointer'
-            });
-    
+            })
+
             // Change the cursor back to default when it leaves the vector layer
             currentMap.on('mouseleave', `${layerId}-fill`, () => {
                 currentMap.getCanvas().style.cursor = ''
-            });
+            })
         }
     }
 
@@ -180,7 +179,7 @@ export const MapCanvas = observer(() => {
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
             app.fetchUrbanExtents()
-            contours.processContours()
+            contours.setInitialUrau()
         })
     }, [])
 

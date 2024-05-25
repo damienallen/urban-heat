@@ -9,6 +9,30 @@ const worker = new Worker(new URL('./geometry/contour.worker.ts', import.meta.ur
     type: 'module',
 })
 
+interface DataSource {
+    key: string
+    data: AnnualData[]
+}
+
+interface AnnualData {
+    year: number
+    url: string
+    stats: Stats
+}
+
+interface Stats {
+    histogram: Histogram
+    mean: number
+    st_dev: number
+    median: number
+    min: number
+    max: number
+}
+
+interface Histogram {
+    [key: string]: number
+}
+
 export class Store {
     public app: AppStore
     public contours: ContoursStore
@@ -85,7 +109,7 @@ export class AppStore {
 }
 
 export class ContoursStore {
-    private dataUrl = 'https://urban-heat-data.ams3.cdn.digitaloceanspaces.com'
+    private apiRoot = 'https://api.urbanheat.app'
     private sourceKey = 'max_surface_temp'
 
     public areProcessing: boolean = true
@@ -100,10 +124,22 @@ export class ContoursStore {
 
     public availableYears: number[] = linspace(2013, 2023, 1)
     public year: number = 2023
-    public urau: string = 'NL037C'
+    public urau: string = ''
+
+    public annualData: AnnualData[] = []
+    public histogram: Histogram = {}
+    public mean: number = 0
+    public stDev: number = 0
+    public median: number = 0
+    public min: number = 0
+    public max: number = 0
 
     setAreProcessing = (value: boolean) => {
         this.areProcessing = value
+    }
+
+    setLayers = (value: any[]) => {
+        this.layers = value
     }
 
     setLastJson = () => {
@@ -114,20 +150,47 @@ export class ContoursStore {
         this.range = value
     }
 
-    setStep = (value: string) => {
+    setStep = (value: string | number) => {
         this.step = Number(value)
     }
 
-    setYear = (value: string) => {
+    setYear = (value: string | number) => {
         this.year = Number(value)
     }
 
     setUrau = (value: string) => {
         this.urau = value
+        this.initUrau()
     }
 
-    setLayers = (value: any[]) => {
-        this.layers= value
+    setAnnualData = (value: AnnualData[]) => {
+        this.annualData = value
+    }
+
+    setHistogram = (value: Histogram) => {
+        // TODO: how to store this?
+        console.log(value)
+        // this.setHistogram(value)
+    }
+
+    setMean = (value: number) => {
+        this.mean = value
+    }
+
+    setStDev = (value: number) => {
+        this.stDev = value
+    }
+
+    setMedian = (value: number) => {
+        this.median = value
+    }
+
+    setMin = (value: number) => {
+        this.min = value
+    }
+
+    setMax = (value: number) => {
+        this.max = value
     }
 
     get thresholds() {
@@ -139,16 +202,58 @@ export class ContoursStore {
             range: this.range,
             step: this.step,
             year: this.year,
-            urau: this.urau
+            urau: this.urau,
         })
     }
 
-    processContours = async () => {
+    setInitialUrau = async () => {
+        const urauCode = 'NL037C'
+        this.setUrau(urauCode)
+    }
+
+    initUrau = async () => {
+        const response = await fetch(`${this.apiRoot}/urau/${this.urau}/sources`)
+        const respJson = await response.json()
+        const source: DataSource = respJson.find(
+            (source: DataSource) => source.key === this.sourceKey
+        )
+        this.setAnnualData(source.data)
+
+        const latestYear = this.annualData.reduce((max, s) => (s.year > max.year ? s : max))
+        this.setYear(latestYear.year)
+        this.loadAnnualData()
+    }
+
+    loadAnnualData = async () => {
+        const annualData = this.annualData.find((data: AnnualData) => data.year === this.year)
+
+        if (annualData) {
+            this.setMean(annualData.stats.mean)
+            this.setStDev(annualData.stats.st_dev)
+            this.setMedian(annualData.stats.median)
+            this.setMin(annualData.stats.min)
+            this.setMax(annualData.stats.max)
+            this.setHistogram(annualData.stats.histogram)
+
+            this.setRange([this.mean + this.stDev, this.mean + 2 * this.stDev])
+            this.setStep(Math.max(Math.min(Math.floor(this.range[1] - this.range[0]), 5), 2))
+
+            console.log('Loading annual dataset', annualData)
+            this.processContours(annualData.url)
+        } else {
+            console.error(`Unable to find data for year '${this.year}'`)
+        }
+    }
+
+    processContours = async (url: string) => {
         this.root.ui.setLoadingState('Downloading imagery', 0)
         this.setLastJson()
         this.setAreProcessing(true)
 
-        worker.postMessage({ url: `${this.dataUrl}/${this.urau}/${this.sourceKey}_${this.year}.tif`, thresholds: this.thresholds })
+        worker.postMessage({
+            url: url,
+            thresholds: this.thresholds,
+        })
         worker.onmessage = (e: MessageEvent) => {
             if (e.data.type === 'progress') {
                 this.root.ui.setLoadingState(e.data.state, e.data.progress)
