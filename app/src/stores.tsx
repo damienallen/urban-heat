@@ -205,19 +205,25 @@ export class ContoursStore {
             'BE',
             'CH',
             'DE',
+            'DK',
             'ES',
+            'FI',
             'FR',
             'IE',
             'IS',
+            'IT',
+            'LU',
             'NL',
             'NO',
             'PL',
             'PT',
+            'SE',
         ]
 
         const cities = this.root.app.featureProperties.filter((feat: FeatureProperties) =>
             processedCountries.includes(feat.URAU_CODE.substring(0, 2))
         )
+
         const randomCity = cities[Math.floor(Math.random() * cities.length)]
 
         if (setPath) {
