@@ -27,7 +27,7 @@ export const MapLoader = observer(() => {
     return (
         <LoadingOverlay
             className={classes.container}
-            visible={ui.showLoadingOverlay}
+            visible={!ui.mapLoaded}
             loaderProps={{
                 children: <Progress color="white" />,
             }}

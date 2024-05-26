@@ -246,7 +246,6 @@ export class ContoursStore {
 
     processContours = async () => {
         if (this.stats && this.url) {
-            this.root.ui.setLoadingState('Downloading imagery', 0)
             this.setLastJson()
             this.setAreProcessing(true)
 
@@ -256,12 +255,10 @@ export class ContoursStore {
             })
             worker.onmessage = (e: MessageEvent) => {
                 if (e.data.type === 'progress') {
-                    this.root.ui.setLoadingState(e.data.state, e.data.progress)
+                    console.debug(e.data.state, e.data.progress)
                 } else if (e.data.type === 'result') {
                     this.setLayers(e.data.result)
                     this.setAreProcessing(false)
-
-                    this.root.ui.setLoadingState('Loading contours', 80)
                     this.root.ui.setShowControls(false)
                 }
             }
@@ -276,9 +273,7 @@ export class ContoursStore {
 }
 
 export class UIStore {
-    public firstLoad: boolean = true
-    public loadingProgress: number = 10
-    public loadingState: string = 'Loading map'
+    public mapLoaded: boolean = false
 
     public showAbout: boolean = false
     public showControls: boolean = false
@@ -286,10 +281,8 @@ export class UIStore {
 
     public colorScheme: MantineColorScheme = 'light'
 
-    setLoadingState = (state: string, progress: number) => {
-        this.loadingState = state
-        this.loadingProgress = progress
-        if (progress === 100) this.firstLoad = false
+    setMapLoaded = (value: boolean) => {
+        this.mapLoaded = value
     }
 
     toggleShowAbout = () => {
@@ -310,10 +303,6 @@ export class UIStore {
 
     toggleColorScheme = () => {
         this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
-    }
-
-    get showLoadingOverlay() {
-        return this.loadingProgress < 100 && this.firstLoad
     }
 
     get disableUpdate() {
