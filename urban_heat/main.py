@@ -90,7 +90,7 @@ async def get_urau_sources(code: str):
     if not feature:
         raise HTTPException(status_code=404, detail="Record not found")
 
-    return feature.sources
+    return feature.prepared_sources
 
 
 @app.patch("/urau/{code}/sources", dependencies=[Depends(check_for_token)])

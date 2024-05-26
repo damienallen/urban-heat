@@ -41,11 +41,22 @@ class DataSource(BaseModel):
     key: str
     data: list[AnnualData]
 
+    @property
+    def available_data(self):
+        return sorted(
+            [d for d in self.data if len(d.stats.histogram.keys()) > 5],
+            key=lambda d: d.year,
+        )
+
 
 class UrbanExtent(Document):
     geometry: Geometry
     properties: Properties
     sources: list[DataSource]
+
+    @property
+    def prepared_sources(self):
+        return [{"key": s.key, "data": s.available_data} for s in self.sources]
 
     @property
     def __geo_interface__(self):
