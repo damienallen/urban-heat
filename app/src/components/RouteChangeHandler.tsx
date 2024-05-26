@@ -10,7 +10,11 @@ export const RouteChangeHandler = observer(() => {
 
     useEffect(() => {
         if (app.features) {
-            contours.featureFromPath(location.pathname)
+            if (location.pathname === '/') {
+                contours.randomizeFeature(false)
+            } else {
+                contours.featureFromPath(location.pathname)
+            }
         }
     }, [app.features, location])
 

@@ -5,6 +5,7 @@ import { MapGeoJSONFeature } from 'maplibre-gl'
 import React from 'react'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
+import { router } from './router'
 
 const worker = new Worker(new URL('./contour.worker.ts', import.meta.url), {
     type: 'module',
@@ -200,26 +201,26 @@ export class ContoursStore {
         return this.data?.url
     }
 
-    randomizeFeature = () => {
-        this.setSelected({
-            URAU_CODE: 'NL037C',
-            URAU_CATG: 'C',
-            CNTR_CODE: 'NL',
-            URAU_NAME: 'Rotterdam ',
-            CITY_CPTL: null,
-            FUA_CODE: 'NL037F',
-            AREA_SQM: 562733118.219429,
-            NUTS3_2021: 'NL33C',
-            FID: 'NL037C',
-        })
+    randomizeFeature = (setPath: boolean = true) => {
+        if (setPath) {
+            router.navigate(`/rotterdam`)
+        } else {
+            this.setSelected({
+                URAU_CODE: 'NL037C',
+                URAU_CATG: 'C',
+                CNTR_CODE: 'NL',
+                URAU_NAME: 'Rotterdam ',
+                CITY_CPTL: null,
+                FUA_CODE: 'NL037F',
+                AREA_SQM: 562733118.219429,
+                NUTS3_2021: 'NL33C',
+                FID: 'NL037C',
+            })
+        }
     }
 
     featureFromPath = (path: string) => {
         const cityName = path.replace('/', '')
-        if (cityName === '') {
-            this.randomizeFeature()
-        }
-
         const feature = this.root.app.features.find(
             (feat: MapGeoJSONFeature) => slugify(feat.properties.URAU_NAME) === cityName
         )
@@ -227,7 +228,7 @@ export class ContoursStore {
             this.setSelected(feature.properties)
         } else {
             console.log(`Unable to find city '${cityName}', randomizing...`)
-            this.randomizeFeature()
+            router.navigate('/')
         }
     }
 
@@ -346,9 +347,3 @@ export const StoreProvider = ({ children }: { children: any }) => (
 )
 
 export const useStores = () => React.useContext(StoreContext)
-
-let timer: number
-const debounce = (func: any, timeout = 350) => {
-    clearTimeout(timer)
-    timer = setTimeout(func, timeout)
-}

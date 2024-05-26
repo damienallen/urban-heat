@@ -1,6 +1,6 @@
 import { Buildings } from '@phosphor-icons/react/Buildings'
+import { DiceThree } from '@phosphor-icons/react/DiceThree'
 import { Gear } from '@phosphor-icons/react/Gear'
-
 import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
@@ -15,8 +15,25 @@ const useStyles = createUseStyles({
         userSelect: 'none',
         padding: '0 8px',
     },
-    spin: {
+    gear: {
         animation: 'spin 5s linear infinite',
+    },
+    icon: {
+        '& .dice': {
+            display: 'none',
+        },
+        '& .city': {
+            display: 'inline-block',
+        },
+        '&:hover': {
+            '& .dice': {
+                display: 'inline-block',
+            },
+            '& .city': {
+                display: 'none',
+            },
+            cursor: 'pointer',
+        },
     },
 })
 
@@ -28,10 +45,15 @@ export const ProcessingStatus = observer(() => {
         <div className={classes.container}>
             {contours.areProcessing ? (
                 <Tooltip label="Generating contours...">
-                    <Gear size={28} weight="duotone" className={classes.spin} />
+                    <Gear size={28} weight="duotone" className={classes.gear} />
                 </Tooltip>
             ) : (
-                <Buildings size={28} weight="duotone" />
+                <Tooltip label="Randomize" className={classes.icon}>
+                    <span onClick={() => contours.randomizeFeature()}>
+                        <DiceThree size={28} weight="duotone" className="dice" />
+                        <Buildings size={28} weight="duotone" className="city" />
+                    </span>
+                </Tooltip>
             )}
         </div>
     )
