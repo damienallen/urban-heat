@@ -14,6 +14,7 @@ export const RouteChangeHandler = observer(() => {
                 contours.randomizeFeature(false)
             } else {
                 contours.featureFromPath(location.pathname)
+                document.title = `Urban Heat in ${contours.city}, ${contours.country}`
             }
         }
     }, [app.features, location])
