@@ -8,6 +8,7 @@ export const slugify = (text: string) => {
         .normalize('NFD') // Normalize accented characters
         .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
         .toLowerCase() // Convert to lowercase
+        .replace('/', '-') // Replace slashes with hyphens
         .replace(/[^a-z0-9\s-]/g, '') // Remove non-alphanumeric characters
         .replace(/\s+/g, '-') // Replace spaces with hyphens
         .replace(/-+/g, '-') // Remove consecutive hyphens
