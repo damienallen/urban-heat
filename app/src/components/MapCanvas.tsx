@@ -32,8 +32,6 @@ export const MapCanvas = observer(() => {
     const mapContainer = useRef(null)
     const map = useRef(null)
 
-    const [contourLayerIds, setContourLayerIds] = useState<string[]>([])
-
     const updateStyle = () => {
         if (map.current && !contours.areProcessing) {
             const currentMap: maplibregl.Map = map.current
@@ -95,7 +93,6 @@ export const MapCanvas = observer(() => {
                 if (!contours.areProcessing) {
                     const city = slugify(feature.properties.URAU_NAME)
                     console.debug(`Selected URAU: ${feature.properties.URAU_CODE} (${city})`)
-                    contours.setSelected(feature.properties as FeatureProperties)
                     navigate(`/${city}`)
                 }
             })
@@ -117,9 +114,8 @@ export const MapCanvas = observer(() => {
 
             // Remove existing layers and sources
             const orderedLayerIds = [...currentMap.getLayersOrder().values()]
-            console.debug(`Removing ${orderedLayerIds.length} existing layers`)
-            for (let id of contourLayerIds) {
-                if (orderedLayerIds.includes(id)) {
+            for (let id of orderedLayerIds) {
+                if (id.includes('contour-')) {
                     currentMap.removeLayer(id)
                     currentMap.removeSource(id)
                 }
@@ -151,8 +147,6 @@ export const MapCanvas = observer(() => {
                     minzoom: 8,
                 })
             }
-
-            setContourLayerIds(idList)
             console.debug(`${layers.length} contour layers added`)
         }
     }
