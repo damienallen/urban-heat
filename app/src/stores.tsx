@@ -63,24 +63,10 @@ export class AppStore {
 
     public cityLookup: { [key: string]: string } = {}
     public urbanExtents: any = undefined
-
     public mapStyle: string = 'dataviz'
-    public mapCenter: [number, number] = [4.478, 51.924]
-    public bounds: [[number, number], [number, number]] | undefined = undefined
 
     setMapStyle = (value: string) => {
         this.mapStyle = value
-    }
-
-    setMapCenter = (value: [number, number]) => {
-        this.mapCenter = value
-    }
-
-    setBounds = (bbox: [number, number, number, number]) => {
-        this.bounds = [
-            [bbox[0], bbox[1]],
-            [bbox[2], bbox[3]],
-        ]
     }
 
     setUrbanExtents = (value: any) => {

@@ -5,10 +5,11 @@ export const linspace = (start: number, stop: number, step: number) => {
 
 export const slugify = (text: string) => {
     return text
-        .toString() // Convert to string
+        .normalize('NFD') // Normalize accented characters
+        .replace(/[\u0300-\u036f]/g, '') // Remove diacritical marks
         .toLowerCase() // Convert to lowercase
-        .trim() // Trim whitespace from both sides
+        .replace(/[^a-z0-9\s-]/g, '') // Remove non-alphanumeric characters
         .replace(/\s+/g, '-') // Replace spaces with hyphens
-        .replace(/[^\w\-]+/g, '') // Remove all non-word characters
-        .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single hyphen
+        .replace(/-+/g, '-') // Remove consecutive hyphens
+        .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
 }

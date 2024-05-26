@@ -165,8 +165,8 @@ export const MapCanvas = observer(() => {
         map.current = new maplibregl.Map({
             container: mapContainer.current || '',
             style: app.styleUrl,
-            center: app.mapCenter,
-            zoom: 10,
+            center: [6, 48],
+            zoom: 4.5,
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
@@ -184,12 +184,15 @@ export const MapCanvas = observer(() => {
         if (app.features) {
             if (map.current && app.selectedFeature) {
                 const currentMap: maplibregl.Map = map.current
-                console.log(extent(app.selectedFeature))
-                currentMap.fitBounds(extent(app.selectedFeature), {
-                    padding: 200,
-                    maxZoom: 12,
-                    duration: 1200,
-                })
+                setTimeout(
+                    () =>
+                        currentMap.fitBounds(extent(app.selectedFeature), {
+                            padding: 200,
+                            maxZoom: 12,
+                            duration: 1000,
+                        }),
+                    500
+                )
             }
         }
     }, [app.features, contours.selected])
