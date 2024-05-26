@@ -60,24 +60,13 @@ export class Store {
 
 export class AppStore {
     public version: string = packageJson.version
-    public cityLookup: { [key: string]: string } = {}
-    public city: string = ''
-    public country: string = ''
 
-    public searchResults: string[] = []
+    public cityLookup: { [key: string]: string } = {}
     public urbanExtents: any = undefined
 
     public mapStyle: string = 'dataviz'
     public mapCenter: [number, number] = [4.478, 51.924]
     public bounds: [[number, number], [number, number]] | undefined = undefined
-
-    setCity = (value: string) => {
-        this.city = value
-    }
-
-    setCountry = (value: string) => {
-        this.country = value
-    }
 
     setMapStyle = (value: string) => {
         this.mapStyle = value
@@ -96,15 +85,13 @@ export class AppStore {
 
     setUrbanExtents = (value: any) => {
         this.urbanExtents = value
-    }
 
-    queryLocation = (query: string) => {
-        const geocodeUrl = `https://geocode.urbanheat.app/q/${query}.js`
-        debounce(async () => {
-            const response = await fetch(geocodeUrl)
-            const respJson = await response.json()
-            this.searchResults = respJson.results.filter((o: any) => o.type === 'city')
-        })
+        let lookup: { [key: string]: string } = {}
+        for (let feat of this.featureProperties as FeatureProperties[]) {
+            const label: string = `${feat.URAU_NAME}, ${feat.CNTR_CODE}`
+            lookup[label] = slugify(feat.URAU_NAME)
+        }
+        this.cityLookup = lookup
     }
 
     fetchUrbanExtents = async () => {
@@ -114,6 +101,10 @@ export class AppStore {
 
     get features() {
         return this.urbanExtents?.features
+    }
+
+    get featureProperties() {
+        return this.urbanExtents?.features.map((feat: MapGeoJSONFeature) => feat.properties)
     }
 
     get styleUrl() {
@@ -185,6 +176,14 @@ export class ContoursStore {
         }
     }
 
+    get city() {
+        return this.selected?.URAU_NAME
+    }
+
+    get country() {
+        return this.selected?.CNTR_CODE
+    }
+
     get json() {
         return JSON.stringify({
             range: this.range,
@@ -223,18 +222,18 @@ export class ContoursStore {
     }
 
     featureFromPath = (path: string) => {
-        if (path === '/') {
+        const cityName = path.replace('/', '')
+        if (cityName === '') {
             this.randomizeFeature()
         }
 
         const feature = this.root.app.features.find(
-            (feat: MapGeoJSONFeature) =>
-                slugify(feat.properties.URAU_NAME) === path.substring(1, path.length)
+            (feat: MapGeoJSONFeature) => slugify(feat.properties.URAU_NAME) === cityName
         )
         if (feature) {
             this.setSelected(feature.properties)
         } else {
-            console.log(`Unable to find city at path '${path}', randomizing...`)
+            console.log(`Unable to find city '${cityName}', randomizing...`)
             this.randomizeFeature()
         }
     }

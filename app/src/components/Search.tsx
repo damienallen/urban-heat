@@ -26,33 +26,24 @@ const useStyles = createUseStyles({
 })
 
 export const Search = observer(() => {
-    const { app } = useStores()
+    const { app, contours } = useStores()
     const classes = useStyles()
     const [query, setQuery] = useState<string>('')
-
-    const updateQuery = (q: string) => {
-        setQuery(q)
-        app.queryLocation(q)
-    }
-
-    const options = Object.fromEntries(
-        app.searchResults.map((r: any) => [`${r.city}, ${r.country_code?.toUpperCase()}`, r])
-    )
 
     return (
         <div className={classes.container}>
             <Autocomplete
                 className={classes.input}
-                placeholder="Explore Cities"
-                data={Object.keys(options)}
+                placeholder={
+                    contours.city && contours.country
+                        ? `${contours.city}, ${contours.country}`
+                        : 'Loading'
+                }
+                data={query.length > 1 ? Object.keys(app.cityLookup) : []}
                 value={query}
-                onChange={(q: string) => updateQuery(q)}
+                onChange={(q: string) => setQuery(q)}
                 onOptionSubmit={(k: string) => {
-                    const o = options[k]
-                    app.setCity(o.city)
-                    app.setCountry(o.country_code.toUpperCase())
-                    app.setMapCenter([o.lon, o.lat])
-                    app.setBounds(o.boundingbox)
+                    contours.featureFromPath(app.cityLookup[k])
                 }}
                 color="gray"
                 leftSection={<ProcessingStatus />}
