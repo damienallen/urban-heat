@@ -1,4 +1,8 @@
-# urban-heat-map
+# urban-heat
+Interactive urban heat island effect visualizations for European cities.
 
-![image](https://github.com/damienallen/urban-heat/assets/17518047/1bdb04da-8cf5-449a-8be4-97d3d0364da4)
 
+![image](https://github.com/damienallen/urban-heat/assets/17518047/4e96ae27-1601-4b23-a8d3-442fd95ed645)
+
+
+🔗 [urbanheat.app](http://urbanheat.app)
