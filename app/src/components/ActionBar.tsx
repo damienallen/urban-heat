@@ -16,7 +16,7 @@ const useStyles = createUseStyles({
         '@media (min-width: 720px)': {
             flex: '0 1 420px',
             margin: 16,
-            padding: 8,
+            padding: '8px 4px',
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
         },

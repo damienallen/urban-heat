@@ -112,6 +112,7 @@ export const MapCanvas = observer(() => {
     }
 
     const loadContours = (layers: any[]) => {
+        ui.setMapLoaded(true)
         if (map.current) {
             const currentMap: maplibregl.Map = map.current
 
@@ -153,7 +154,6 @@ export const MapCanvas = observer(() => {
             }
 
             setContourLayerIds(idList)
-            ui.setMapLoaded(true)
             console.debug(`${layers.length} contour layers added`)
         }
     }
