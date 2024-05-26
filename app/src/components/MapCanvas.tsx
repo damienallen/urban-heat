@@ -165,8 +165,8 @@ export const MapCanvas = observer(() => {
         map.current = new maplibregl.Map({
             container: mapContainer.current || '',
             style: app.styleUrl,
-            center: [6, 48],
-            zoom: 4.5,
+            center: [4, 48],
+            zoom: 5,
         }) as any
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
@@ -187,7 +187,6 @@ export const MapCanvas = observer(() => {
                 setTimeout(
                     () =>
                         currentMap.fitBounds(extent(app.selectedFeature), {
-                            padding: 200,
                             maxZoom: 12,
                             duration: 1000,
                         }),
