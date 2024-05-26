@@ -1,5 +1,4 @@
 import { Autocomplete } from '@mantine/core'
-import { ProcessingStatus } from './ProcessingStatus'
 import { X } from '@phosphor-icons/react/X'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
@@ -10,7 +9,6 @@ import { useStores } from '../stores'
 const useStyles = createUseStyles({
     container: {
         flex: 1,
-        marginRight: 8,
     },
     input: {
         background: 'none',
@@ -18,9 +16,9 @@ const useStyles = createUseStyles({
         '& .mantine-Autocomplete-input': {
             color: '#333',
             border: 'none',
-            fontSize: '1.4em',
+            fontSize: '1.2em',
             '@media (max-width: 720px)': {
-                fontSize: '1.4em',
+                fontSize: '1.1em',
             },
         },
     },
@@ -48,8 +46,6 @@ export const Search = observer(() => {
                     navigate(`/${app.cityLookup[k]}`)
                 }}
                 color="gray"
-                leftSection={<ProcessingStatus />}
-                leftSectionWidth={48}
                 rightSection={<X size={16} onClick={() => setQuery('')} />}
                 comboboxProps={{ transitionProps: { transition: 'fade', duration: 200 } }}
             />

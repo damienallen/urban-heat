@@ -1,4 +1,5 @@
 import { AboutButton } from './AboutButton'
+import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
 import { StyleMenu } from './StyleMenu'
 import { createUseStyles } from 'react-jss'
@@ -31,6 +32,7 @@ export const ActionBar = () => {
     const classes = useStyles()
     return (
         <div className={classes.container}>
+            <ProcessingStatus />
             <Search />
             <StyleMenu />
             <AboutButton />

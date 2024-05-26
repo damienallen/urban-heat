@@ -45,13 +45,13 @@ export const ProcessingStatus = observer(() => {
         <div className={classes.container}>
             {contours.areProcessing ? (
                 <Tooltip label="Generating contours...">
-                    <Gear size={28} weight="duotone" className={classes.gear} />
+                    <Gear size={32} weight="duotone" className={classes.gear} />
                 </Tooltip>
             ) : (
                 <Tooltip label="Randomize" className={classes.icon}>
                     <span onClick={() => contours.randomizeFeature()}>
-                        <DiceThree size={28} weight="duotone" className="dice" />
-                        <Buildings size={28} weight="duotone" className="city" />
+                        <DiceThree size={32} weight="duotone" className="dice" />
+                        <Buildings size={32} weight="duotone" className="city" />
                     </span>
                 </Tooltip>
             )}
