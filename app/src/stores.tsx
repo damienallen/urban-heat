@@ -202,20 +202,28 @@ export class ContoursStore {
     }
 
     randomizeFeature = (setPath: boolean = true) => {
+        const processedCountries = [
+            'BE',
+            'CH',
+            'DE',
+            'ES',
+            'FR',
+            'IE',
+            'IS',
+            'NL',
+            'NO',
+            'PL',
+            'PT',
+        ]
+        const cities = this.root.app.featureProperties.filter((feat: FeatureProperties) =>
+            processedCountries.includes(feat.URAU_CODE.substring(0, 2))
+        )
+        const randomCity = cities[Math.floor(Math.random() * cities.length)]
+
         if (setPath) {
-            router.navigate(`/rotterdam`)
+            router.navigate(`/${slugify(randomCity.URAU_NAME)}`)
         } else {
-            this.setSelected({
-                URAU_CODE: 'NL037C',
-                URAU_CATG: 'C',
-                CNTR_CODE: 'NL',
-                URAU_NAME: 'Rotterdam ',
-                CITY_CPTL: null,
-                FUA_CODE: 'NL037F',
-                AREA_SQM: 562733118.219429,
-                NUTS3_2021: 'NL33C',
-                FID: 'NL037C',
-            })
+            this.setSelected(randomCity)
         }
     }
 
