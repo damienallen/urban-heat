@@ -1,7 +1,6 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-import { FeatureProperties, useStores } from '../stores'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { createUseStyles } from 'react-jss'
 import { extent } from 'geojson-bounds'
@@ -9,6 +8,7 @@ import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
 import { slugify } from '../utils'
 import { useNavigate } from 'react-router-dom'
+import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     map: {
