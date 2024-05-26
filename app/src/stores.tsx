@@ -84,6 +84,7 @@ export class AppStore {
     fetchUrbanExtents = async () => {
         const response = await fetch('urban_extents.geojson')
         this.setUrbanExtents(await response.json())
+        this.root.ui.setMapLoaded(true)
     }
 
     get features() {

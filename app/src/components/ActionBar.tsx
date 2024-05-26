@@ -13,17 +13,15 @@ const useStyles = createUseStyles({
         width: '100vw',
         userSelect: 'none',
         zIndex: 100,
+        flex: '0 1',
+        padding: '8px 0',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
         '@media (min-width: 720px)': {
             flex: '0 1 420px',
             margin: 16,
             padding: '8px 4px',
             border: '1px solid rgba(0, 0, 0, 0.2)',
             borderRadius: 8,
-        },
-        '@media (max-width: 720px)': {
-            flex: '0 1',
-            padding: 8,
-            borderBottom: '1px solid rgba(0, 0, 0, 0.2)',
         },
     },
 })

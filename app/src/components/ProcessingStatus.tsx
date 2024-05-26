@@ -1,9 +1,15 @@
 import { Buildings } from '@phosphor-icons/react/Buildings'
+import { DiceFive } from '@phosphor-icons/react/DiceFive'
+import { DiceFour } from '@phosphor-icons/react/DiceFour'
+import { DiceOne } from '@phosphor-icons/react/DiceOne'
+import { DiceSix } from '@phosphor-icons/react/DiceSix'
 import { DiceThree } from '@phosphor-icons/react/DiceThree'
+import { DiceTwo } from '@phosphor-icons/react/DiceTwo'
 import { Gear } from '@phosphor-icons/react/Gear'
 import { Tooltip } from '@mantine/core'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { useState } from 'react'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
@@ -18,16 +24,16 @@ const useStyles = createUseStyles({
     gear: {
         animation: 'spin 5s linear infinite',
     },
-    icon: {
+    button: {
         '& .dice': {
             display: 'none',
         },
         '& .city': {
-            display: 'inline-block',
+            display: 'flex',
         },
         '&:hover': {
             '& .dice': {
-                display: 'inline-block',
+                display: 'flex',
             },
             '& .city': {
                 display: 'none',
@@ -37,9 +43,21 @@ const useStyles = createUseStyles({
     },
 })
 
+const getRoll = () => Math.floor(Math.random() * 6)
+
 export const ProcessingStatus = observer(() => {
     const { contours } = useStores()
     const classes = useStyles()
+
+    const [roll, setRoll] = useState<number>(getRoll)
+    const dice = [
+        <DiceOne size={32} weight="duotone" className="dice" />,
+        <DiceTwo size={32} weight="duotone" className="dice" />,
+        <DiceThree size={32} weight="duotone" className="dice" />,
+        <DiceFour size={32} weight="duotone" className="dice" />,
+        <DiceFive size={32} weight="duotone" className="dice" />,
+        <DiceSix size={32} weight="duotone" className="dice" />,
+    ]
 
     return (
         <div className={classes.container}>
@@ -48,11 +66,15 @@ export const ProcessingStatus = observer(() => {
                     <Gear size={32} weight="duotone" className={classes.gear} />
                 </Tooltip>
             ) : (
-                <Tooltip label="Randomize" className={classes.icon}>
-                    <span onClick={() => contours.randomizeFeature()}>
-                        <DiceThree size={32} weight="duotone" className="dice" />
+                <Tooltip label="Randomize">
+                    <div
+                        onClick={() => contours.randomizeFeature()}
+                        onMouseLeave={() => setRoll(getRoll())}
+                        className={classes.button}
+                    >
+                        {dice[roll]}
                         <Buildings size={32} weight="duotone" className="city" />
-                    </span>
+                    </div>
                 </Tooltip>
             )}
         </div>

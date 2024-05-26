@@ -112,7 +112,6 @@ export const MapCanvas = observer(() => {
     }
 
     const loadContours = (layers: any[]) => {
-        ui.setMapLoaded(true)
         if (map.current) {
             const currentMap: maplibregl.Map = map.current
 
