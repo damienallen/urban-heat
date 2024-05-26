@@ -1,8 +1,8 @@
 import { MantineColorScheme, RangeSliderValue, createTheme } from '@mantine/core'
+import { linspace, slugify } from './utils'
 
 import { MapGeoJSONFeature } from 'maplibre-gl'
 import React from 'react'
-import { linspace } from './utils'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
 
@@ -59,22 +59,17 @@ export class Store {
 }
 
 export class AppStore {
-    public currentPath = '/'
-
     public version: string = packageJson.version
+    public cityLookup: { [key: string]: string } = {}
     public city: string = ''
     public country: string = ''
 
     public searchResults: string[] = []
-    public urbanExtents: MapGeoJSONFeature | undefined = undefined
+    public urbanExtents: any = undefined
 
     public mapStyle: string = 'dataviz'
     public mapCenter: [number, number] = [4.478, 51.924]
     public bounds: [[number, number], [number, number]] | undefined = undefined
-
-    setPath = (value: string) => {
-        this.currentPath = value
-    }
 
     setCity = (value: string) => {
         this.city = value
@@ -99,7 +94,7 @@ export class AppStore {
         ]
     }
 
-    setUrbanExtents = (value: MapGeoJSONFeature) => {
+    setUrbanExtents = (value: any) => {
         this.urbanExtents = value
     }
 
@@ -112,11 +107,13 @@ export class AppStore {
         })
     }
 
-    updateRoute = () => {}
-
     fetchUrbanExtents = async () => {
         const response = await fetch('urban_extents.geojson')
         this.setUrbanExtents(await response.json())
+    }
+
+    get features() {
+        return this.urbanExtents?.features
     }
 
     get styleUrl() {
@@ -211,7 +208,7 @@ export class ContoursStore {
         return this.data?.url
     }
 
-    setInitialUrau = async () => {
+    randomizeFeature = () => {
         this.setSelected({
             URAU_CODE: 'NL037C',
             URAU_CATG: 'C',
@@ -225,6 +222,23 @@ export class ContoursStore {
         })
     }
 
+    featureFromPath = (path: string) => {
+        if (path === '/') {
+            this.randomizeFeature()
+        }
+
+        const feature = this.root.app.features.find(
+            (feat: MapGeoJSONFeature) =>
+                slugify(feat.properties.URAU_NAME) === path.substring(1, path.length)
+        )
+        if (feature) {
+            this.setSelected(feature.properties)
+        } else {
+            console.log(`Unable to find city at path '${path}', randomizing...`)
+            this.randomizeFeature()
+        }
+    }
+
     initUrau = async () => {
         const response = await fetch(`${this.apiRoot}/urau/${this.selected!.URAU_CODE}/sources`)
         const respJson = await response.json()
@@ -235,8 +249,6 @@ export class ContoursStore {
 
         const latestYear = this.annualData.reduce((max, s) => (s.year > max.year ? s : max))
         this.setYear(latestYear.year)
-
-        this.root.app.updateRoute()
         this.processContours()
     }
 

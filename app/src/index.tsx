@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom/client'
 
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: '*',
         element: <App />,
     },
 ])

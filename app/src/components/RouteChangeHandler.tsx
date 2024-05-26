@@ -3,15 +3,16 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useStores } from '../stores'
 
-// Component to update Mobx store on route change
+// Component to update selected feature on route change
 export const RouteChangeHandler = observer(() => {
-    const { app } = useStores()
+    const { app, contours } = useStores()
     const location = useLocation()
 
     useEffect(() => {
-        console.log(location.pathname)
-        app.setPath(location.pathname)
-    }, [location])
+        if (app.features) {
+            contours.featureFromPath(location.pathname)
+        }
+    }, [app.features, location])
 
     return null
 })

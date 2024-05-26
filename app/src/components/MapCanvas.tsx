@@ -92,13 +92,10 @@ export const MapCanvas = observer(() => {
             currentMap.on('click', `${layerId}-fill`, (e) => {
                 const feature = e.features![0]
                 if (!contours.areProcessing) {
-                    console.debug(`Selected URAU: ${feature.properties.URAU_CODE}`)
+                    const city = slugify(feature.properties.URAU_NAME)
+                    console.debug(`Selected URAU: ${feature.properties.URAU_CODE} (${city})`)
                     contours.setSelected(feature.properties as FeatureProperties)
-                    navigate(
-                        `/${feature.properties.CNTR_CODE.toLowerCase()}/${slugify(
-                            feature.properties.URAU_NAME
-                        )}`
-                    )
+                    navigate(`/${city}`)
                 }
 
                 if (e.lngLat) {
@@ -186,7 +183,6 @@ export const MapCanvas = observer(() => {
         ;(map.current as any).on('load', () => {
             console.log('Map loaded successfully')
             app.fetchUrbanExtents()
-            contours.setInitialUrau()
         })
     }, [])
 
