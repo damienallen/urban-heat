@@ -23,7 +23,7 @@ const useStyles = createUseStyles({
         gap: 8,
         position: 'relative',
         '@media (max-width: 720px)': {
-            padding: 16,
+            padding: 8,
         },
     },
     sliderInput: {

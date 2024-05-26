@@ -25,7 +25,7 @@ const useStyles = createUseStyles({
 })
 
 export const MapCanvas = observer(() => {
-    const { app, contours, ui } = useStores()
+    const { app, contours } = useStores()
     const classes = useStyles()
     const navigate = useNavigate()
 

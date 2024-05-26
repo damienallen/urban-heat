@@ -68,8 +68,11 @@ export const ProcessingStatus = observer(() => {
             ) : (
                 <Tooltip label="Randomize">
                     <div
-                        onClick={() => contours.randomizeFeature()}
                         onMouseLeave={() => setRoll(getRoll())}
+                        onClick={() => {
+                            contours.randomizeFeature()
+                            setRoll(getRoll())
+                        }}
                         className={classes.button}
                     >
                         {dice[roll]}
