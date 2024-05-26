@@ -4,6 +4,7 @@ import { FeatureProperties, useStores } from '../stores'
 import { useEffect, useRef, useState } from 'react'
 
 import { createUseStyles } from 'react-jss'
+import { extent } from 'geojson-bounds'
 import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
 import { slugify } from '../utils'
@@ -97,19 +98,6 @@ export const MapCanvas = observer(() => {
                     contours.setSelected(feature.properties as FeatureProperties)
                     navigate(`/${city}`)
                 }
-
-                if (e.lngLat) {
-                    const coordinates = (feature.geometry as any).coordinates[0]
-                    const bounds = coordinates.reduce((bounds: any, coord: any) => {
-                        return bounds.extend(coord)
-                    }, new maplibregl.LngLatBounds(coordinates[0], coordinates[0]))
-
-                    currentMap.fitBounds(bounds, {
-                        padding: 200,
-                        maxZoom: 12,
-                        duration: 1200,
-                    })
-                }
             })
 
             currentMap.on('mouseenter', `${layerId}-fill`, () => {
@@ -193,11 +181,18 @@ export const MapCanvas = observer(() => {
     }, [contours.layers])
 
     useEffect(() => {
-        if (map.current && app.bounds) {
-            const currentMap: maplibregl.Map = map.current
-            currentMap.fitBounds(app.bounds, { padding: 20, maxZoom: 14 })
+        if (app.features) {
+            if (map.current && app.selectedFeature) {
+                const currentMap: maplibregl.Map = map.current
+                console.log(extent(app.selectedFeature))
+                currentMap.fitBounds(extent(app.selectedFeature), {
+                    padding: 200,
+                    maxZoom: 12,
+                    duration: 1200,
+                })
+            }
         }
-    }, [app.bounds])
+    }, [app.features, contours.selected])
 
     useEffect(() => loadUrbanExtents(), [app.urbanExtents])
     useEffect(() => updateStyle(), [app.styleUrl])

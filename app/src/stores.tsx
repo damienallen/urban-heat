@@ -103,6 +103,13 @@ export class AppStore {
         return this.urbanExtents?.features
     }
 
+    get selectedFeature() {
+        return this.features?.find(
+            (feat: MapGeoJSONFeature) =>
+                feat.properties.URAU_CODE === this.root.contours.selected?.URAU_CODE
+        )
+    }
+
     get featureProperties() {
         return this.urbanExtents?.features.map((feat: MapGeoJSONFeature) => feat.properties)
     }
