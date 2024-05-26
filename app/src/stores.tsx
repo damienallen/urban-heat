@@ -145,11 +145,9 @@ export class ContoursStore {
         this.year = Number(value)
     }
 
-    setSelected = (properties: FeatureProperties | null) => {
+    setSelected = (properties: FeatureProperties) => {
         this.selected = properties
-        if (properties !== null) {
-            this.initUrau()
-        }
+        this.initUrau()
     }
 
     setAnnualData = (value: AnnualData[]) => {

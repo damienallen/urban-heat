@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react'
+
 import { Autocomplete } from '@mantine/core'
 import { X } from '@phosphor-icons/react/X'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
@@ -18,7 +19,7 @@ const useStyles = createUseStyles({
             border: 'none',
             fontSize: '1.2em',
             '@media (max-width: 720px)': {
-                fontSize: '1.1em',
+                fontSize: '1em',
             },
         },
     },
@@ -29,6 +30,12 @@ export const Search = observer(() => {
     const classes = useStyles()
     const [query, setQuery] = useState<string>('')
     const navigate = useNavigate()
+
+    useEffect(() => {
+        if (contours.city && contours.country) {
+            setQuery(`${contours.city}, ${contours.country}`)
+        }
+    }, [contours.selected])
 
     return (
         <div className={classes.container}>
