@@ -3,6 +3,7 @@ import { ProcessingStatus } from './ProcessingStatus'
 import { X } from '@phosphor-icons/react/X'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { useStores } from '../stores'
 
@@ -29,6 +30,7 @@ export const Search = observer(() => {
     const { app, contours } = useStores()
     const classes = useStyles()
     const [query, setQuery] = useState<string>('')
+    const navigate = useNavigate()
 
     return (
         <div className={classes.container}>
@@ -43,7 +45,7 @@ export const Search = observer(() => {
                 value={query}
                 onChange={(q: string) => setQuery(q)}
                 onOptionSubmit={(k: string) => {
-                    contours.featureFromPath(app.cityLookup[k])
+                    navigate(`/${app.cityLookup[k]}`)
                 }}
                 color="gray"
                 leftSection={<ProcessingStatus />}

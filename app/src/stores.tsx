@@ -215,6 +215,7 @@ export class ContoursStore {
             'PL',
             'PT',
         ]
+
         const cities = this.root.app.featureProperties.filter((feat: FeatureProperties) =>
             processedCountries.includes(feat.URAU_CODE.substring(0, 2))
         )
