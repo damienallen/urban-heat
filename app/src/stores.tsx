@@ -211,7 +211,7 @@ export class ContoursStore {
             'FR',
             'IE',
             'IS',
-            // 'IT',
+            'IT',
             'LU',
             'NL',
             'NO',
