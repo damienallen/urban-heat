@@ -49,7 +49,7 @@ def prepare_scenes(usgs_scenes: list[dict], downloads_dir: Path):
             cloud_cover=int(raw_scene["cloudCover"]),
         )
 
-        if Path(scene.file_path).exists() or db.count((Scenes.entity_id == scene.entity_id)) > 0:
+        if Path(scene.file_path).exists():
             scene.saved = True
             scene.skipped = False
             scene.failed = False
