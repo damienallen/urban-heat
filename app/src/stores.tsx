@@ -202,14 +202,17 @@ export class ContoursStore {
 
     randomizeFeature = (setPath: boolean = true) => {
         const processedCountries = [
+            'AT',
             'BE',
             'CH',
+            'CZ',
             'DE',
             'DK',
             'EE',
             'ES',
             'FI',
             'FR',
+            'HU',
             'IE',
             'IS',
             'IT',
@@ -221,10 +224,14 @@ export class ContoursStore {
             'PL',
             'PT',
             'SE',
+            'SI',
+            'SK',
         ]
 
-        const cities = this.root.app.featureProperties.filter((feat: FeatureProperties) =>
-            processedCountries.includes(feat.URAU_CODE.substring(0, 2))
+        const cities = this.root.app.featureProperties.filter(
+            (feat: FeatureProperties) =>
+                processedCountries.includes(feat.URAU_CODE.substring(0, 2)) &&
+                (feat.CITY_CPTL === 'Y' || setPath)
         )
 
         const randomCity = cities[Math.floor(Math.random() * cities.length)]
