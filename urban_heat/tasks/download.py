@@ -12,8 +12,8 @@ from tqdm.asyncio import tqdm
 from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get_auth_header_async
 from urban_heat.tasks.utils.inventory import Scene, Scenes, aio_db, db, report_inventory_async
 
-BATCH_SIZE = 100
-MAX_CONCURRENT = 5
+BATCH_SIZE = 200
+MAX_CONCURRENT = 10
 RETRY_TIMEOUT = 300
 
 
@@ -117,7 +117,6 @@ async def consume_queue(batch_size: int, downloads_dir: Path):
 
             scene_batch = [Scene(**s) for s in pending_inventory[:batch_size]]
             downloads = await request_downloads(scene_batch[:batch_size])
-            print(f"Downloading batch of {len(scene_batch)} scenes")
             await process_downloads(downloads, downloads_dir)
             await report_inventory_async()
 
