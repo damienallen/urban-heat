@@ -13,7 +13,7 @@ from urban_heat.tasks import BAND, DATASET_NAME, DOWNLOADS_DIR, SERVICE_URL, get
 from urban_heat.tasks.utils.inventory import Scene, Scenes, aio_db, db, report_inventory_async
 
 BATCH_SIZE = 200
-MAX_CONCURRENT = 10
+MAX_CONCURRENT = 5
 RETRY_TIMEOUT = 300
 
 
