@@ -55,45 +55,50 @@ def clip_scene(clipping_scene: ClippingScene):
     image_path = Path(clipping_scene.metadata.path)
     clipped_image_path = clipped_images_dir / f"{image_path.stem}.tif"
 
-    if clipped_image_path.exists():
+    if clipped_image_path.exists() or not image_path.exists():
         return
 
-    with rasterio.open(image_path) as src:
-        masked_data, masked_transform = mask(src, clipping_scene.mask_gdf.geometry, invert=False)
-
-        # Apply scale factor and convert to celcius
-        # https://www.usgs.gov/faqs/how-do-i-use-a-scale-factor-landsat-level-2-science-products
-        scale_factor = 0.00341802
-        addititive_offset = 149
-        temp_c = masked_data * scale_factor + addititive_offset - 273.15
-        temp_c = np.where(temp_c < 0, NO_DATA, temp_c)
-
-        # Transform to WGS84
-        transform, _, _ = calculate_default_transform(
-            src.crs, DST_CRS, src.width, src.height, *src.bounds
-        )
-
-        dst_meta = src.meta.copy()
-        dst_meta.update(
-            dtype=rasterio.uint8,
-            height=int(masked_data.shape[1]),
-            width=int(masked_data.shape[2]),
-            nodata=NO_DATA,
-            crs=DST_CRS,
-            transform=transform,
-            compress="lzw",
-        )
-
-        with rasterio.open(clipped_image_path, "w", **dst_meta) as dst:
-            reproject(
-                source=temp_c,
-                destination=rasterio.band(dst, 1),
-                src_transform=masked_transform,
-                src_crs=src.crs,
-                dst_transform=transform,
-                dst_crs=DST_CRS,
-                resampling=Resampling.nearest,
+    try:
+        with rasterio.open(image_path) as src:
+            masked_data, masked_transform = mask(
+                src, clipping_scene.mask_gdf.geometry, invert=False
             )
+    except rasterio.RasterioIOError:
+        return
+
+    # Apply scale factor and convert to celcius
+    # https://www.usgs.gov/faqs/how-do-i-use-a-scale-factor-landsat-level-2-science-products
+    scale_factor = 0.00341802
+    addititive_offset = 149
+    temp_c = masked_data * scale_factor + addititive_offset - 273.15
+    temp_c = np.where(temp_c < 0, NO_DATA, temp_c)
+
+    # Transform to WGS84
+    transform, _, _ = calculate_default_transform(
+        src.crs, DST_CRS, src.width, src.height, *src.bounds
+    )
+
+    dst_meta = src.meta.copy()
+    dst_meta.update(
+        dtype=rasterio.uint8,
+        height=int(masked_data.shape[1]),
+        width=int(masked_data.shape[2]),
+        nodata=NO_DATA,
+        crs=DST_CRS,
+        transform=transform,
+        compress="lzw",
+    )
+
+    with rasterio.open(clipped_image_path, "w", **dst_meta) as dst:
+        reproject(
+            source=temp_c,
+            destination=rasterio.band(dst, 1),
+            src_transform=masked_transform,
+            src_crs=src.crs,
+            dst_transform=transform,
+            dst_crs=DST_CRS,
+            resampling=Resampling.nearest,
+        )
 
 
 def collect_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DIR):
@@ -110,6 +115,9 @@ def collect_country_scenes(country_code: str, downloads_dir: Path = DOWNLOADS_DI
         for image_path in tqdm(
             [Path(s.path) for s in country_scenes.scenes], desc="Making CRS masks"
         ):
+            if not image_path.exists():
+                continue
+
             with rasterio.open(image_path) as src:
                 if (src_crs := str(src.crs)) not in mask_gdf_utm:
                     mask_gdf_utm[src_crs] = mask_gdf.to_crs(src_crs)
