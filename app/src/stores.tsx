@@ -120,7 +120,7 @@ export class ContoursStore {
     public layers: any[] = []
     public lastJson: string = ''
 
-    public range: RangeSliderValue = [0.5, 2]
+    public range: RangeSliderValue = [1.0, 2.0]
     public annualData: AnnualData[] = []
 
     public year: number = 2023
@@ -163,7 +163,7 @@ export class ContoursStore {
         if (this.stats) {
             const low = this.stats.mean + this.range[0] * this.stats.st_dev
             const high = this.stats.mean + this.range[1] * this.stats.st_dev
-            return linspace(low, high, this.stats.st_dev).map((val: number) => Math.round(val))
+            return linspace(low, high, this.stats.st_dev / 2).map((val: number) => Math.round(val))
         } else {
             return []
         }
