@@ -120,7 +120,7 @@ export class ContoursStore {
     public layers: any[] = []
     public lastJson: string = ''
 
-    public range: RangeSliderValue = [1, 3]
+    public range: RangeSliderValue = [0.5, 2]
     public annualData: AnnualData[] = []
 
     public year: number = 2023
