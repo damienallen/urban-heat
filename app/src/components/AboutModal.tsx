@@ -47,8 +47,23 @@ export const AboutModal = observer(() => {
                 across European urban centers.
             </p>
             <p>
-                Isotherm contours are generated from a moderate resolution satellite image source
-                using client-side worker processes.
+                Due to limitations in available processing power and hosting costs, this project is
+                limited to cities included in the{' '}
+                <a
+                    href="https://ec.europa.eu/eurostat/web/gisco/geodata/statistical-units/urban-audit"
+                    rel="external"
+                >
+                    Eurostat GISCO Urban Audit (2021)
+                </a>
+                .
+            </p>
+            <p>
+                Isotherm contour polygons are generated from a moderate resolution satellite image
+                source using client-side worker processes harnessing{' '}
+                <a href="https://d3js.org" rel="external">
+                    d3js
+                </a>
+                .
             </p>
             <p>
                 Questions & comments are welcome:{' '}
