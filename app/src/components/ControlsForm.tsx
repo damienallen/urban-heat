@@ -94,6 +94,7 @@ export const ControlsForm = observer(() => {
                 <div className={classes.sliderInput}>
                     <RangeSlider
                         label={null}
+                        step={0.5}
                         minRange={1}
                         maxRange={2}
                         min={0}
