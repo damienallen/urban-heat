@@ -201,42 +201,11 @@ export class ContoursStore {
     }
 
     randomizeFeature = (setPath: boolean = true) => {
-        const processedCountries = [
-            'AT',
-            'BE',
-            'CH',
-            'CZ',
-            'DE',
-            'DK',
-            'EE',
-            'EL',
-            'ES',
-            'FI',
-            'FR',
-            'HU',
-            'IE',
-            'IS',
-            'IT',
-            'LT',
-            'LU',
-            'LV',
-            'NL',
-            'NO',
-            'PL',
-            'PT',
-            'SE',
-            'SI',
-            'SK',
-        ]
-
         const cities = this.root.app.featureProperties.filter(
-            (feat: FeatureProperties) =>
-                processedCountries.includes(feat.URAU_CODE.substring(0, 2)) &&
-                (feat.CITY_CPTL === 'Y' || setPath)
+            (feat: FeatureProperties) => feat.CITY_CPTL === 'Y' || setPath
         )
 
         const randomCity = cities[Math.floor(Math.random() * cities.length)]
-
         if (setPath) {
             router.navigate(`/${slugify(randomCity.URAU_NAME)}`)
         } else {
