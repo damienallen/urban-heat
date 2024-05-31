@@ -105,7 +105,7 @@ export const ControlsForm = observer(() => {
                             { value: 1.5 },
                             { value: 2, label: '2σ' },
                             { value: 2.5 },
-                            { value: 2, label: '3σ' },
+                            { value: 3, label: '3σ' },
                         ]}
                         defaultValue={contours.range}
                         onChangeEnd={(range: RangeSliderValue) => contours.setRange(range)}
