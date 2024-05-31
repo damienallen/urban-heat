@@ -53,17 +53,13 @@ export const AboutModal = observer(() => {
                     href="https://ec.europa.eu/eurostat/web/gisco/geodata/statistical-units/urban-audit"
                     rel="external"
                 >
-                    Eurostat GISCO Urban Audit (2021)
-                </a>
-                .
+                    Eurostat GISCO Urban Audit
+                </a>{' '}
+                (2021).
             </p>
             <p>
                 Isotherm contour polygons are generated from a moderate resolution satellite image
-                source using client-side worker processes harnessing{' '}
-                <a href="https://d3js.org" rel="external">
-                    d3js
-                </a>
-                .
+                source using client-side worker processes.
             </p>
             <p>
                 Questions & comments are welcome:{' '}

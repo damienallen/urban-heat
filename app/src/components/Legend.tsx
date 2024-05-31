@@ -21,6 +21,7 @@ const useStyles = createUseStyles({
         background: '#f00',
         padding: '4px 8px',
         borderRadius: 4,
+        minWidth: 60,
     },
 })
 
@@ -28,8 +29,26 @@ export const Legend = observer(() => {
     const { contours } = useStores()
     const classes = useStyles()
 
-    if (contours.stats == undefined) {
-        return undefined
+    if (contours.stats == undefined || contours.thresholds.length < 1) {
+        return (
+            <div className={classes.items}>
+                <div
+                    key={`placeholder-0`}
+                    className={classes.threholdItem}
+                    style={{ background: `rgba(255, 0, 0, 0.2)` }}
+                />
+                <div
+                    key={`placeholder-1`}
+                    className={classes.threholdItem}
+                    style={{ background: `rgba(255, 0, 0, 0.4)` }}
+                />
+                <div
+                    key={`placeholder-2`}
+                    className={classes.threholdItem}
+                    style={{ background: `rgba(255, 0, 0, 0.6)` }}
+                />
+            </div>
+        )
     }
 
     let items = []
