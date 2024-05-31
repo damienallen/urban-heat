@@ -46,7 +46,6 @@ def get_auth_header() -> dict[str, str]:
 
 
 async def get_auth_header_async(client: httpx.AsyncClient) -> dict[str, str]:
-    print("Fetching EROS M2M auth token")
     r = await client.post(
         f"{SERVICE_URL}/login-token",
         json={

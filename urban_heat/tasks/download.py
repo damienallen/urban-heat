@@ -42,7 +42,7 @@ async def download_file(
     async with semaphore:
         try:
             r = await client.get(url, timeout=60)
-        except httpx.ReadError:
+        except Exception:
             print(f"[READ ERROR] Download Failed: {filename}")
             adb.update({"failed": True}, (Scenes.display_id == filename[:-11]))
             return
