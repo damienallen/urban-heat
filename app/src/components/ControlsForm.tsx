@@ -97,7 +97,7 @@ export const ControlsForm = observer(() => {
                         minRange={2}
                         maxRange={3}
                         min={0}
-                        max={5}
+                        max={3}
                         marks={[
                             { value: 0, label: 'x̄' },
                             { value: 0.5 },
