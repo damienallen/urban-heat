@@ -94,10 +94,10 @@ export const ControlsForm = observer(() => {
                 <div className={classes.sliderInput}>
                     <RangeSlider
                         label={null}
-                        minRange={2}
-                        maxRange={3}
+                        minRange={1}
+                        maxRange={2}
                         min={0}
-                        max={2.5}
+                        max={3}
                         marks={[
                             { value: 0, label: 'x̄' },
                             { value: 0.5 },
