@@ -70,9 +70,9 @@ export const AboutModal = observer(() => {
             <p>
                 An{' '}
                 <a href="https://github.com/damienallen/urban-heat" rel="external">
-                    open-source project
+                    open-source
                 </a>{' '}
-                by{' '}
+                project by{' '}
                 <a href="https://dallen.co" rel="author" target="_blank">
                     Damien Allen
                 </a>
