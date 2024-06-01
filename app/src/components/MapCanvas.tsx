@@ -109,7 +109,7 @@ export const MapCanvas = observer(() => {
     }
 
     const loadContours = (layers: any[]) => {
-        if (map.current) {
+        if (map.current && contours.selected) {
             const currentMap: maplibregl.Map = map.current
 
             // Remove existing layers and sources
@@ -125,7 +125,7 @@ export const MapCanvas = observer(() => {
             let idList = []
             let accumulatedOpacity = 0
             for (let ind = 0; ind < layers.length; ind++) {
-                const layerId = `contour-${layers[ind].threshold}`
+                const layerId = `contour-${contours.selected.URAU_CODE}-${layers[ind].threshold}`
                 idList.push(layerId)
 
                 const opacity = (ind + 1) / (layers.length + 1) - accumulatedOpacity
