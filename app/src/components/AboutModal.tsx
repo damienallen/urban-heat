@@ -47,8 +47,8 @@ export const AboutModal = observer(() => {
                 across European urban centers.
             </p>
             <p>
-                Due to limitations in available processing power and hosting costs, this project is
-                limited to cities included in the{' '}
+                Due to limitations in available processing power and cloud resources, this project
+                is limited to cities included in the{' '}
                 <a
                     href="https://ec.europa.eu/eurostat/web/gisco/geodata/statistical-units/urban-audit"
                     rel="external"
