@@ -163,7 +163,8 @@ export class ContoursStore {
         if (this.stats) {
             const low = this.stats.mean + this.range[0] * this.stats.st_dev
             const high = this.stats.mean + this.range[1] * this.stats.st_dev
-            return linspace(low, high, this.stats.st_dev / 2).map((val: number) => Math.round(val))
+            const uniqueThresholds = new Set(linspace(low, high, this.stats.st_dev / 2).map((val: number) => Math.round(val)))
+            return [...uniqueThresholds]
         } else {
             return []
         }
