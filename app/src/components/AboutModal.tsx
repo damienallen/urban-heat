@@ -69,7 +69,11 @@ export const AboutModal = observer(() => {
             </p>
             <br />
             <p>
-                Created by{' '}
+                An{' '}
+                <a href="https://github.com/damienallen/urban-heat" rel="external">
+                    open-source project
+                </a>{' '}
+                by{' '}
                 <a href="https://dallen.co" rel="author" target="_blank">
                     Damien Allen
                 </a>
