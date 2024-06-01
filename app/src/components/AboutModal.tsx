@@ -57,10 +57,9 @@ export const AboutModal = observer(() => {
                 </a>{' '}
                 (2021).
             </p>
-            <br />
             <p>
-                Isotherm contour polygons are generated from a moderate resolution satellite image
-                source using client-side worker processes.
+                Isotherm contour polygons are generated from moderate resolution satellite imagry
+                using client-side worker processes.
             </p>
             <br />
             <p>
