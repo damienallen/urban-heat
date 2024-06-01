@@ -83,7 +83,7 @@ def upload_annual_data(image_path: Path):
     r.raise_for_status()
 
 
-def upload_sources(sources_dir: Path = SOURCES_DIR):
+def upload_sources(sources_dir: Path = SOURCES_DIR, overwrite: bool = False):
     r = httpx.get(f"{API_URL}/codes")
     r.raise_for_status()
 
@@ -98,7 +98,7 @@ def upload_sources(sources_dir: Path = SOURCES_DIR):
 
         # TODO: check data source per year (i.e. needed to add 2024)
         urau_sources = r.json()
-        if not urau_sources:
+        if not urau_sources or overwrite:
             for source_dir in [d for d in urau_dir.glob("*") if d.is_dir()]:
                 process_map(
                     upload_annual_data,
