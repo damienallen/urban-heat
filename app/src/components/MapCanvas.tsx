@@ -59,7 +59,7 @@ export const MapCanvas = observer(() => {
                 data: app.urbanExtents,
             })
 
-            const maxZoom = 12
+            const maxZoom = 14
             const extentColor = '#777'
 
             currentMap.addLayer({
