@@ -47,6 +47,10 @@ export const AboutModal = observer(() => {
                 across European urban centers.
             </p>
             <p>
+                Isotherm contour polygons are generated from moderate resolution satellite imagry
+                using client-side worker processes.
+            </p>
+            <p>
                 Due to limitations in available processing power and cloud resources, this project
                 is limited to cities included in the{' '}
                 <a
@@ -56,10 +60,6 @@ export const AboutModal = observer(() => {
                     Eurostat GISCO Urban Audit
                 </a>{' '}
                 (2021).
-            </p>
-            <p>
-                Isotherm contour polygons are generated from moderate resolution satellite imagry
-                using client-side worker processes.
             </p>
             <br />
             <p>
