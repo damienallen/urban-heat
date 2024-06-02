@@ -1,10 +1,11 @@
-import 'maplibre-gl/dist/maplibre-gl.css'
+import '@maptiler/sdk/dist/maptiler-sdk.css'
+
+import * as maptilersdk from '@maptiler/sdk'
 
 import { useEffect, useRef } from 'react'
 
 import { createUseStyles } from 'react-jss'
 import { extent } from 'geojson-bounds'
-import maplibregl from 'maplibre-gl'
 import { observer } from 'mobx-react'
 import { slugify } from '../utils'
 import { useNavigate } from 'react-router-dom'
@@ -16,9 +17,22 @@ const useStyles = createUseStyles({
         width: '100%',
         height: '100%',
         zIndex: 50,
+        '& .maplibregl-ctrl-group': {
+            opacity: 0.8,
+        },
+        '& .maplibregl-ctrl-top-right': {
+            padding: '160px 8px 0 0',
+        },
+        '& .maplibregl-ctrl-bottom-left': {
+            padding: '0 0 80px 12px',
+        },
         '@media (max-width: 720px)': {
-            '& .maplibregl-ctrl-attrib': {
-                marginBottom: '64px !important',
+            '& .maplibregl-ctrl-top-right': {
+                marginRight: -10,
+                padding: '160px 0 0 0',
+            },
+            '& .maplibregl-ctrl-bottom-left': {
+                padding: '0 0 64px 8px',
             },
         },
     },
@@ -34,8 +48,8 @@ export const MapCanvas = observer(() => {
 
     const updateStyle = () => {
         if (map.current && !contours.areProcessing) {
-            const currentMap: maplibregl.Map = map.current
-            currentMap.setStyle(app.styleUrl, { diff: false })
+            const currentMap: maptilersdk.Map = map.current
+            currentMap.setStyle(app.mapStyle, { diff: false })
             currentMap.on('style.load', () => {
                 loadContours(contours.layers)
                 loadUrbanExtents()
@@ -45,12 +59,15 @@ export const MapCanvas = observer(() => {
 
     const loadUrbanExtents = () => {
         if (map.current && app.urbanExtents) {
-            const currentMap: maplibregl.Map = map.current
+            const currentMap: maptilersdk.Map = map.current
             const layerId = 'eu-urban-extents'
 
             if ([...currentMap.getLayersOrder().values()].includes(layerId)) {
                 currentMap.removeLayer(`${layerId}-fill`)
                 currentMap.removeLayer(`${layerId}-line`)
+            }
+
+            if (currentMap.getSource(layerId)) {
                 currentMap.removeSource(layerId)
             }
 
@@ -110,7 +127,7 @@ export const MapCanvas = observer(() => {
 
     const loadContours = (layers: any[]) => {
         if (map.current && contours.selected) {
-            const currentMap: maplibregl.Map = map.current
+            const currentMap: maptilersdk.Map = map.current
 
             // Remove existing layers and sources
             const orderedLayerIds = [...currentMap.getLayersOrder().values()]
@@ -155,9 +172,10 @@ export const MapCanvas = observer(() => {
         if (map.current) return
 
         console.log('Initializing map...')
-        map.current = new maplibregl.Map({
+        map.current = new maptilersdk.Map({
             container: mapContainer.current || '',
-            style: app.styleUrl,
+            geolocateControl: false,
+            style: app.mapStyle,
             center: [4, 48],
             zoom: 5,
         }) as any
@@ -176,7 +194,7 @@ export const MapCanvas = observer(() => {
     useEffect(() => {
         if (app.features) {
             if (map.current && app.selectedFeature) {
-                const currentMap: maplibregl.Map = map.current
+                const currentMap: maptilersdk.Map = map.current
                 setTimeout(
                     () =>
                         currentMap.fitBounds(extent(app.selectedFeature), {
@@ -190,7 +208,7 @@ export const MapCanvas = observer(() => {
     }, [app.features, contours.selected])
 
     useEffect(() => loadUrbanExtents(), [app.urbanExtents])
-    useEffect(() => updateStyle(), [app.styleUrl])
+    useEffect(() => updateStyle(), [app.mapStyle])
 
     return (
         <>

@@ -1,3 +1,5 @@
+import * as maptilersdk from '@maptiler/sdk'
+
 import { MantineColorScheme, RangeSliderValue, createTheme } from '@mantine/core'
 import { linspace, slugify } from './utils'
 
@@ -6,6 +8,8 @@ import React from 'react'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
 import { router } from './router'
+
+maptilersdk.config.apiKey = 'wDiAbMXktsF0wdW1skrt'
 
 const worker = new Worker(new URL('./contour.worker.ts', import.meta.url), {
     type: 'module',
@@ -102,11 +106,6 @@ export class AppStore {
         return this.urbanExtents?.features.map((feat: MapGeoJSONFeature) => feat.properties)
     }
 
-    get styleUrl() {
-        const maptilerApiKey = 'wDiAbMXktsF0wdW1skrt'
-        return `https://api.maptiler.com/maps/${this.mapStyle}/style.json?key=${maptilerApiKey}`
-    }
-
     constructor(public root: Store) {
         makeAutoObservable(this, {}, { autoBind: true })
     }
@@ -163,7 +162,9 @@ export class ContoursStore {
         if (this.stats) {
             const low = this.stats.mean + this.range[0] * this.stats.st_dev
             const high = this.stats.mean + this.range[1] * this.stats.st_dev
-            const uniqueThresholds = new Set(linspace(low, high, this.stats.st_dev / 2).map((val: number) => Math.round(val)))
+            const uniqueThresholds = new Set(
+                linspace(low, high, this.stats.st_dev / 2).map((val: number) => Math.round(val))
+            )
             return [...uniqueThresholds]
         } else {
             return []
