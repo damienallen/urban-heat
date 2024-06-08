@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { Autocomplete } from '@mantine/core'
 import { X } from '@phosphor-icons/react/X'
@@ -30,12 +30,6 @@ export const Search = observer(() => {
     const classes = useStyles()
     const [query, setQuery] = useState<string>('')
     const navigate = useNavigate()
-
-    useEffect(() => {
-        if (contours.city && contours.country) {
-            setQuery(`${contours.city}, ${contours.country}`)
-        }
-    }, [contours.selected])
 
     return (
         <div className={classes.container}>

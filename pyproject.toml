@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "urban_heat"
-description = "A simple backend supporting the Urban Heat Map"
+description = "A simple backend supporting the Urban Heat app"
 version = "2024"
 
 repository = "https://github.com/damienallen/urban-heat"
