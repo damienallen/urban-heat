@@ -38,6 +38,13 @@ const useStyles = createUseStyles({
     },
 })
 
+const buildingsSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#555555" viewBox="0 0 256 256">
+    <path d="M136,32V216H40V85.35a8,8,0,0,1,3.56-6.66l80-53.33A8,8,0,0,1,136,32Z" opacity="0.2"></path>
+    <path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"></path>
+</svg>
+`
+
 export const MapCanvas = observer(() => {
     const { app, contours } = useStores()
     const classes = useStyles()
@@ -53,6 +60,29 @@ export const MapCanvas = observer(() => {
             currentMap.on('style.load', () => {
                 loadContours(contours.layers)
                 loadUrbanExtents()
+                loadIcons()
+            })
+        }
+    }
+
+    const setPointerEvents = (layerId: string) => {
+        if (map.current && app.urbanExtents) {
+            const currentMap: maptilersdk.Map = map.current
+            currentMap.on('mouseenter', layerId, () => {
+                currentMap.getCanvas().style.cursor = 'pointer'
+            })
+
+            currentMap.on('mouseleave', layerId, () => {
+                currentMap.getCanvas().style.cursor = ''
+            })
+
+            currentMap.on('click', layerId, (e) => {
+                const feature = e.features![0]
+                if (!contours.areProcessing) {
+                    const city = slugify(feature.properties.URAU_NAME)
+                    console.debug(`Selected URAU: ${feature.properties.URAU_CODE} (${city})`)
+                    navigate(`/${city}`)
+                }
             })
         }
     }
@@ -61,6 +91,10 @@ export const MapCanvas = observer(() => {
         if (map.current && app.urbanExtents) {
             const currentMap: maptilersdk.Map = map.current
             const layerId = 'eu-urban-extents'
+
+            const extentColor = '#777'
+            const minZoom = 6
+            const maxZoom = 14
 
             if ([...currentMap.getLayersOrder().values()].includes(layerId)) {
                 currentMap.removeLayer(`${layerId}-fill`)
@@ -76,9 +110,6 @@ export const MapCanvas = observer(() => {
                 data: app.urbanExtents,
             })
 
-            const maxZoom = 14
-            const extentColor = '#777'
-
             currentMap.addLayer({
                 id: `${layerId}-fill`,
                 type: 'fill',
@@ -89,6 +120,7 @@ export const MapCanvas = observer(() => {
                     'fill-opacity': 0.2,
                 },
                 maxzoom: maxZoom,
+                minzoom: minZoom,
             })
 
             currentMap.addLayer({
@@ -102,26 +134,46 @@ export const MapCanvas = observer(() => {
                     'line-opacity': 0.3,
                 },
                 maxzoom: maxZoom,
+                minzoom: minZoom,
             })
 
             // Load contours and center map on click
-            currentMap.on('click', `${layerId}-fill`, (e) => {
-                const feature = e.features![0]
-                if (!contours.areProcessing) {
-                    const city = slugify(feature.properties.URAU_NAME)
-                    console.debug(`Selected URAU: ${feature.properties.URAU_CODE} (${city})`)
-                    navigate(`/${city}`)
+            setPointerEvents(`${layerId}-fill`)
+        }
+    }
+
+    const loadIcons = () => {
+        if (map.current && app.centroidsGeojson) {
+            const currentMap: maptilersdk.Map = map.current
+            const layerId = 'centroids'
+
+            if (!currentMap.getSource(layerId)) {
+                const svgImage = new Image(32, 32)
+                svgImage.onload = () => {
+                    currentMap.addImage('hoverIcon', svgImage)
                 }
-            })
 
-            currentMap.on('mouseenter', `${layerId}-fill`, () => {
-                currentMap.getCanvas().style.cursor = 'pointer'
-            })
+                svgImage.src =
+                    'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(buildingsSVG)
 
-            // Change the cursor back to default when it leaves the vector layer
-            currentMap.on('mouseleave', `${layerId}-fill`, () => {
-                currentMap.getCanvas().style.cursor = ''
-            })
+                currentMap.addSource(layerId, {
+                    type: 'geojson',
+                    data: app.centroidsGeojson,
+                })
+
+                currentMap.addLayer({
+                    id: layerId,
+                    type: 'symbol',
+                    source: layerId,
+                    layout: {
+                        'icon-image': 'hoverIcon',
+                    },
+                    paint: {},
+                    maxzoom: 9,
+                })
+
+                setPointerEvents(layerId)
+            }
         }
     }
 
@@ -154,13 +206,20 @@ export const MapCanvas = observer(() => {
                 })
                 currentMap.addLayer({
                     id: layerId,
-                    type: 'fill',
+                    type: app.mapStyle === 'topo-v2' ? 'fill-extrusion' : 'fill',
                     source: layerId,
                     layout: {},
-                    paint: {
-                        'fill-color': '#f00',
-                        'fill-opacity': opacity,
-                    },
+                    paint:
+                        app.mapStyle === 'topo-v2'
+                            ? ({
+                                  'fill-extrusion-color': '#f00',
+                                  'fill-extrusion-opacity': opacity,
+                                  'fill-extrusion-height': 10 * (ind + 1),
+                              } as any)
+                            : {
+                                  'fill-color': '#f00',
+                                  'fill-opacity': opacity,
+                              },
                     minzoom: 8,
                 })
             }
@@ -188,6 +247,7 @@ export const MapCanvas = observer(() => {
     useEffect(() => {
         if (!contours.areProcessing) {
             loadContours(contours.layers)
+            loadIcons()
         }
     }, [contours.layers])
 

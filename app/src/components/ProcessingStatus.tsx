@@ -19,7 +19,7 @@ const useStyles = createUseStyles({
         alignItems: 'center',
         justifyContent: 'center',
         userSelect: 'none',
-        paddingLeft: '0 4px 0 8px',
+        padding: '0 4px 0 8px',
     },
     gear: {
         animation: 'spin 5s linear infinite',

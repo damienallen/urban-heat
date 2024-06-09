@@ -5,11 +5,14 @@ import { linspace, slugify } from './utils'
 
 import { MapGeoJSONFeature } from 'maplibre-gl'
 import React from 'react'
+import { geoPath } from 'd3'
 import { makeAutoObservable } from 'mobx'
 import packageJson from '../package.json'
 import { router } from './router'
 
 maptilersdk.config.apiKey = 'wDiAbMXktsF0wdW1skrt'
+
+const path = geoPath().digits(3)
 
 const worker = new Worker(new URL('./contour.worker.ts', import.meta.url), {
     type: 'module',
@@ -104,6 +107,22 @@ export class AppStore {
 
     get featureProperties() {
         return this.urbanExtents?.features.map((feat: MapGeoJSONFeature) => feat.properties)
+    }
+
+    get centroidsGeojson() {
+        return {
+            type: 'FeatureCollection',
+            features: this.features
+                ? this.features.map((feat: MapGeoJSONFeature) => ({
+                      type: 'Feature',
+                      properties: feat.properties,
+                      geometry: {
+                          coordinates: path.centroid(feat),
+                          type: 'Point',
+                      },
+                  }))
+                : [],
+        } as any
     }
 
     constructor(public root: Store) {
