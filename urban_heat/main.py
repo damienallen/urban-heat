@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 
 from urban_heat import API_TOKEN, APP_URL
-from urban_heat.models import AnnualData, DataSource, UrbanExtent, get_extent_features, init_db
+from urban_heat.models import AnnualData, DataSource, UrbanExtent, init_db
 
 origins = [
     APP_URL,
@@ -34,16 +34,8 @@ async def check_for_token(x_token: Annotated[str, Header()]):
 async def hello():
     return {
         "welcome": "Welcome to the urban-heat API, see repository for more information.",
-        "url": "https://github.com/damienallen/urban-heat/tree/main",
-    }
-
-
-@app.get("/extents", response_model=list[UrbanExtent])
-async def get_urban_extents():
-    return {
-        "type": "FeatureCollection",
-        "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}},
-        "features": await get_extent_features(),
+        "repo": "https://github.com/damienallen/urban-heat/tree/main",
+        "endpoints": "https://api.urbanheat.app/docs",
     }
 
 
@@ -69,6 +61,14 @@ async def get_source_counts():
             countries[extent.properties.CNTR_CODE]["missing"] += 1
 
     return OrderedDict(sorted(countries.items()))
+
+
+@app.get("/urau/missing", response_model=list[str])
+async def get_missing():
+    await init_db()
+
+    features = await UrbanExtent.find_all().to_list()
+    return sorted([f.properties.URAU_CODE for f in features if not f.prepared_sources])
 
 
 @app.get("/urau/{code}", response_model=UrbanExtent)

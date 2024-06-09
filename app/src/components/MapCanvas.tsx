@@ -135,8 +135,6 @@ export const MapCanvas = observer(() => {
             })
 
             // Load contours and center map on click
-            setSelectOnClick(`${layerId}-fill`)
-
             currentMap.on('mouseenter', `${layerId}-fill`, () => {
                 currentMap.getCanvas().style.cursor = 'pointer'
             })
@@ -144,6 +142,8 @@ export const MapCanvas = observer(() => {
             currentMap.on('mouseleave', `${layerId}-fill`, () => {
                 currentMap.getCanvas().style.cursor = ''
             })
+
+            setSelectOnClick(`${layerId}-fill`)
         }
     }
 
@@ -151,16 +151,17 @@ export const MapCanvas = observer(() => {
         if (map.current && app.centroidsGeojson) {
             const currentMap: maptilersdk.Map = map.current
             const sourceId = 'centroids'
+            const iconSize = 0.4
 
             if (!currentMap.getSource(sourceId)) {
-                const buildingsImage = new Image(32, 32)
+                const buildingsImage = new Image(64, 64)
                 buildingsImage.onload = () => {
                     currentMap.addImage('buildingsIcon', buildingsImage)
                 }
                 buildingsImage.src =
                     'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(buildingsSVG)
 
-                const tapImage = new Image(32, 32)
+                const tapImage = new Image(64, 64)
                 tapImage.onload = () => {
                     currentMap.addImage('tapIcon', tapImage)
                 }
@@ -175,8 +176,10 @@ export const MapCanvas = observer(() => {
                     id: `${sourceId}-building`,
                     type: 'symbol',
                     source: sourceId,
+                    filter: ['all', ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || '']],
                     layout: {
                         'icon-image': 'buildingsIcon',
+                        'icon-size': iconSize,
                     },
                     paint: {},
                     maxzoom: 9,
@@ -189,6 +192,7 @@ export const MapCanvas = observer(() => {
                     filter: ['all', ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || '']],
                     layout: {
                         'icon-image': 'tapIcon',
+                        'icon-size': iconSize,
                     },
                     paint: {},
                     minzoom: 9,
@@ -243,7 +247,7 @@ export const MapCanvas = observer(() => {
                                   'fill-color': '#f00',
                                   'fill-opacity': opacity,
                               },
-                    minzoom: 8,
+                    minzoom: 6,
                 })
             }
             console.debug(`${layers.length} contour layers added`)
@@ -278,12 +282,21 @@ export const MapCanvas = observer(() => {
         if (app.features) {
             if (map.current && app.selectedFeature) {
                 const currentMap: maptilersdk.Map = map.current
-
-                setTimeout(() => {
+                if (
+                    currentMap.getLayer('centroids-building') &&
+                    currentMap.getLayer('centroids-tap')
+                ) {
+                    currentMap.setFilter('centroids-building', [
+                        'all',
+                        ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
+                    ])
                     currentMap.setFilter('centroids-tap', [
                         'all',
                         ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
                     ])
+                }
+
+                setTimeout(() => {
                     currentMap.fitBounds(extent(app.selectedFeature), {
                         maxZoom: 12,
                         duration: 1000,

@@ -73,13 +73,6 @@ async def init_db():
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
 
 
-async def get_extent_features():
-    await init_db()
-
-    features = await UrbanExtent.find_all().to_list()
-    return [feature.__geo_interface__ for feature in features]
-
-
 async def get_urau_by_code(code: str):
     await init_db()
 

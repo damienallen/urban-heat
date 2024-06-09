@@ -67,6 +67,7 @@ export class Store {
 }
 
 export class AppStore {
+    public apiRoot = 'https://api.urbanheat.app'
     public version: string = packageJson.version
 
     public cityLookup: { [key: string]: string } = {}
@@ -77,8 +78,11 @@ export class AppStore {
         this.mapStyle = value
     }
 
-    setUrbanExtents = (value: any) => {
-        this.urbanExtents = value
+    setUrbanExtents = (value: any, missing: string[]) => {
+        this.urbanExtents = {
+            type: 'FeatureCollection',
+            features: value.features.filter((f: any) => !missing.includes(f.id)),
+        }
 
         let lookup: { [key: string]: string } = {}
         for (let feat of this.featureProperties as FeatureProperties[]) {
@@ -89,8 +93,12 @@ export class AppStore {
     }
 
     fetchUrbanExtents = async () => {
-        const response = await fetch('urban_extents.geojson')
-        this.setUrbanExtents(await response.json())
+        const extentsResp = await fetch('urban_extents.geojson')
+        const extentsGeojson = await extentsResp.json()
+
+        const missingResp = await fetch(`${this.apiRoot}/urau/missing`)
+        const missing = await missingResp.json()
+        this.setUrbanExtents(extentsGeojson, missing)
         this.root.ui.setMapLoaded(true)
     }
 
@@ -131,7 +139,6 @@ export class AppStore {
 }
 
 export class ContoursStore {
-    private apiRoot = 'https://api.urbanheat.app'
     private sourceKey = 'max_surface_temp'
 
     public areProcessing: boolean = true
@@ -248,7 +255,9 @@ export class ContoursStore {
     }
 
     initUrau = async () => {
-        const response = await fetch(`${this.apiRoot}/urau/${this.selected!.URAU_CODE}/sources`)
+        const response = await fetch(
+            `${this.root.app.apiRoot}/urau/${this.selected!.URAU_CODE}/sources`
+        )
         const respJson = await response.json()
 
         this.setAnnualData(
