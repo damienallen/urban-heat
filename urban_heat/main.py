@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 
 from urban_heat import API_TOKEN, APP_URL
-from urban_heat.models import AnnualData, DataSource, UrbanExtent, get_extent_features, init_db
+from urban_heat.models import AnnualData, DataSource, UrbanExtent, init_db
 
 origins = [
     APP_URL,
@@ -34,16 +34,8 @@ async def check_for_token(x_token: Annotated[str, Header()]):
 async def hello():
     return {
         "welcome": "Welcome to the urban-heat API, see repository for more information.",
-        "url": "https://github.com/damienallen/urban-heat/tree/main",
-    }
-
-
-@app.get("/extents", response_model=list[UrbanExtent])
-async def get_urban_extents():
-    return {
-        "type": "FeatureCollection",
-        "crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::4326"}},
-        "features": await get_extent_features(),
+        "repo": "https://github.com/damienallen/urban-heat/tree/main",
+        "endpoints": "https://api.urbanheat.app/docs",
     }
 
 
