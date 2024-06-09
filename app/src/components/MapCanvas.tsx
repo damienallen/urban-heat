@@ -247,7 +247,7 @@ export const MapCanvas = observer(() => {
                                   'fill-color': '#f00',
                                   'fill-opacity': opacity,
                               },
-                    minzoom: 8,
+                    minzoom: 6,
                 })
             }
             console.debug(`${layers.length} contour layers added`)
