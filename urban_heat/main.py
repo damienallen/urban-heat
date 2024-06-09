@@ -63,6 +63,14 @@ async def get_source_counts():
     return OrderedDict(sorted(countries.items()))
 
 
+@app.get("/urau/missing", response_model=list[str])
+async def get_missing():
+    await init_db()
+
+    features = await UrbanExtent.find_all().to_list()
+    return sorted([f.properties.URAU_CODE for f in features if not f.prepared_sources])
+
+
 @app.get("/urau/{code}", response_model=UrbanExtent)
 async def get_urau(code: str):
     await init_db()
