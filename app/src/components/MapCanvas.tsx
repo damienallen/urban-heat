@@ -39,9 +39,15 @@ const useStyles = createUseStyles({
 })
 
 const buildingsSVG = `
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#555555" viewBox="0 0 256 256">
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#333333" viewBox="0 0 256 256">
     <path d="M136,32V216H40V85.35a8,8,0,0,1,3.56-6.66l80-53.33A8,8,0,0,1,136,32Z" opacity="0.2"></path>
     <path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"></path>
+</svg>
+`
+
+const tapSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#333333" viewBox="0 0 256 256">
+    <path d="M56,76a60,60,0,0,1,120,0,8,8,0,0,1-16,0,44,44,0,0,0-88,0,8,8,0,1,1-16,0Zm140,44a27.9,27.9,0,0,0-13.36,3.39A28,28,0,0,0,144,106.7V76a28,28,0,0,0-56,0v80l-3.82-6.13a28,28,0,0,0-48.41,28.17l29.32,50A8,8,0,1,0,78.89,220L49.6,170a12,12,0,1,1,20.78-12l.14.23,18.68,30A8,8,0,0,0,104,184V76a12,12,0,0,1,24,0v68a8,8,0,1,0,16,0V132a12,12,0,0,1,24,0v20a8,8,0,0,0,16,0v-4a12,12,0,0,1,24,0v36c0,21.61-7.1,36.3-7.16,36.42a8,8,0,0,0,3.58,10.73A7.9,7.9,0,0,0,208,232a8,8,0,0,0,7.16-4.42c.37-.73,8.85-18,8.85-43.58V148A28,28,0,0,0,196,120Z"></path>
 </svg>
 `
 
@@ -65,17 +71,9 @@ export const MapCanvas = observer(() => {
         }
     }
 
-    const setPointerEvents = (layerId: string) => {
+    const setSelectOnClick = (layerId: string) => {
         if (map.current && app.urbanExtents) {
             const currentMap: maptilersdk.Map = map.current
-            currentMap.on('mouseenter', layerId, () => {
-                currentMap.getCanvas().style.cursor = 'pointer'
-            })
-
-            currentMap.on('mouseleave', layerId, () => {
-                currentMap.getCanvas().style.cursor = ''
-            })
-
             currentMap.on('click', layerId, (e) => {
                 const feature = e.features![0]
                 if (!contours.areProcessing) {
@@ -92,7 +90,6 @@ export const MapCanvas = observer(() => {
             const currentMap: maptilersdk.Map = map.current
             const layerId = 'eu-urban-extents'
 
-            const extentColor = '#777'
             const minZoom = 6
             const maxZoom = 14
 
@@ -116,7 +113,7 @@ export const MapCanvas = observer(() => {
                 source: layerId,
                 layout: {},
                 paint: {
-                    'fill-color': extentColor,
+                    'fill-color': '#777',
                     'fill-opacity': 0.2,
                 },
                 maxzoom: maxZoom,
@@ -130,7 +127,7 @@ export const MapCanvas = observer(() => {
                 layout: {},
                 paint: {
                     'line-width': 1.5,
-                    'line-color': extentColor,
+                    'line-color': '#777',
                     'line-opacity': 0.3,
                 },
                 maxzoom: maxZoom,
@@ -138,7 +135,15 @@ export const MapCanvas = observer(() => {
             })
 
             // Load contours and center map on click
-            setPointerEvents(`${layerId}-fill`)
+            setSelectOnClick(`${layerId}-fill`)
+
+            currentMap.on('mouseenter', `${layerId}-fill`, () => {
+                currentMap.getCanvas().style.cursor = 'pointer'
+            })
+
+            currentMap.on('mouseleave', `${layerId}-fill`, () => {
+                currentMap.getCanvas().style.cursor = ''
+            })
         }
     }
 
@@ -148,13 +153,18 @@ export const MapCanvas = observer(() => {
             const layerId = 'centroids'
 
             if (!currentMap.getSource(layerId)) {
-                const svgImage = new Image(32, 32)
-                svgImage.onload = () => {
-                    currentMap.addImage('hoverIcon', svgImage)
+                const buildingsImage = new Image(32, 32)
+                buildingsImage.onload = () => {
+                    currentMap.addImage('buildingsIcon', buildingsImage)
                 }
-
-                svgImage.src =
+                buildingsImage.src =
                     'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(buildingsSVG)
+
+                const tapImage = new Image(32, 32)
+                tapImage.onload = () => {
+                    currentMap.addImage('tapIcon', tapImage)
+                }
+                tapImage.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(tapSVG)
 
                 currentMap.addSource(layerId, {
                     type: 'geojson',
@@ -162,17 +172,30 @@ export const MapCanvas = observer(() => {
                 })
 
                 currentMap.addLayer({
-                    id: layerId,
+                    id: `${layerId}-building`,
                     type: 'symbol',
                     source: layerId,
                     layout: {
-                        'icon-image': 'hoverIcon',
+                        'icon-image': 'buildingsIcon',
                     },
                     paint: {},
                     maxzoom: 9,
                 })
 
-                setPointerEvents(layerId)
+                currentMap.addLayer({
+                    id: `${layerId}-tap`,
+                    type: 'symbol',
+                    source: layerId,
+                    filter: ['all', ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || '']],
+                    layout: {
+                        'icon-image': 'tapIcon',
+                    },
+                    paint: {},
+                    minzoom: 9,
+                })
+
+                setSelectOnClick(`${layerId}-building`)
+                setSelectOnClick(`${layerId}-tap`)
             }
         }
     }
