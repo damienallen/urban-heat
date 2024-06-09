@@ -53,9 +53,32 @@ const useStyles = createUseStyles({
     },
 })
 
+const welcomeText = `%c
+██╗   ██╗██████╗ ██████╗  █████╗ ███╗   ██╗
+██║   ██║██╔══██╗██╔══██╗██╔══██╗████╗  ██║
+██║   ██║██████╔╝██████╔╝███████║██╔██╗ ██║
+██║   ██║██╔══██╗██╔══██╗██╔══██║██║╚██╗██║
+╚██████╔╝██║  ██║██████╔╝██║  ██║██║ ╚████║
+ ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝
+                                           
+██╗  ██╗███████╗ █████╗ ████████╗          
+██║  ██║██╔════╝██╔══██╗╚══██╔══╝          
+███████║█████╗  ███████║   ██║             
+██╔══██║██╔══╝  ██╔══██║   ██║             
+██║  ██║███████╗██║  ██║   ██║             
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝             
+                                           
+
+Curious about what's going on under the hood?\n
+Check out the source: https://github.com/damienallen/urban-heat\n
+Or browse the swagger: https://api.urbanheat.app/docs\n
+`
+
 export const App = () => {
     const { ui } = useStores()
     const classes = useStyles()
+
+    console.log(welcomeText, 'color: #d84100')
 
     return (
         <StoreProvider>
