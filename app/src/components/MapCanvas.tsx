@@ -282,21 +282,21 @@ export const MapCanvas = observer(() => {
         if (app.features) {
             if (map.current && app.selectedFeature) {
                 const currentMap: maptilersdk.Map = map.current
+                if (
+                    currentMap.getLayer('centroids-building') &&
+                    currentMap.getLayer('centroids-tap')
+                ) {
+                    currentMap.setFilter('centroids-building', [
+                        'all',
+                        ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
+                    ])
+                    currentMap.setFilter('centroids-tap', [
+                        'all',
+                        ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
+                    ])
+                }
 
                 setTimeout(() => {
-                    if (
-                        currentMap.getLayer('centroids-building') &&
-                        currentMap.getLayer('centroids-tap')
-                    ) {
-                        currentMap.setFilter('centroids-building', [
-                            'all',
-                            ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
-                        ])
-                        currentMap.setFilter('centroids-tap', [
-                            'all',
-                            ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
-                        ])
-                    }
                     currentMap.fitBounds(extent(app.selectedFeature), {
                         maxZoom: 12,
                         duration: 1000,
