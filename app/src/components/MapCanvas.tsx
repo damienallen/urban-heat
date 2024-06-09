@@ -150,9 +150,9 @@ export const MapCanvas = observer(() => {
     const loadIcons = () => {
         if (map.current && app.centroidsGeojson) {
             const currentMap: maptilersdk.Map = map.current
-            const layerId = 'centroids'
+            const sourceId = 'centroids'
 
-            if (!currentMap.getSource(layerId)) {
+            if (!currentMap.getSource(sourceId)) {
                 const buildingsImage = new Image(32, 32)
                 buildingsImage.onload = () => {
                     currentMap.addImage('buildingsIcon', buildingsImage)
@@ -166,15 +166,15 @@ export const MapCanvas = observer(() => {
                 }
                 tapImage.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(tapSVG)
 
-                currentMap.addSource(layerId, {
+                currentMap.addSource(sourceId, {
                     type: 'geojson',
                     data: app.centroidsGeojson,
                 })
 
                 currentMap.addLayer({
-                    id: `${layerId}-building`,
+                    id: `${sourceId}-building`,
                     type: 'symbol',
-                    source: layerId,
+                    source: sourceId,
                     layout: {
                         'icon-image': 'buildingsIcon',
                     },
@@ -183,9 +183,9 @@ export const MapCanvas = observer(() => {
                 })
 
                 currentMap.addLayer({
-                    id: `${layerId}-tap`,
+                    id: `${sourceId}-tap`,
                     type: 'symbol',
-                    source: layerId,
+                    source: sourceId,
                     filter: ['all', ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || '']],
                     layout: {
                         'icon-image': 'tapIcon',
@@ -194,8 +194,8 @@ export const MapCanvas = observer(() => {
                     minzoom: 9,
                 })
 
-                setSelectOnClick(`${layerId}-building`)
-                setSelectOnClick(`${layerId}-tap`)
+                setSelectOnClick(`${sourceId}-building`)
+                setSelectOnClick(`${sourceId}-tap`)
             }
         }
     }
@@ -278,14 +278,17 @@ export const MapCanvas = observer(() => {
         if (app.features) {
             if (map.current && app.selectedFeature) {
                 const currentMap: maptilersdk.Map = map.current
-                setTimeout(
-                    () =>
-                        currentMap.fitBounds(extent(app.selectedFeature), {
-                            maxZoom: 12,
-                            duration: 1000,
-                        }),
-                    500
-                )
+
+                setTimeout(() => {
+                    currentMap.setFilter('centroids-tap', [
+                        'all',
+                        ['!=', 'URAU_CODE', contours.selected?.URAU_CODE || ''],
+                    ])
+                    currentMap.fitBounds(extent(app.selectedFeature), {
+                        maxZoom: 12,
+                        duration: 1000,
+                    })
+                }, 200)
             }
         }
     }, [app.features, contours.selected])
