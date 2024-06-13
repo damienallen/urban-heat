@@ -24,7 +24,7 @@ export const OpenButton = observer(() => {
     const { contours, ui } = useStores()
     const classes = useStyles()
 
-    return ui.showControls ? null : (
+    return ui.showControls && !contours.areProcessing ? null : (
         <span className={classes.container}>
             <Tooltip label="Controls">
                 <Button
