@@ -1,15 +1,7 @@
-import {
-    Blockquote,
-    LoadingOverlay,
-    NativeSelect,
-    RangeSlider,
-    RangeSliderValue,
-} from '@mantine/core'
+import { Blockquote, NativeSelect, RangeSlider, RangeSliderValue } from '@mantine/core'
 
 import { ControlsItem } from './ControlsItem'
 import { HideButton } from './HideButton'
-import { Progress } from './Progress'
-import { UpdateButton } from './UpdateButton'
 import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useStores } from '../stores'
@@ -55,17 +47,8 @@ export const ControlsForm = observer(() => {
         </div>
     )
 
-    return ui.showControls ? (
+    return (
         <div className={classes.container}>
-            <LoadingOverlay
-                visible={contours.areProcessing}
-                loaderProps={{
-                    children: <Progress color="black" />,
-                }}
-                zIndex={150}
-                overlayProps={{ blur: 2 }}
-            />
-
             <Blockquote className={classes.description} color="gray" cite={source} mt="xl">
                 Annual maximum land surface temperature (LST).
             </Blockquote>
@@ -74,7 +57,7 @@ export const ControlsForm = observer(() => {
                 <NativeSelect
                     value="Max. Surface Temp."
                     data={['Max. Surface Temp.']}
-                    onChange={(e: React.ChangeEvent) => console.log(e)}
+                    onChange={(e) => console.log(e)}
                     disabled={contours.areProcessing}
                 />
             </ControlsItem>
@@ -83,9 +66,19 @@ export const ControlsForm = observer(() => {
                 <NativeSelect
                     value={contours.year}
                     data={contours.availableYears.map(String)}
-                    onChange={(e: React.ChangeEvent) =>
-                        contours.setYear((e.currentTarget as HTMLInputElement).value)
-                    }
+                    onChange={(e) => contours.setYear(e.currentTarget.value)}
+                    disabled={contours.areProcessing}
+                />
+            </ControlsItem>
+
+            <ControlsItem label="Reference">
+                <NativeSelect
+                    value={ui.absoluteReference ? 'absolute' : 'relative'}
+                    data={[
+                        { label: 'Absolute', value: 'absolute' },
+                        { label: 'Relative to Mean', value: 'relative' },
+                    ]}
+                    onChange={(e) => ui.setAbsoluteReference(e.currentTarget.value === 'absolute')}
                     disabled={contours.areProcessing}
                 />
             </ControlsItem>
@@ -100,7 +93,7 @@ export const ControlsForm = observer(() => {
                         min={0}
                         max={3}
                         marks={[
-                            { value: 0.0, label: 'x̄' },
+                            { value: 0.0, label: 'mean' },
                             { value: 0.5 },
                             { value: 1.0, label: 'σ' },
                             { value: 1.5 },
@@ -117,8 +110,7 @@ export const ControlsForm = observer(() => {
 
             <div className={classes.actionButtons}>
                 <HideButton />
-                <UpdateButton />
             </div>
         </div>
-    ) : null
+    )
 })

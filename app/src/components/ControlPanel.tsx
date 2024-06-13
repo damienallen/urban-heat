@@ -26,10 +26,10 @@ const useStyles = createUseStyles({
 })
 
 export const ControlPanel = observer(() => {
-    const { ui } = useStores()
+    const { contours, ui } = useStores()
     const classes = useStyles()
 
-    return ui.showControls ? (
+    return ui.showControls && !contours.areProcessing ? (
         <div className={classes.container}>
             <ControlsForm />
         </div>

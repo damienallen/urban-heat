@@ -143,7 +143,6 @@ export class ContoursStore {
 
     public areProcessing: boolean = true
     public layers: any[] = []
-    public lastJson: string = ''
 
     public range: RangeSliderValue = [1.0, 2.0]
     public annualData: AnnualData[] = []
@@ -159,16 +158,16 @@ export class ContoursStore {
         this.layers = value
     }
 
-    setLastJson = () => {
-        this.lastJson = this.json
-    }
-
     setRange = (value: RangeSliderValue) => {
         this.range = value
+        this.root.ui.toggleShowControls()
+        this.processContours()
     }
 
     setYear = (value: string | number) => {
         this.year = Number(value)
+        this.root.ui.toggleShowControls()
+        this.processContours()
     }
 
     setSelected = (properties: FeatureProperties) => {
@@ -266,12 +265,10 @@ export class ContoursStore {
 
         const latestYear = this.annualData.reduce((max, s) => (s.year > max.year ? s : max))
         this.setYear(latestYear.year)
-        this.processContours()
     }
 
     processContours = async () => {
         if (this.stats && this.url) {
-            this.setLastJson()
             this.setAreProcessing(true)
 
             worker.postMessage({
@@ -303,6 +300,7 @@ export class UIStore {
     public showAbout: boolean = false
     public showControls: boolean = false
     public showStyleMenu: boolean = false
+    public absoluteReference: boolean = false
 
     public colorScheme: MantineColorScheme = 'light'
 
@@ -326,15 +324,12 @@ export class UIStore {
         this.showControls = value
     }
 
-    toggleColorScheme = () => {
-        this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
+    setAbsoluteReference = (value: boolean) => {
+        this.absoluteReference = value
     }
 
-    get disableUpdate() {
-        return (
-            this.root.contours.areProcessing ||
-            this.root.contours.lastJson === this.root.contours.json
-        )
+    toggleColorScheme = () => {
+        this.colorScheme = this.colorScheme === 'dark' ? 'light' : 'dark'
     }
 
     get theme() {
