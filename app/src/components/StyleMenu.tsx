@@ -34,8 +34,8 @@ export const StyleMenu = observer(() => {
             value: 'dataviz',
         },
         {
-            label: 'Bright',
-            value: 'bright-v2',
+            label: 'OSM',
+            value: 'openstreetmap',
         },
         {
             label: 'Satellite',
@@ -46,7 +46,7 @@ export const StyleMenu = observer(() => {
             value: 'streets-v2',
         },
         {
-            label: 'Topo',
+            label: 'Topo (3D)',
             value: 'topo-v2',
         },
     ]
