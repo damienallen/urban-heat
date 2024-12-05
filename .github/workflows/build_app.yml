@@ -42,3 +42,18 @@ jobs:
           git add .
           git commit -am "Created distributables"
           git push --force --set-upstream origin build
+
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: unnecessary
+
+      - name: Add Known Hosts
+        run: ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Sync Static Files
+        run: |
+          rsync -avz --delete --exclude .git/ --exclude .github/ --exclude .gitignore --exclude README.md \
+          -e "ssh -p ${{ secrets.SSH_PORT }}" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/urban-heat
