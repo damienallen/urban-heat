@@ -43,7 +43,6 @@ jobs:
           git commit -am "Created distributables"
           git push --force --set-upstream origin build
 
-
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -56,4 +55,4 @@ jobs:
       - name: Sync Static Files
         run: |
           rsync -avz --delete --exclude .git/ --exclude .github/ --exclude .gitignore --exclude README.md \
-          -e "ssh -p ${{ secrets.SSH_PORT }}" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/urban-heat
+          -e "ssh -p ${{ secrets.SSH_PORT }}" . ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/urban-heat/main
