@@ -3,6 +3,9 @@
 app:
 	cd app; yarn dev
 
+update-license-file:
+	cd app; npx generate-license-file --input package.json --output third-party-licenses.txt --overwrite
+
 service:
 	uvicorn urban_heat.main:app --reload
 

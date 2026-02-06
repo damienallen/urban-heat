@@ -1,19 +1,44 @@
-FROM python:3.12
-
-ENV POETRY_VERSION=1.8.2
-ENV POETRY_VIRTUALENVS_CREATE=false
-ENV PATH /root/.local/bin:$PATH
-
-RUN apt update; \
-    apt install build-essential
-
-RUN pip install pipx; pipx install poetry
-WORKDIR /pysetup
-COPY ./README.md ./pyproject.toml ./poetry.lock* /pysetup/
-RUN poetry install
-
+#
+# Python image for backend
+#
+FROM python:3.13-slim-trixie AS service
 WORKDIR /service
-COPY ./urban_heat /service/urban_heat/
+
+RUN apt-get update && apt-get install -y build-essential
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+ENV VIRTUAL_ENV=/service/.venv \
+    PATH="/service/.venv/bin:$PATH"
+
+ADD README.md pyproject.toml uv.lock ./
+
+RUN uv sync --frozen --no-install-project
+
+# Copy and install service
+ADD ./urban_heat ./urban_heat/
+RUN uv sync --frozen
 
 EXPOSE 8000
-CMD ["uvicorn", "urban_heat.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["granian", "--interface", "asgi", "--host", "0.0.0.0", "--port", "8000", "urban_heat.main:app"]
+
+
+#
+# Caddy image with baked in static and SPA
+#
+FROM node:24-trixie-slim AS static-builder
+WORKDIR /app
+ARG BUILD_MODE=production
+
+COPY ./app/package.json ./app/package-lock.json /app/
+RUN npm ci
+
+COPY ./app /app/
+RUN if [ "$BUILD_MODE" = "localdev" ]; then \
+    npm run build:local; \
+    else \
+    npm run build; \
+    fi
+
+FROM caddy:2-alpine AS static
+COPY --from=static-builder /app/dist /var/www
+COPY Caddyfile /etc/caddy/Caddyfile

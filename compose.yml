@@ -1,0 +1,52 @@
+# Compose for local development
+---
+services:
+
+  service:
+    build:
+      cache_from:
+        - ghcr.io/damienallen/urban-heat-service:latest
+      context: .
+      target: service
+    restart: unless-stopped
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017
+    develop:
+      watch:
+        - action: rebuild
+          path: ./uv.lock
+    volumes:
+      - ./app:/app
+    ports:
+      - "8888:8888"
+    depends_on:
+      - mongo
+
+  ui:
+    build:
+      cache_from:
+        - ghcr.io/damienallen/urban-heat-static:latest
+      context: .
+      args:
+        - BUILD_MODE=localdev
+      target: static
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: rebuild
+          path: ./app/package-lock.json
+    ports:
+      - "3000:80"
+
+  mongo:
+    image: mongo:8.2-noble
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - "27017:27017"
+    expose:
+      - 27017
+
+volumes:
+  mongo-data:

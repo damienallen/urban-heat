@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:local": "vite build --mode localdev",
     "preview": "vite preview"
   },
   "dependencies": {

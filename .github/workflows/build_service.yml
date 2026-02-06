@@ -3,7 +3,7 @@ name: Service
 on:
   push:
     branches:
-      - main
+      - mainx
     paths:
       - urban_heat/**
       - tasks/**
