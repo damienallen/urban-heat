@@ -1,45 +1,39 @@
-[tool.poetry]
-name = "urban_heat"
+[project]
+name = "urban-heat"
+version = "2026.1"
 description = "A simple backend supporting the Urban Heat app"
-version = "2024"
 
-repository = "https://github.com/damienallen/urban-heat"
+authors = [{ name = "Damien Allen", email = "dev@dallen.co" }]
 license = "AGPL-3.0"
-authors = ["Damien Allen <dev@dallen.co>"]
-
-homepage = "https://urbanheat.app"
 readme = "README.md"
 
-[tool.poetry.dependencies]
-python = "~3.12"
+requires-python = ">=3.13,<3.14"
 
-fastapi = "^0.110.1"
-beanie = "^1.25.0"
-pydantic = "^2.7.0"
-uvicorn = { extras = ["standard"], version = "^0.29.0" }
+dependencies = [
+    "beanie==2.0.1",
+    "fastapi==0.128.3",
+    "granian>=2.7.0",
+    "pydantic==2.12.5",
+]
 
-aiofiles = "^23.2.1"
-aiotinydb = "^2.0.0"
-httpx = "^0.27.0"
-rasterio = "^1.3.9"
-geopandas = "^0.14.3"
-tinydb = "^4.8.0"
-tqdm = "^4.66.2"
-typer = "^0.12.3"
-boto3 = "^1.34.107"
+[dependency-groups]
+tasks = [
+    "aiofiles==25.1.0",
+    "aiotinydb==2.0.0",
+    "boto3==1.42.43",
+    "httpx==0.28.1",
+    "geopandas==0.14.4",
+    "rasterio==1.5.0",
+    "tinydb==4.8.2",
+    "tqdm==4.67.3",
+    "typer==0.21.1",
+]
 
+dev = ["types-aiofiles==25.1.0.20251011", "types-pyyaml==6.0.12.20240311"]
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.10.0"
-pre-commit = "^3.7"
-ruff = "^0.4.3"
-types-aiofiles = "^23.2.0.20240403"
-types-pyyaml = "^6.0.12.20240311"
-pytest = "^8.2.2"
-
-
-[tool.black]
-line-length = 99
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 99
@@ -48,10 +42,10 @@ line-length = 99
 "__init__.py" = ["E402"]
 "**/tasks/*" = ["E712"]
 
-[tool.mypy]
-ignore_missing_imports = true
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+profile = "black"

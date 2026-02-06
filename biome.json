@@ -1,0 +1,90 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": [
+            "**",
+            "!!**/node_modules",
+            "!!**/dist",
+            "!!*.json",
+            "!!**/*.html",
+            "!!**/*.json"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineEnding": "lf",
+        "lineWidth": 100,
+        "attributePosition": "auto",
+        "bracketSameLine": false,
+        "bracketSpacing": true,
+        "expand": "auto",
+        "useEditorconfig": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "noDoubleEquals": "warn",
+                "noImplicitAnyLet": "warn",
+                "noExplicitAny": "off",
+                "noAssignInExpressions": "off",
+                "noRedeclare": "warn",
+                "noGlobalAssign": "warn"
+            },
+            "correctness": {
+                "noInnerDeclarations": "off",
+                "noInvalidUseBeforeDeclaration": "warn"
+            },
+            "style": {
+                "noNonNullAssertion": "off",
+                "useImportType": "off"
+            },
+            "a11y": {
+                "noSvgWithoutTitle": "off",
+                "noStaticElementInteractions": "off",
+                "useKeyWithClickEvents": "off"
+            }
+        }
+    },
+    "javascript": {
+        "formatter": {
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "trailingCommas": "es5",
+            "semicolons": "asNeeded",
+            "arrowParentheses": "always",
+            "bracketSameLine": false,
+            "quoteStyle": "single",
+            "attributePosition": "auto",
+            "bracketSpacing": true
+        }
+    },
+    "html": {
+        "formatter": {
+            "selfCloseVoidElements": "always"
+        }
+    },
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeImports": {
+                    "level": "on",
+                    "options": {
+                        "identifierOrder": "lexicographic"
+                    }
+                }
+            }
+        }
+    }
+}

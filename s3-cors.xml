@@ -1,0 +1,10 @@
+<CORSConfiguration>
+    <CORSRule>
+        <AllowedHeader>*</AllowedHeader>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>HEAD</AllowedMethod>
+        <AllowedOrigin>https://urbanheat.app</AllowedOrigin>
+        <AllowedOrigin>https://dev.urbanheat.app</AllowedOrigin>
+        <AllowedOrigin>http://localhost:5173</AllowedOrigin>
+    </CORSRule>
+</CORSConfiguration>

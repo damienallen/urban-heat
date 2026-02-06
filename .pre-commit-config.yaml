@@ -1,14 +1,34 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
-      - id: check-added-large-files
-        args: ['--maxkb=600']
       - id: check-merge-conflict
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.4.3
+      - id: check-added-large-files
+        args: ["--maxkb=600"]
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.9.25
     hooks:
-      - id: ruff
-        args: ["--select", "I", "--fix"]
+      - id: uv-lock
+  - repo: https://github.com/pycqa/isort
+    rev: 7.0.0
+    hooks:
+      - id: isort
+        additional_dependencies: [toml]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.14
+    hooks:
+      # run linter + formatter
+      - id: ruff-check
+        args: [--fix]
       - id: ruff-format
+  - repo: https://github.com/biomejs/pre-commit
+    rev: v2.3.10 # Use the sha / tag you want to point at
+    hooks:
+      - id: biome-check
+        args: [--max-diagnostics=500]
+        verbose: true
