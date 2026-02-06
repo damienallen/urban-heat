@@ -4,6 +4,7 @@ import { fromUrl } from 'geotiff'
 
 const d3 = Object.assign({}, { contours, geoProject, geoTransform })
 
+// biome-ignore lint/suspicious/noGlobalAssign: okay in web worker
 onmessage = async (e: MessageEvent) => {
     console.log(`Fetching: ${e.data.url}`)
     postMessage({ type: 'progress', state: 'Fetching images', progress: 20 })

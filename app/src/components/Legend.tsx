@@ -30,7 +30,7 @@ export const Legend = observer(() => {
     const { contours, ui } = useStores()
     const classes = useStyles()
 
-    if (contours.stats == undefined || contours.thresholds.length < 1) {
+    if (contours.stats === undefined || contours.thresholds.length < 1) {
         return (
             <div className={classes.items}>
                 <div

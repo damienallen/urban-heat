@@ -156,14 +156,13 @@ export const MapCanvas = observer(() => {
                 buildingsImage.onload = () => {
                     currentMap.addImage('buildingsIcon', buildingsImage)
                 }
-                buildingsImage.src =
-                    'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(buildingsSVG)
+                buildingsImage.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(buildingsSVG)}`
 
                 const tapImage = new Image(64, 64)
                 tapImage.onload = () => {
                     currentMap.addImage('tapIcon', tapImage)
                 }
-                tapImage.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(tapSVG)
+                tapImage.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(tapSVG)}`
 
                 currentMap.addSource(sourceId, {
                     type: 'geojson',
@@ -307,9 +306,5 @@ export const MapCanvas = observer(() => {
     useEffect(() => loadUrbanExtents(), [app.urbanExtents])
     useEffect(() => updateStyle(), [app.mapStyle])
 
-    return (
-        <>
-            <div ref={mapContainer} className={classes.map} />
-        </>
-    )
+    return <div ref={mapContainer} className={classes.map} />
 })

@@ -1,13 +1,10 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {"name":"Add Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.add_country", "args": ["LU"]},
         {"name":"Download","type":"debugpy","request":"launch","module":"urban_heat.tasks.download"},
         {"name":"Collect Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.collect_country", "args": ["LU"]},
         {"name":"Process Country","type":"debugpy","request":"launch","module":"urban_heat.tasks.process_country", "args": ["LU"]},
-        {"name":"Upload","type":"debugpy","request":"launch","module":"urban_heat.tasks.upload"},
+        {"name":"Upload","type":"debugpy","request":"launch","module":"urban_heat.tasks.upload"}
     ]
 }
