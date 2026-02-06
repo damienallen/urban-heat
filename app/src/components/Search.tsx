@@ -1,9 +1,9 @@
 import { Autocomplete } from '@mantine/core'
 import { X } from '@phosphor-icons/react/X'
-import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { createUseStyles } from 'react-jss'
+import { useNavigate } from 'react-router-dom'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({

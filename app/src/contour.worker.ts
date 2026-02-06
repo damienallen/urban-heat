@@ -1,7 +1,6 @@
 import { contours, geoTransform } from 'd3'
-
-import { fromUrl } from 'geotiff'
 import { geoProject } from 'd3-geo-projection'
+import { fromUrl } from 'geotiff'
 
 const d3 = Object.assign({}, { contours, geoProject, geoTransform })
 
@@ -33,10 +32,10 @@ onmessage = async (e: MessageEvent) => {
         },
     })
 
-    let projectedContours = []
-    for (let contourGeojson of rawContours) {
+    const projectedContours = []
+    for (const contourGeojson of rawContours) {
         if (contourGeojson.coordinates.length) {
-            let projectedGeojson = geoProject(contourGeojson, projection)
+            const projectedGeojson = geoProject(contourGeojson, projection)
             projectedGeojson.threshold = contourGeojson.value
             projectedContours.push(projectedGeojson)
         }

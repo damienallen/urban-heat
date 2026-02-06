@@ -1,8 +1,8 @@
+import { createUseStyles } from 'react-jss'
 import { AboutButton } from './AboutButton'
 import { ProcessingStatus } from './ProcessingStatus'
 import { Search } from './Search'
 import { StyleMenu } from './StyleMenu'
-import { createUseStyles } from 'react-jss'
 
 const useStyles = createUseStyles({
     container: {

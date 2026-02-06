@@ -1,15 +1,13 @@
 import '@maptiler/sdk/dist/maptiler-sdk.css'
 
 import * as maptilersdk from '@maptiler/sdk'
-
-import { useEffect, useRef } from 'react'
-
-import { createUseStyles } from 'react-jss'
 import { extent } from 'geojson-bounds'
 import { observer } from 'mobx-react'
-import { slugify } from '../utils'
+import { useEffect, useRef } from 'react'
+import { createUseStyles } from 'react-jss'
 import { useNavigate } from 'react-router-dom'
 import { useStores } from '../stores'
+import { slugify } from '../utils'
 
 const useStyles = createUseStyles({
     map: {
@@ -210,7 +208,7 @@ export const MapCanvas = observer(() => {
 
             // Remove existing layers and sources
             const orderedLayerIds = [...currentMap.getLayersOrder().values()]
-            for (let id of orderedLayerIds) {
+            for (const id of orderedLayerIds) {
                 if (id.includes('contour-')) {
                     currentMap.removeLayer(id)
                     currentMap.removeSource(id)
@@ -218,7 +216,7 @@ export const MapCanvas = observer(() => {
             }
 
             // Add contour layers
-            let idList = []
+            const idList = []
             let accumulatedOpacity = 0
             for (let ind = 0; ind < layers.length; ind++) {
                 const layerId = `contour-${contours.selected.URAU_CODE}-${layers[ind].threshold}`

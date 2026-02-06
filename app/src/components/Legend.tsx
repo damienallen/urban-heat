@@ -1,5 +1,5 @@
-import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
@@ -52,7 +52,7 @@ export const Legend = observer(() => {
         )
     }
 
-    let items = []
+    const items = []
     for (let ind = 0; ind < contours.thresholds.length; ind++) {
         const opacity = (0.8 * (ind + 1)) / (contours.thresholds.length + 1)
 

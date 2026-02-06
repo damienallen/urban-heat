@@ -1,9 +1,9 @@
+import { observer } from 'mobx-react'
+import { createUseStyles } from 'react-jss'
+import { useStores } from '../stores'
 import { ControlsForm } from './ControlsForm'
 import { Legend } from './Legend'
 import { OpenButton } from './OpenButton'
-import { createUseStyles } from 'react-jss'
-import { observer } from 'mobx-react'
-import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {

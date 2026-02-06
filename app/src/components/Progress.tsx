@@ -1,6 +1,6 @@
 import { Loader } from '@mantine/core'
-import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { createUseStyles } from 'react-jss'
 
 const useStyles = createUseStyles({
     container: {

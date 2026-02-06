@@ -1,10 +1,9 @@
 import { Blockquote, NativeSelect, RangeSlider, RangeSliderValue } from '@mantine/core'
-
+import { observer } from 'mobx-react'
+import { createUseStyles } from 'react-jss'
+import { useStores } from '../stores'
 import { ControlsItem } from './ControlsItem'
 import { HideButton } from './HideButton'
-import { createUseStyles } from 'react-jss'
-import { observer } from 'mobx-react'
-import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
     container: {

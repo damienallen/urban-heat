@@ -1,16 +1,15 @@
 import '@mantine/core/styles.css'
 
+import { MantineProvider } from '@mantine/core'
+import { createUseStyles } from 'react-jss'
 import { StoreProvider, useStores } from '../stores'
-
 import { AboutModal } from './AboutModal'
 import { ActionBar } from './ActionBar'
 import { ControlPanel } from './ControlPanel'
-import { MantineProvider } from '@mantine/core'
 import { MapCanvas } from './MapCanvas'
 import { MapLoader } from './MapLoader'
 import { RouteChangeHandler } from './RouteChangeHandler'
 import { Title } from './Title'
-import { createUseStyles } from 'react-jss'
 
 const useStyles = createUseStyles({
     app: {
@@ -60,14 +59,14 @@ const welcomeText = `%c
 ██║   ██║██╔══██╗██╔══██╗██╔══██║██║╚██╗██║
 ╚██████╔╝██║  ██║██████╔╝██║  ██║██║ ╚████║
  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝
-                                           
-██╗  ██╗███████╗ █████╗ ████████╗          
-██║  ██║██╔════╝██╔══██╗╚══██╔══╝          
-███████║█████╗  ███████║   ██║             
-██╔══██║██╔══╝  ██╔══██║   ██║             
-██║  ██║███████╗██║  ██║   ██║             
-╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝             
-                                           
+
+██╗  ██╗███████╗ █████╗ ████████╗
+██║  ██║██╔════╝██╔══██╗╚══██╔══╝
+███████║█████╗  ███████║   ██║
+██╔══██║██╔══╝  ██╔══██║   ██║
+██║  ██║███████╗██║  ██║   ██║
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝
+
 
 Curious about what's going on under the hood?\n
 Check out the source: https://github.com/damienallen/urban-heat\n

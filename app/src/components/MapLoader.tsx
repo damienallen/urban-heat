@@ -1,8 +1,8 @@
 import { LoadingOverlay } from '@mantine/core'
-import { Progress } from './Progress'
-import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
+import { Progress } from './Progress'
 
 const useStyles = createUseStyles({
     container: {

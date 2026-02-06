@@ -1,7 +1,6 @@
 import { Modal, Pill } from '@mantine/core'
-
-import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
+import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
@@ -73,7 +72,7 @@ export const AboutModal = observer(() => {
                     open-source
                 </a>{' '}
                 project by{' '}
-                <a href="https://dallen.co" rel="author" target="_blank">
+                <a href="https://dallen.co" rel="noopener author" target="_blank">
                     Damien Allen
                 </a>
             </p>

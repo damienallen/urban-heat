@@ -1,3 +1,4 @@
+import { Tooltip } from '@mantine/core'
 import { Buildings } from '@phosphor-icons/react/Buildings'
 import { DiceFive } from '@phosphor-icons/react/DiceFive'
 import { DiceFour } from '@phosphor-icons/react/DiceFour'
@@ -6,10 +7,9 @@ import { DiceSix } from '@phosphor-icons/react/DiceSix'
 import { DiceThree } from '@phosphor-icons/react/DiceThree'
 import { DiceTwo } from '@phosphor-icons/react/DiceTwo'
 import { Gear } from '@phosphor-icons/react/Gear'
-import { Tooltip } from '@mantine/core'
-import { createUseStyles } from 'react-jss'
 import { observer } from 'mobx-react'
 import { useState } from 'react'
+import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
 
 const useStyles = createUseStyles({
