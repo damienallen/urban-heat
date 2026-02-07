@@ -1,5 +1,6 @@
 .env
 ,B
+*.archive.gz
 
 # Python
 __pycache__/

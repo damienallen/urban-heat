@@ -66,8 +66,9 @@ export class Store {
 }
 
 export class AppStore {
-    public apiRoot = 'https://api.urbanheat.app'
     public version: string = packageJson.version
+    public apiRoot =
+        import.meta.env.MODE === 'localdev' ? 'http://localhost:8888' : 'https://api.urbanheat.app'
 
     public cityLookup: { [key: string]: string } = {}
     public urbanExtents: any = undefined

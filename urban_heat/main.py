@@ -10,6 +10,7 @@ from urban_heat.models import AnnualData, DataSource, UrbanExtent, init_db
 
 origins = [
     APP_URL,
+    "http://localhost:3000",
     "http://localhost:5173",
 ]
 

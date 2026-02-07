@@ -71,7 +71,8 @@ class UrbanExtent(Document):
 
 async def init_db():
     client = AsyncMongoClient(os.environ["MONGODB_URI"])
-    await init_beanie(database=client.db_name, document_models=[UrbanExtent])
+    db_name = os.environ.get("MONGODB_DB", "urbanheat")
+    await init_beanie(database=client[db_name], document_models=[UrbanExtent])
 
 
 async def get_urau_by_code(code: str):
