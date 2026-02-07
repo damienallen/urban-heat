@@ -9,7 +9,7 @@ import typer
 from boto3.session import Session
 from tqdm.contrib.concurrent import process_map
 
-from urban_heat import API_URL, get_auth_headers
+from urban_heat import API_HOST, get_auth_headers
 from urban_heat.models import Stats
 from urban_heat.tasks import NO_DATA, SOURCES_DIR
 
@@ -72,7 +72,7 @@ def upload_annual_data(image_path: Path):
     )
 
     r = httpx.post(
-        f"{API_URL}/urau/{urau_code}/source/add/{image_path.parts[-2]}",
+        f"https://{API_HOST}/urau/{urau_code}/source/add/{image_path.parts[-2]}",
         json={
             "year": int(image_path.stem.split("_")[-1]),
             "url": f"{S3_CDN_ENDPOINT}/{relative_path}",
@@ -84,7 +84,7 @@ def upload_annual_data(image_path: Path):
 
 
 def upload_sources(sources_dir: Path = SOURCES_DIR, overwrite: bool = False):
-    r = httpx.get(f"{API_URL}/codes")
+    r = httpx.get(f"https://{API_HOST}/codes")
     r.raise_for_status()
 
     urau_codes = r.json()
@@ -93,7 +93,7 @@ def upload_sources(sources_dir: Path = SOURCES_DIR, overwrite: bool = False):
         if not urau_dir.exists():
             continue
 
-        r = httpx.get(f"{API_URL}/urau/{code}/sources")
+        r = httpx.get(f"https://{API_HOST}/urau/{code}/sources")
         r.raise_for_status()
 
         # TODO: check data source per year (i.e. needed to add 2024)

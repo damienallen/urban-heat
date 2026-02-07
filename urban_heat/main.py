@@ -5,11 +5,13 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 
-from urban_heat import API_TOKEN, APP_URL
+from urban_heat import API_TOKEN, APP_HOST
 from urban_heat.models import AnnualData, DataSource, UrbanExtent, init_db
 
 origins = [
-    APP_URL,
+    f"https://{APP_HOST}",
+    f"https://www.{APP_HOST}",
+    f"https://dev.{APP_HOST}",
     "http://localhost:3000",
     "http://localhost:5173",
 ]
