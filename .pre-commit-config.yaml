@@ -8,6 +8,7 @@ repos:
       - id: check-json
       - id: check-yaml
       - id: end-of-file-fixer
+        exclude: package\.json$
       - id: trailing-whitespace
   - repo: https://github.com/astral-sh/uv-pre-commit
     # uv version.
