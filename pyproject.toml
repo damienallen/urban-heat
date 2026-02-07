@@ -1,5 +1,5 @@
 [project]
-name = "urban-heat"
+name = "urban_heat"
 version = "2026.1"
 description = "A simple backend supporting the Urban Heat app"
 
@@ -12,7 +12,7 @@ requires-python = ">=3.13,<3.14"
 dependencies = [
     "beanie==2.0.1",
     "fastapi==0.128.3",
-    "granian>=2.7.0",
+    "granian==2.7.0",
     "pydantic==2.12.5",
 ]
 

@@ -18,8 +18,8 @@ RUN uv sync --frozen --no-install-project
 ADD ./urban_heat ./urban_heat/
 RUN uv sync --frozen
 
-EXPOSE 8000
-CMD ["granian", "--interface", "asgi", "--host", "0.0.0.0", "--port", "8000", "urban_heat.main:app"]
+EXPOSE 8888
+CMD ["granian", "--interface", "asgi", "--host", "0.0.0.0", "--port", "8888", "urban_heat.main:app"]
 
 
 #

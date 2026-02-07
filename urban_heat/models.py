@@ -1,8 +1,9 @@
+import os
 from typing import Literal
 
 from beanie import Document, init_beanie
-from motor.motor_asyncio import AsyncIOMotorClient
 from pydantic import AnyUrl, BaseModel
+from pymongo import AsyncMongoClient
 
 
 class Geometry(BaseModel):
@@ -69,7 +70,7 @@ class UrbanExtent(Document):
 
 
 async def init_db():
-    client = AsyncIOMotorClient("mongodb://mongo:27017")
+    client = AsyncMongoClient(os.environ["MONGODB_URI"])
     await init_beanie(database=client.db_name, document_models=[UrbanExtent])
 
 
