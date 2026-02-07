@@ -224,10 +224,7 @@ export class ContoursStore {
     }
 
     get url() {
-        return this.data?.url.replace(
-            'urban-heat-data.ams3.cdn.digitaloceanspaces.com',
-            'urban-heat.fsn1.your-objectstorage.com'
-        )
+        return this.data?.url
     }
 
     randomizeFeature = (setPath: boolean = true) => {

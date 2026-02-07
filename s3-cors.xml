@@ -6,5 +6,6 @@
         <AllowedOrigin>https://urbanheat.app</AllowedOrigin>
         <AllowedOrigin>https://dev.urbanheat.app</AllowedOrigin>
         <AllowedOrigin>http://localhost:5173</AllowedOrigin>
+        <AllowedOrigin>http://localhost:3000</AllowedOrigin>
     </CORSRule>
 </CORSConfiguration>
