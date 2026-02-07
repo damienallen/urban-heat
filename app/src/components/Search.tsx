@@ -1,5 +1,5 @@
 import { Autocomplete } from '@mantine/core'
-import { X } from '@phosphor-icons/react/X'
+import { XIcon } from '@phosphor-icons/react/X'
 import { observer } from 'mobx-react'
 import { useState } from 'react'
 import { createUseStyles } from 'react-jss'
@@ -46,7 +46,7 @@ export const Search = observer(() => {
                     navigate(`/${app.cityLookup[k]}`)
                 }}
                 color="gray"
-                rightSection={<X size={16} onClick={() => setQuery('')} />}
+                rightSection={<XIcon size={16} onClick={() => setQuery('')} />}
                 comboboxProps={{ transitionProps: { transition: 'fade', duration: 200 } }}
             />
         </div>

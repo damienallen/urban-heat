@@ -1,6 +1,6 @@
 import { Button, Tooltip } from '@mantine/core'
 
-import { Sliders } from '@phosphor-icons/react/Sliders'
+import { SlidersIcon } from '@phosphor-icons/react/Sliders'
 import { observer } from 'mobx-react'
 import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
@@ -32,7 +32,7 @@ export const OpenButton = observer(() => {
                     variant="light"
                     disabled={contours.areProcessing}
                 >
-                    <Sliders size={24} weight="duotone" />
+                    <SlidersIcon size={24} weight="duotone" />
                 </Button>
             </Tooltip>
         </span>

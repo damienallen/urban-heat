@@ -1,12 +1,12 @@
 import { Tooltip } from '@mantine/core'
-import { Buildings } from '@phosphor-icons/react/Buildings'
-import { DiceFive } from '@phosphor-icons/react/DiceFive'
-import { DiceFour } from '@phosphor-icons/react/DiceFour'
-import { DiceOne } from '@phosphor-icons/react/DiceOne'
-import { DiceSix } from '@phosphor-icons/react/DiceSix'
-import { DiceThree } from '@phosphor-icons/react/DiceThree'
-import { DiceTwo } from '@phosphor-icons/react/DiceTwo'
-import { Gear } from '@phosphor-icons/react/Gear'
+import { BuildingsIcon } from '@phosphor-icons/react/Buildings'
+import { DiceFiveIcon } from '@phosphor-icons/react/DiceFive'
+import { DiceFourIcon } from '@phosphor-icons/react/DiceFour'
+import { DiceOneIcon } from '@phosphor-icons/react/DiceOne'
+import { DiceSixIcon } from '@phosphor-icons/react/DiceSix'
+import { DiceThreeIcon } from '@phosphor-icons/react/DiceThree'
+import { DiceTwoIcon } from '@phosphor-icons/react/DiceTwo'
+import { GearIcon } from '@phosphor-icons/react/Gear'
 import { observer } from 'mobx-react'
 import { useState } from 'react'
 import { createUseStyles } from 'react-jss'
@@ -51,19 +51,19 @@ export const ProcessingStatus = observer(() => {
 
     const [roll, setRoll] = useState<number>(getRoll)
     const dice = [
-        <DiceOne size={32} weight="duotone" className="dice" />,
-        <DiceTwo size={32} weight="duotone" className="dice" />,
-        <DiceThree size={32} weight="duotone" className="dice" />,
-        <DiceFour size={32} weight="duotone" className="dice" />,
-        <DiceFive size={32} weight="duotone" className="dice" />,
-        <DiceSix size={32} weight="duotone" className="dice" />,
+        <DiceOneIcon size={32} weight="duotone" key="one" className="dice" />,
+        <DiceTwoIcon size={32} weight="duotone" key="two" className="dice" />,
+        <DiceThreeIcon size={32} weight="duotone" key="three" className="dice" />,
+        <DiceFourIcon size={32} weight="duotone" key="four" className="dice" />,
+        <DiceFiveIcon size={32} weight="duotone" key="five" className="dice" />,
+        <DiceSixIcon size={32} weight="duotone" key="six" className="dice" />,
     ]
 
     return (
         <div className={classes.container}>
             {contours.areProcessing ? (
                 <Tooltip label="Generating contours...">
-                    <Gear size={32} weight="duotone" className={classes.gear} />
+                    <GearIcon size={32} weight="duotone" className={classes.gear} />
                 </Tooltip>
             ) : (
                 <Tooltip label="Randomize">
@@ -76,7 +76,7 @@ export const ProcessingStatus = observer(() => {
                         className={classes.button}
                     >
                         {dice[roll]}
-                        <Buildings size={32} weight="duotone" className="city" />
+                        <BuildingsIcon size={32} weight="duotone" className="city" />
                     </div>
                 </Tooltip>
             )}

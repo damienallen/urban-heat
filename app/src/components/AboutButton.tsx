@@ -1,4 +1,4 @@
-import { Info } from '@phosphor-icons/react/Info'
+import { InfoIcon } from '@phosphor-icons/react/Info'
 import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
 
@@ -22,7 +22,7 @@ export const AboutButton = () => {
 
     return (
         <span className={classes.icon} onClick={() => ui.toggleShowAbout()}>
-            <Info size={32} weight="duotone" />
+            <InfoIcon size={32} weight="duotone" />
         </span>
     )
 }

@@ -1,5 +1,5 @@
 import { Menu } from '@mantine/core'
-import { StackSimple } from '@phosphor-icons/react/StackSimple'
+import { StackSimpleIcon } from '@phosphor-icons/react/StackSimple'
 import { observer } from 'mobx-react'
 import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
@@ -75,7 +75,7 @@ export const StyleMenu = observer(() => {
                 <span
                     className={`${classes.icon} ${contours.areProcessing ? classes.disabled : ''}`}
                 >
-                    <StackSimple size={32} weight="duotone" />
+                    <StackSimpleIcon size={32} weight="duotone" />
                 </span>
             </Menu.Target>
             <Menu.Dropdown>

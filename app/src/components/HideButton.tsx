@@ -1,5 +1,5 @@
 import { Button } from '@mantine/core'
-import { CaretLineDown } from '@phosphor-icons/react/CaretLineDown'
+import { CaretLineDownIcon } from '@phosphor-icons/react/CaretLineDown'
 import { observer } from 'mobx-react'
 import { createUseStyles } from 'react-jss'
 import { useStores } from '../stores'
@@ -26,7 +26,7 @@ export const HideButton = observer(() => {
         <span className={classes.container}>
             <Button
                 onClick={ui.toggleShowControls}
-                leftSection={<CaretLineDown size={24} weight="duotone" />}
+                leftSection={<CaretLineDownIcon size={24} weight="duotone" />}
                 variant="light"
             >
                 Hide
